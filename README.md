@@ -1,20 +1,18 @@
-# QUT-Notes-Template - Unit name
+# CAB202 - Microprocessors and Digital Systems
 
-## Unit coordinator name
+## Dr Mark Broadmeadow
 
-### Semester #, 20xx
+### Semester 2, 2022
 
 ---
 
 ## Downloads
 
-Lecture notes download: [QUT-Notes-Template Lecture Notes PDF](https://www.github.com/Tarang74/QUT-Notes-Template/raw/main/QUT-Notes-Template%20Lecture%20Notes.pdf)
-
-Exam notes download: [QUT-Notes-Template Exam Notes PDF](https://www.github.com/Tarang74/QUT-Notes-Template/raw/main/QUT-Notes-Template%20Exam%20Notes.pdf)
+Lecture notes download: [CAB202 Lecture Notes PDF](https://www.github.com/Tarang74/CAB202/raw/main/CAB202%20Lecture%20Notes.pdf)
 
 ---
 
-This repository provides **lecture notes** and **exam notes** for **QUT-Notes-Template - Unit name**.
+This repository provides **lecture notes** for **CAB202 - Microprocessors and Digital Systems**.
 
 *The contents of the lecture notes are described below.*
 
