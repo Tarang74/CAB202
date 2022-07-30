@@ -45,5 +45,141 @@
 \tableofcontents
 \newpage
 %
-\section{Section 1}
+\section{Microcontroller Fundamentals}
+\subsection{Computer}
+\begin{definition}[Computer]
+    A computer is a digital electronic machine that can be programmed to carry
+    out sequences of arithmetic or logical operations (computation) automatically.
+\end{definition}
+\begin{definition}[Control unit]
+    The control unit interprets the instructions and decides what actions to take.
+\end{definition}
+\begin{definition}[Arithmetic logic unit]
+    The arithmetic logic unit (ALU) performs computations required by the control unit.
+    This store data in memory, stores program instructions in memory
+
+\end{definition}
+
+microprocessor doesnt include external storage, inputs, outputs,
+
+mircocontroller, integrated circuit, single chip that contains a CPU, memory, peripherals and is a standalone system.
+
+on a desktop motherboard, the CPU is the microprocessor and the memory, and other peripherals are connected via other busses on the motherboard.
+
+The QUTy uses a microcontroller called ATtiny1626, that are within a family of microcontrollers called AVRs.
+
+\subsection{ATtiny1626 Microcontroller}
+The ATtiny1626 microcontroller has the following features:
+\begin{itemize}
+    \item CPU:\@ AVR Core (AVRxt variant)
+    \item Memory:\@
+          \begin{itemize}
+              \item Flash memory (16KB) used to store program instructions in memory
+              \item SRAM used (2KB) to store data in memory
+              \item EEPROM (256B)
+          \end{itemize}
+    \item Peripherals, i.e., inputs/outputs. These are implemented in hardware (part of the chip) in order to offload complexity
+\end{itemize}
+\subsubsection{Flash Memory}
+\begin{itemize}
+    \item Non-volatile --- memory is not lost when power is removed
+    \item Inexpensive
+    \item Slower than SRAM
+    \item Can only erase in large chunks
+    \item Typically used to store programme data
+    \item Generally read-only. Programmed via an external tool, which is loaded once and remains static during the lifetime of the program
+    \item Writing is slow
+\end{itemize}
+\subsubsection{SRAM}
+\begin{itemize}
+    \item Volatile --- memory is lost when power is removed
+    \item Expensive
+    \item Faster than flash memory and is used to store variables and temporary data
+    \item Can access individual bytes (large chunk erases are not required)
+\end{itemize}
+\subsubsection{EEPROM}
+\begin{itemize}
+    \item Older technology
+    \item Expensive
+    \item Non-volatile
+    \item Can erase individual bytes
+\end{itemize}
+\subsection{AVR Core}
+\begin{definition}[Computer programme]
+    A computer programme is a sequence or set of instructions in a programming language
+    for a computer to execute.
+\end{definition}
+The main function of the AVR Core Central Processing Unit (CPU) is to ensure correct program execution.
+The CPU must, therefore, be able to access memories, perform calculations, control peripherals, and handle interrupts.
+Some key characteristics of the AVR Core are:
+\begin{itemize}
+    \item 8-bit Reduced Instruction Set Computer (RISC)
+    \item 32 working registers (r0 to r31)
+    \item Program Counter (PC) --- location in memory where the program is stored
+    \item Status Register --- modified by the ALU and stores key information from the ALU (i.e., whether a result is negative)
+    \item Stack Pointer --- temporary data that doesn't fit into the registers
+    \item 8-bit core --- all data, registers, and operations, operate within 8-bits
+\end{itemize}
+\subsection{Programme Execution}
+At the time of reset PC = 0.
+\begin{enumerate}
+    \item Fetch instruction (from memory)
+    \item Decode instruction (decode binary instruction)
+    \item Execute instruction:
+          \begin{itemize}
+              \item Execute an operation
+              \item Store data in data memory, the ALU, a register, or update the stack pointer
+          \end{itemize}
+    \item Store result
+    \item Update PC (move to next instruction or if instruction is longer than 1, add 2. Or move to different location in program arbitrary address k)
+\end{enumerate}
+\subsection{Instructions}
+\begin{itemize}
+    \item The CPU understands and can execute a limited set of instructions --- \textasciitilde88 unique instructions for the ATtiny1626
+    \item Instructions are encoded in programme memory as opcodes. Most instructions are two bytes long, but some instructions are four bytes long
+    \item The AVR Instruction Set Manual describes all of the available instructions, and how they are translated into opcodes
+    \item Instructions fall loosely into five categories:
+          \begin{itemize}
+              \item Arithmetic and logic --- ALU
+              \item Change of flow --- jumping to different sections of the code or making decisions
+              \item Data transfer --- moving data in/out of registers, into the data space, or into RAM
+              \item Bit and bit-test --- looking at data in registers (which bits are set or not set)
+              \item Control --- changing what the CPU is doing
+          \end{itemize}
+\end{itemize}
+
+ldi - load immediate
+takes constat value and stores it in a register
+
+data must be in a register to be used in an instruction
+
+can only access r16-r31
+
+\subsection{Interacting with memory and peripherals}
+\begin{itemize}
+    \item The CPU interacts with both memory and peripherals via the data space
+    \item From the perspective of the CPU, the data space is single large array of
+          locations that can be read from, or written to, using an address
+    \item We control peripherals by reading from, and writing to, their registers
+    \item Each peripheral register is assigned a unique address in the data space
+    \item When a peripheral is accessed in this manner we refer to it as being
+          memory mapped, as we access them as if they were normal memory
+    \item Different devices, peripherals and memory can be included in a memory map
+          (and sometimes a device can be accessed at multiple different addresses)
+\end{itemize}
+\subsection{Memory map}
+
+\subsection{Assembly code}
+\begin{itemize}
+    \item The opcodes that get placed into programme memory are what we call
+          machine code (i.e. code the machine operates on directly)
+    \item We tend not to write machine code directly as it is:
+    \item Not human readable
+    \item Prone to errors (swapping a single bit can completely change the operation)
+    \item Instead we can write instructions directly in assembly code
+    \item We use instruction mnemonics to specify each instruction
+    \item You have already seen some of these: ldi, add, sts, jmp …
+    \item An assembler takes the assembly code and translates it into opcodes that can
+          be loaded into programme memory
+\end{itemize}
 \end{document}
