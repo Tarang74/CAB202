@@ -1,0 +1,45 @@
+%!TEX TS-program = xelatex
+%!TEX options = -aux-directory=Debug -shell-escape -file-line-error -interaction=nonstopmode -halt-on-error -synctex=1 "%DOC%"
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{chains,decorations.pathreplacing}
+
+\begin{document}
+\begin{tikzpicture}[
+        node distance = 0pt,
+        start chain = A going right,
+        start chain = B going right,
+        start chain = C going left,
+        start chain = D going righ,
+        X/.style = {rectangle, draw,
+                minimum width=3.5ex, minimum height=3.5ex,
+                outer sep=0pt}
+    ]
+    \foreach \i in {1,1,0,0,0,1,0,0}
+    \node[X, on chain=A] {\i};
+
+    \node[X, on chain=B] at (0, -1) {1};
+    \foreach \i in {0,0,0,1,0,0,{\color{blue}C}}
+    \node[X, on chain=B] {\i};
+
+    \draw[->] (A-2.south) -- (B-1.north);
+    \draw[->] (A-3.south) -- (B-2.north);
+    \draw[->] (A-4.south) -- (B-3.north);
+    \draw[->] (A-5.south) -- (B-4.north);
+    \draw[->] (A-6.south) -- (B-5.north);
+    \draw[->] (A-7.south) -- (B-6.north);
+    \draw[->] (A-8.south) -- (B-7.north);
+
+    \draw[draw=none] (A-1.west) -- ++ (-1, 0) node[X, on chain=C] {{\color{green}\textbf{C}}};
+    \draw[->] (A-1.west) -- (C-1.east);
+
+    \draw[draw=none] (B-8.east) -- ++ (1, 0) node[X, on chain=D] {{\color{green}\textbf{C}}};
+    \draw[->] (D-1.west) -- (B-8.east);`'
+\end{tikzpicture}
+\end{document}

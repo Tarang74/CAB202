@@ -4,6 +4,12 @@
 \input{LaTeX-Submodule/template.tex}
 
 % Additional packages & macros
+\usepackage{xcolor}
+\newcommand{\keyword}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+
+\setminted{
+    escapeinside=||
+}
 
 % Header and footer
 \newcommand{\unitName}{Microprocessors and Digital Systems}
@@ -46,7 +52,7 @@
 \newpage
 %
 \section{Microcontroller Fundamentals}
-\subsection{Computer}
+\subsection{Architecture of a Computer}
 \begin{definition}[Computer]
     A computer is a digital electronic machine that can be programmed to carry
     out sequences of arithmetic or logical operations (computation) automatically.
@@ -56,18 +62,13 @@
 \end{definition}
 \begin{definition}[Arithmetic logic unit]
     The arithmetic logic unit (ALU) performs computations required by the control unit.
-    This store data in memory, stores program instructions in memory
-
 \end{definition}
-
-microprocessor doesnt include external storage, inputs, outputs,
-
-mircocontroller, integrated circuit, single chip that contains a CPU, memory, peripherals and is a standalone system.
-
-on a desktop motherboard, the CPU is the microprocessor and the memory, and other peripherals are connected via other busses on the motherboard.
+\subsection{Microprocessors \& Microcontrollers}
+While a microcontroller puts the CPU and all peripherals onto the same chip,
+a microprocessor houses a more powerful CPU on a single chip that connects to external peripherals.
+The peripherals include memory, I/O, and control units.
 
 The QUTy uses a microcontroller called ATtiny1626, that are within a family of microcontrollers called AVRs.
-
 \subsection{ATtiny1626 Microcontroller}
 The ATtiny1626 microcontroller has the following features:
 \begin{itemize}
@@ -75,10 +76,10 @@ The ATtiny1626 microcontroller has the following features:
     \item Memory:\@
           \begin{itemize}
               \item Flash memory (16KB) used to store program instructions in memory
-              \item SRAM used (2KB) to store data in memory
+              \item SRAM (2KB) used to store data in memory
               \item EEPROM (256B)
           \end{itemize}
-    \item Peripherals, i.e., inputs/outputs. These are implemented in hardware (part of the chip) in order to offload complexity
+    \item Peripherals:\@ Implemented in hardware (part of the chip) in order to offload complexity
 \end{itemize}
 \subsubsection{Flash Memory}
 \begin{itemize}
@@ -110,18 +111,18 @@ The ATtiny1626 microcontroller has the following features:
     for a computer to execute.
 \end{definition}
 The main function of the AVR Core Central Processing Unit (CPU) is to ensure correct program execution.
-The CPU must, therefore, be able to access memories, perform calculations, control peripherals, and handle interrupts.
+The CPU must, therefore, be able to access memory, perform calculations, control peripherals, and handle interrupts.
 Some key characteristics of the AVR Core are:
 \begin{itemize}
     \item 8-bit Reduced Instruction Set Computer (RISC)
-    \item 32 working registers (r0 to r31)
+    \item 32 working registers (R0 to R31)
     \item Program Counter (PC) --- location in memory where the program is stored
-    \item Status Register --- modified by the ALU and stores key information from the ALU (i.e., whether a result is negative)
+    \item Status Register (SREG) --- stores key information from calculations performed by the ALU (i.e., whether a result is negative)
     \item Stack Pointer --- temporary data that doesn't fit into the registers
     \item 8-bit core --- all data, registers, and operations, operate within 8-bits
 \end{itemize}
 \subsection{Programme Execution}
-At the time of reset PC = 0.
+At the time of reset, PC = 0. The following steps are then performed:
 \begin{enumerate}
     \item Fetch instruction (from memory)
     \item Decode instruction (decode binary instruction)
@@ -131,8 +132,14 @@ At the time of reset PC = 0.
               \item Store data in data memory, the ALU, a register, or update the stack pointer
           \end{itemize}
     \item Store result
-    \item Update PC (move to next instruction or if instruction is longer than 1, add 2. Or move to different location in program arbitrary address k)
+    \item Update PC (move to next instruction or if instruction is longer than 1 word, increment twice. The program can also move to another point in the program that has an address \(k\), through jumps.)
 \end{enumerate}
+This is illustrated in the following figure:
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 12cm, keepaspectratio = true]{figures/AVR_CPU.pdf}
+    % \caption{} % \label{}
+\end{figure}
 \subsection{Instructions}
 \begin{itemize}
     \item The CPU understands and can execute a limited set of instructions --- \textasciitilde88 unique instructions for the ATtiny1626
@@ -147,14 +154,6 @@ At the time of reset PC = 0.
               \item Control --- changing what the CPU is doing
           \end{itemize}
 \end{itemize}
-
-ldi - load immediate
-takes constat value and stores it in a register
-
-data must be in a register to be used in an instruction
-
-can only access r16-r31
-
 \subsection{Interacting with memory and peripherals}
 \begin{itemize}
     \item The CPU interacts with both memory and peripherals via the data space
@@ -168,18 +167,492 @@ can only access r16-r31
           (and sometimes a device can be accessed at multiple different addresses)
 \end{itemize}
 \subsection{Memory map}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 8cm, keepaspectratio = true]{figures/memory_map.pdf}
+    % \caption{Memory map.} % \label{}
+\end{figure}
 \subsection{Assembly code}
 \begin{itemize}
-    \item The opcodes that get placed into programme memory are what we call
-          machine code (i.e. code the machine operates on directly)
-    \item We tend not to write machine code directly as it is:
-    \item Not human readable
-    \item Prone to errors (swapping a single bit can completely change the operation)
+    \item The opcodes placed into programme memory are called
+          machine code (i.e., code the machine operates on directly)
+    \item We don't write machine code directly as it is:
+          \begin{itemize}
+              \item Not human readable
+              \item Prone to errors (swapping a single bit can completely change the operation)
+          \end{itemize}
     \item Instead we can write instructions directly in assembly code
-    \item We use instruction mnemonics to specify each instruction
-    \item You have already seen some of these: ldi, add, sts, jmp …
-    \item An assembler takes the assembly code and translates it into opcodes that can
+    \item We use instruction mnemonics to specify each instruction:\@ \mintinline{ca65}{|\keyword{ldi}|}, \mintinline{ca65}{|\keyword{add}|}, \mintinline{ca65}{|\keyword{sts}|}, \mintinline{ca65}{jmp}, \dots
+    \item An assembler takes assembly code and translates it into opcodes that can
           be loaded into programme memory
 \end{itemize}
+\section{Digital Representations and Operations}
+\subsection{Digital Systems}
+A \textbf{bit}\footnote{The term \textit{bit} comes from \textbf{b}inary dig\textbf{it}.}
+is the most basic unit of information in a digital system.
+A bit encodes a logical state with one of two possible values (i.e., binary).
+These states are often referred to as:
+\begin{itemize}
+    \item true, false
+    \item high, low (voltage states)
+    \item on, off (logical states)
+    \item set, reset
+    \item 1, 0
+\end{itemize}
+A sequence of \textit{eight} bits is known as a \textbf{byte}, and it is the most
+common representation of data in digital systems.
+A sequence of \textit{four} bits is known as a \textbf{nibble}.
+
+A sequence of \(n\) bits can represent up to \(2^n\) states.
+\subsection{Representation}
+\subsubsection{Binary Representation}
+The \textbf{binary system} is a base-2 system that uses a sequence of bits to represent a number.
+Bits are written left-to-right from \textbf{most significant} to \textbf{least significant} bit.
+
+The first bit is the ``most significant'' bit because it is associated with the highest value in the sequence (coefficient of the highest power of two).
+\begin{itemize}
+    \item The \textbf{least significant bit} (LSB) is at bit index 0.
+    \item The \textbf{most significant bit} (MSB) is at bit index \(n - 1\) in an \(n\)-bit sequence.
+\end{itemize}
+\begin{align*}
+    0000_2 & = 0 & 0100_2 & = 4 & 1000_2 & = 8  & 1100_2 = 12 \\
+    0001_2 & = 1 & 0101_2 & = 5 & 1001_2 & = 9  & 1101_2 = 13 \\
+    0010_2 & = 2 & 0110_2 & = 6 & 1010_2 & = 10 & 1110_2 = 14 \\
+    0011_2 & = 3 & 0111_2 & = 7 & 1011_2 & = 11 & 1111_2 = 15
+\end{align*}
+The subscript 2 indicates that the number is represented using a base-2 system.
+\subsubsection{Hexadecimal Representation}
+The \textbf{hexadecimal system} (hex) is a base-16 system. As we need 16 digits in this system, we use the letters A to F to represent digits 10 to 15.
+
+Hex is a convenient notation when working with digital systems as each hex digit maps to a nibble.
+\begin{align*}
+    0_{16} & = 0000_2 & 4_{16} & = 0100_2 & 8_{16} & = 1000_2 & C_{16} = 1100_2 \\
+    1_{16} & = 0001_2 & 5_{16} & = 0101_2 & 9_{16} & = 1001_2 & D_{16} = 1101_2 \\
+    2_{16} & = 0010_2 & 6_{16} & = 0110_2 & A_{16} & = 1010_2 & E_{16} = 1110_2 \\
+    3_{16} & = 0011_2 & 7_{16} & = 0111_2 & B_{16} & = 1011_2 & F_{16} = 1111_2
+\end{align*}
+\subsubsection{Numeric Literals}
+When a fixed value is declared directly in a program, it is referred to as a \textbf{literal}.
+Generally, numeric literals can be expressed as either binary, decimal, or hexadecimal, so we
+use prefixes to denote various bases. Typically,
+\begin{itemize}
+    \item \textbf{Binary} notation requires the prefix \mintinline{ca65}{0b}
+    \item \textbf{Decimal} notation does not require prefixes
+    \item \textbf{Hexadecimal} notation requires the prefix \mintinline{ca65}{0x}
+\end{itemize}
+For example, \mintinline{ca65}{0x80 |=| 0b10000000 |=| 128}.
+\subsection{Unsigned Integers}
+The \textbf{unsigned integers} represent the set of counting (natural) numbers, starting at 0.
+In the \textbf{decimal system} (base-10), the unsigned integers are encoded using a sequence of decimal digits (0--9).
+
+The decimal system is a \textbf{positional numeral system}, where the contribution of each digit is determined by its position.
+For example,
+\begin{align*}
+    278_{10} & = 2 \times 10^2 &  & + 7 \times 10^1 &  & + 8 \times 10^0 \\
+             & = 2 \times 100  &  & + 7 \times 10   &  & + 8 \times 1    \\
+             & = 200           &  & + 70            &  & + 8             \\
+\end{align*}
+In the \textbf{binary system} (base-2) the unsigned integers are encoded using a sequence of binary digits (0--1)
+in the same manner. For example,
+\begin{align*}
+    10101_2 & = 1 \times 2^4 &  & + 0 \times 2^3 &  & + 1 \times 2^2 &  & + 0 \times 2^1 &  & + 1 \times 2^0 \\
+            & = 1 \times 16  &  & + 0 \times 8   &  & + 1 \times 4   &  & + 0 \times 2   &  & + 1 \times 1   \\
+            & = 16           &  & + 0            &  & + 4            &  & + 0            &  & + 1            \\
+            & = 21_{10}
+\end{align*}
+The range of values an \(n\)-bit binary number can hold when encoding an unsigned integer is 0 to \(2^n - 1\).
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c}
+        \toprule
+        \textbf{No.\ of Bits} & \textbf{Range}                        \\
+        \midrule
+        8                     & \(0\)--\(255\)                        \\
+        16                    & \(0\)--\(\num{65535}\)                \\
+        32                    & \(0\)--\(\num{4294967295}\)           \\
+        64                    & \(0\)--\(\num{18446744073709551615}\) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Range of available values in binary representations.} % \label{}
+\end{table}
+\subsection{Signed Integers}
+Signed integers are used to represent integers that can be positive or negative.
+The following representations allow us to encode negative integers using a sequence of binary bits:
+\begin{itemize}
+    \item Sign-magnitude
+    \item One's complement
+    \item Two's complement (most common)
+\end{itemize}
+\subsubsection{Sign-Magnitude}
+In sign-magnitude representation, the most significant bit encodes the sign of the
+integer. In an 8-bit sequence, the remaining 7-bits are used to
+encode the value of the bit.
+\begin{itemize}
+    \item If the sign bit is 0, the remaining bits represent a positive value,
+    \item If the sign bit is 1, the remaining bits represent a negative value.
+\end{itemize}
+As the sign bit consumes one bit from the sequence, the range of values that can be
+represented by an \(n\)-bit sign-magnitude encoded bit sequence is:
+\begin{equation*}
+    -\left( 2^{n - 1} - 1 \right) \text{ to } 2^{n - 1} - 1
+\end{equation*}
+For 8-bit sequences, this range is: \(-127\) to \(127\).
+
+However, there are some issues with this representation.
+\begin{enumerate}
+    \item There are two ways to represent zero: \mintinline{ca65}{0b10000000 |=| 0}, or \mintinline{ca65}{0b00000000 |=| -0}.
+    \item Arithmetic and comparison requires inspecting the sign bit
+    \item The range is reduced by 1 (due to the redundant zero representation)
+\end{enumerate}
+\subsubsection{One's Complement}
+In one's complement representation, a negative number is represented by
+inverting the bits of a positive number (i.e., \(0 \to 1\) and \(1 \to 0\)).
+
+The range of values are still the same:
+\begin{equation*}
+    -\left( 2^{n - 1} - 1 \right) \text{ to } 2^{n - 1} - 1
+\end{equation*}
+however, this representation tackles the second problem in the previous representation as
+addition is performed via standard binary addition with \textit{end-around carry} (carry bit is added onto result).
+\begin{equation*}
+    a - b = a + \left( \text{\textasciitilde} b \right) + C.
+\end{equation*}
+\subsubsection{Two's Complement}
+In two's complement representation, the most significant bit encodes a negative weighting of
+\(-2^{n - 1}\). For example, in 8-bit sequences, index-7 represents a value of \(-128\).
+
+The two's complement is calculated by adding 1 to the one's complement.
+
+The range of values are:
+\begin{equation*}
+    -2^{n - 1} \text{ to } 2^{n - 1} - 1
+\end{equation*}
+This representation is more efficient than the previous because \mintinline{ca65}{0} has a single representation
+and subtraction is performed by adding the two's complement of the subtrahend.
+\begin{equation*}
+    a - b = a + \left( \text{\textasciitilde} b + 1 \right).
+\end{equation*}
+\subsection{Logical Operators}
+\subsubsection{Boolean Functions}
+A Boolean function is a function whose arguments and results assume values
+from a two-element set, (usually \(\left\{ 0,\: 1 \right\}\) or \mintinline{text}{{false, true}}).
+
+These functions are also referred to as \textit{logical functions} when they operate on bits.
+The most common logical functions available to microprocessors and most programming languages are:
+\begin{itemize}
+    \item Negation: \mintinline{ca65}{|\keyword{NOT}|}
+    \item Conjunction: \mintinline{ca65}{AND}
+    \item Disjunction: \mintinline{ca65}{|\keyword{OR}|}
+    \item Exclusive disjunction: \mintinline{ca65}{|\keyword{XOR}|}
+\end{itemize}
+By convention, we map a bit value of \mintinline{ca65}{0} to \mintinline{ca65}{false}, and a bit value of \mintinline{ca65}{1} to \mintinline{ca65}{true}.
+\subsubsection{Negation}
+\mintinline{ca65}{NOT} is a unary operator that is used to \textbf{invert} a bit.
+It is typically expressed as:
+\begin{itemize}
+    \item \mintinline{ca65}{|\keyword{NOT}|} \(a\)
+    \item \textasciitilde\(a\)
+    \item \(\overline{a}\)
+\end{itemize}
+Truth table:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c}
+        \toprule
+        \textbf{\(a\)} & \mintinline{ca65}{|\keyword{NOT}|} \(a\) \\
+        \midrule
+        0              & 1                                        \\
+        1              & 0                                        \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\subsubsection{Conjunction}
+\mintinline{ca65}{AND} is a binary operator whose output is true if \textbf{both} inputs are \textbf{true}.
+It is typically expressed as:
+\begin{itemize}
+    \item \(a\) \mintinline{ca65}{AND} \(b\)
+    \item \(a\) \mintinline{ca65}{&} \(b\)
+    \item \(a \cdot b\)
+    \item \(a \land b\)
+\end{itemize}
+Truth table:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+        \toprule
+        \textbf{\(a\)} & \textbf{\(b\)} & \textbf{\(a\) \mintinline{ca65}{AND} \(b\)} \\
+        \midrule
+        0              & 0              & 0                                           \\
+        0              & 1              & 0                                           \\
+        1              & 0              & 0                                           \\
+        1              & 1              & 1                                           \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\subsubsection{Disjunction}
+\mintinline{ca65}{|\keyword{OR}|} is a binary operator whose output is true if \textbf{either} input is \textbf{true}.
+It is typically expressed as:
+\begin{itemize}
+    \item \(a\) \mintinline{ca65}{|\keyword{OR}|} \(b\)
+    \item \(a\) \mintinline{ca65}{|\vert|} \(b\)
+    \item \(a + b\)
+    \item \(a \lor b\)
+\end{itemize}
+Truth table:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+        \toprule
+        \textbf{\(a\)} & \textbf{\(b\)} & \(a\) \mintinline{ca65}{|\keyword{OR}|} \(b\) \\
+        \midrule
+        0              & 0              & 0                                             \\
+        0              & 1              & 0                                             \\
+        1              & 0              & 1                                             \\
+        1              & 1              & 1                                             \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\subsubsection{Exclusive Disjunction}
+\mintinline{ca65}{|\keyword{XOR}|} (Exclusive \mintinline{ca65}{|\keyword{OR}|}) is a binary operator whose output is true if \textbf{only one} input is \textbf{true}.
+It is typically expressed as:
+\begin{itemize}
+    \item \(a\) \mintinline{ca65}{|\keyword{XOR}|} \(b\)
+    \item \(a\) \mintinline{ca65}{^} \(b\)
+    \item \(a \oplus b\)
+\end{itemize}
+Truth table:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+        \toprule
+        \textbf{\(a\)} & \textbf{\(b\)} & \(a\) \mintinline{ca65}{|\keyword{XOR}|} \(b\) \\
+        \midrule
+        0              & 0              & 0                                              \\
+        0              & 1              & 1                                              \\
+        1              & 0              & 1                                              \\
+        1              & 1              & 0                                              \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+\subsubsection{Bitwise Operations}
+When applying logical operators to a sequence of bits, the operation is performed in a \textbf{bitwise} manner. The result of each operation is stored in the corresponding bit index also.
+\subsection{Bit Manipulation}
+Often we need to modify individual bits within a byte, \textbf{without} modifying other bits.
+This is accomplished by performing a bitwise operation on the byte using a \textbf{bit mask} or \textbf{bit field}.
+
+These operations can:
+\begin{itemize}
+    \item \textbf{Set} specific bits (change value to \mintinline{ca65}{1})
+    \item \textbf{Clear} specific bits (change value to \mintinline{ca65}{0})
+    \item \textbf{Toggle} specific bits (change values from \(0 \to 1\), or \(1 \to 0\))
+\end{itemize}
+\subsubsection{Setting Bits}
+To \textbf{set} a bit, we take the bitwise \mintinline{ca65}{|\keyword{OR}|} of the byte, with a bit mask
+that has a \textbf{1} in each position where the bit should be set.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/bit_set.pdf}
+    \caption{Setting bits using the logical or.} % \label{}
+\end{figure}
+\subsubsection{Clearing Bits}
+To \textbf{clear} a bit, we take the bitwise \mintinline{ca65}{AND} of the byte, with a bit mask
+that has a \textbf{0} in each position where the bit should be cleared.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/bit_clear.pdf}
+    \caption{Clearing bits using the logical and.} % \label{}
+\end{figure}
+\subsubsection{Toggling Bits}
+To \textbf{toggle} a bit, we take the bitwise \mintinline{ca65}{|\keyword{XOR}|} of the byte, with a bit mask
+that has a \textbf{1} in each position where the bit should be toggled.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/bit_toggle.pdf}
+    \caption{Toggling bits using the logical exclusive or.} % \label{}
+\end{figure}
+Other bitwise operations act on the entire byte.
+\begin{itemize}
+    \item One's complement (bitwise \mintinline{ca65}{|\keyword{NOT}|})
+    \item Two's complement (bitwise \mintinline{ca65}{|\keyword{NOT}|} + 1)
+    \item Shifts
+          \begin{itemize}
+              \item Logical
+              \item Arithmetic (for signed integers)
+          \end{itemize}
+    \item Rotations
+\end{itemize}
+\subsubsection{One's Complement}
+The one's complement of a byte inverts every bit in the operand. This is done by
+taking the bitwise \mintinline{ca65}{|\keyword{NOT}|} of the byte.
+
+Similarly, we can subtract the byte from \mintinline{ca65}{0xFF} to get the one's complement.
+\subsubsection{Two's Complement}
+The two's complement of a byte is the one's complement of the byte plus one.
+Therefore, we can apply take the bitwise \mintinline{ca65}{|\keyword{NOT}|} of the byte, and then add one to it.
+\subsubsection{Shifts}
+Shifts are used to move bits within a byte. In many programming languages this is represented by two greater than \mintinline{ca65}{>>} or two less than \mintinline{ca65}{<<} characters.
+\begin{equation*}
+    a \gg s
+\end{equation*}
+shifts the bits in \(a\) by \(s\) places to the right while adding \mintinline{ca65}{0}'s to the MSB.\
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/logical_right_shift.pdf}
+    \caption{Right shift using \mintinline{ca65}{lsr} in AVR Assembly.} % \label{}
+\end{figure}
+Similarly
+\begin{equation*}
+    a \ll s
+\end{equation*}
+shifts the bits in \(a\) by \(s\) places to the left while adding \mintinline{ca65}{0}'s to the LSB.\
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/logical_left_shift.pdf}
+    \caption{Left shift using \keyword{\ttfamily{lsl}} in AVR Assembly.} % \label{}
+\end{figure}
+When using signed integers, the arithmetic shift is used to preserve the value of the sign bit when shifting.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/arithmetic_right_shift.pdf}
+    \caption{Arithmetic right shift using \keyword{\ttfamily{asr}} in AVR Assembly.} % \label{}
+\end{figure}
+Left shifts are used to multiply numbers by 2, whereas right shifts are used to divide numbers by 2 (with truncation).
+\subsubsection{Rotations}
+Rotatations are used to shift bits with a carry from the previous instruction.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/rotate_left.pdf}
+    \caption{Rotate left using \mintinline{ca65}{rol} in AVR Assembly.} % \label{}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/rotate_right.pdf}
+    \caption{Rotate right using \mintinline{ca65}{ror} in AVR Assembly.} % \label{}
+\end{figure}
+Here the blue bit is carried from the previous instruction, and the carry bit is updated
+to the value of the bit that was shifted out.
+Rotations are used to perform multi-byte shifts and arithmetic operations.
+\subsection{Arithmetic Operations}
+\subsubsection{Addition}
+Addition is performed using the same process as decimal addition except we only use two digits, 0 and 1.
+\begin{enumerate}
+    \item \mintinline{ca65}{0b0 + 0b0 = 0b0}
+    \item \mintinline{ca65}{0b0 + 0b1 = 0b1}
+    \item \mintinline{ca65}{0b1 + 0b1 = 0b10}
+\end{enumerate}
+When adding two 1's, we carry the result into the next bit position as we would with a 10 in decimal addition.
+In AVR Assembly, we can use the \mintinline{ca65}{|\keyword{add}|} instruction to add two bytes. The following
+example adds two bytes.
+\begin{minted}{ca65}
+; Accumulator
+|\keyword{ldi}| r16, 0
+
+; First number
+|\keyword{ldi}| r17, 29
+|\keyword{add}| r16, 17 ; R16 <- R16 + R17 = 0 + 29 = 29
+
+; Second number
+|\keyword{ldi}| r17, 118
+|\keyword{add}| r16, 17 ; R16 <- R16 + R17 = 29 + 118 = 147
+\end{minted}
+Below is a graphical illustration of the above code.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 3cm, keepaspectratio = true]{figures/add.pdf}
+    \caption{Overflow addition using \keyword{\ttfamily{add}} in AVR Assembly.} % \label{}
+\end{figure}
+\subsubsection{Overflows}
+When the sum of two 8-bit numbers is greater than 8-bit (255), an \textbf{overflow} occurs.
+Here we must utilise a second register to store the high byte so that the result is represented as
+a 16-bit number.
+
+To avoid loss of information, a \textbf{carry bit} is used to indicate when an overflow has occurred.
+This carry bit can be added to the high byte in the event that an overflow occurs.
+This is because the carry bit is 0 when the sum is less than 256, and 1 when the sum is greater than 255.
+
+The following example shows how to use the \mintinline{ca65}{adc} instruction to carry the carry bit when an overflow occurs.
+\begin{minted}{ca65}
+; Low byte
+|\keyword{ldi}| r30, 0
+; High byte
+|\keyword{ldi}| r31, 0
+
+; Empty byte for adding carry bit
+|\keyword{ldi}| r29, 0
+
+; First number
+|\keyword{ldi}| r16, 0b11111111
+; Add to low byte
+|\keyword{add}| r30, r16 ; R30 <- R30 + R16 = 0 + 255 = 255, C <- 0
+; Add to high byte
+adc r31, r29 ; R31 <- R31 + R29 + C = 0 + 0 + 0 = 0
+
+; Second number
+|\keyword{ldi}| r16, 0b00000001
+; Add to low byte
+|\keyword{add}| r30, r16 ; R30 <- R30 + R16 = 255 + 1 = 0, C <- 1
+; Add to high byte
+adc r31, r29 ; R31 <- R31 + R29 + C = 0 + 0 + 1 = 1
+\end{minted}
+Therefore the final result is: \mintinline{ca65}{R31|:|R30 |=| 0b00000001|:|0b00000001 |=| 256}.
+Below is a graphical representation of the above code.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 6cm, keepaspectratio = true]{figures/adc.pdf}
+    \caption{Overflow addition using \mintinline{ca65}{adc} in AVR Assembly.} % \label{}
+\end{figure}
+\subsubsection{Subtraction}
+Subtraction is performed using the same process as binary addition, with the
+subtrahend in two's complement form.
+In the case of overflows, the carry bit is discarded.
+\subsubsection{Multiplication}
+Multiplication is understood as the sum of a set of partial products, similar to the process used in decimal multiplication.
+Here each digit of the multiplier is multiplied to the multipicand and each partial product is added to the result.
+
+Given an \(m\)-bit and an \(n\)-bit number, the product is at most \((m+n)\)-bits wide.
+\begin{align*}
+    13 \times 43 & = 00001101_2 \times 00101011_2          \\
+                 & = \begin{aligned}[t]
+                          &   & 00001101_2 & & \times & & 1_2      \\
+                          & + & 00001101_2 & & \times & & 10_2     \\
+                          & + & 00001101_2 & & \times & & 1000_2   \\
+                          & + & 00001101_2 & & \times & & 100000_2
+                     \end{aligned} \\
+                 & = \begin{aligned}[t]
+                          &   & 00001101_2  \\
+                          & + & 00011010_2  \\
+                          & + & 01101000_2  \\
+                          & + & 110100000_2
+                     \end{aligned}                    \\
+                 & = 1000101111
+\end{align*}
+Using AVR assembly, we can use the \mintinline{ca65}{|\keyword{mul}|} instruction to perform multiplication.
+\begin{minted}{ca65}
+; First number
+|\keyword{ldi}| r16, 13
+; Second number
+|\keyword{ldi}| r17, 43
+
+; Multiply
+|\keyword{mul}| r16, r17 ; R1:R0 <- 0b00000010:0b00101111 = 2:47
+\end{minted}
+The result is stored in the register pair \mintinline{text}{R1:R0}.
+\subsubsection{Division}
+Division, square roots and many other functions are very expensive to implement in hardware,
+and thus are typically not found in conventional ALUs, but rather
+implemented in software.
+
+However, there are other techniques that can be used to implement division in hardware.
+By representing the divisor in reciprocal form, we can try to represent the number as
+the sum of powers of 2.
+
+For example, the divisor \(6.4\) can be represented as:
+\begin{equation*}
+    \frac{1}{6.4} = \frac{10}{64} = 10 \times 2^{-6}
+\end{equation*}
+so that dividing an integer \(n\) by \(6.4\) is approximately equivalent to:
+\begin{equation*}
+    \frac{n}{6.4} \approx \left( n \times 10 \right) \gg 6
+\end{equation*}
+When the divisor is not exactly representable as a power of 2 we can use fractional exponents to represent the divisor, however this requires a floating point system implementation which is not provided on the AVR.
 \end{document}
