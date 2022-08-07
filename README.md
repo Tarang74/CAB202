@@ -21,6 +21,7 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 ## Contents
 
 1. Microcontroller Fundamentals
+2. Digital Representations and Operations
 
 ---
 
