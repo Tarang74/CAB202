@@ -1,0 +1,24 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    % DPDT
+    \draw (3, 1.1) node[cute spdt mid arrow] (dpdt1) {};
+    \draw (3, -0.1) node[cute spdt mid arrow] (dpdt2) {};
+    \draw (dpdt1.in) to[short] ++ (-0.5, 0)
+    (dpdt1.out 1) to[short] ++ (0.5, 0)
+    (dpdt1.out 2) to[short] ++ (0.5, 0)
+    (dpdt2.in) to[short] ++ (-0.5, 0)
+    (dpdt2.out 1) to[short] ++ (0.5, 0)
+    (dpdt2.out 2) to[short] ++ (0.5, 0);
+    \draw[densely dashed] (dpdt1.mid) -- (dpdt2.mid);
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,81 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\pgfplotsset{compat=newest}
+
+\usetikzlibrary{arrows.meta, matrix}
+\usepgfplotslibrary{colormaps}
+\usepgfplotslibrary{groupplots}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\def\axisdefaultwidth{8cm}
+\def\axisdefaultheight{4cm}
+\pgfplotsset{every axis/.style={scale only axis}}
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        name = voltage,
+        xticklabels = \empty,
+        ytick = {0.92, 1.08},
+        %
+        yticklabels = {\(t_L\), \(t_H\)},
+        %
+        xmin = 0, xmax = 10,
+        ymin = 0.75, ymax = 1.25,
+        %
+        ylabel = {Voltage},
+        axis lines=left
+    ]
+        \addplot+ [thick, domain=0:10, samples=300, mark=none] {0.01 * sin(deg(1 / 1.2 * pi * x)) + 0.2 * cos(deg(0.7 * pi * x)) - 1 / 4.5 * cos(deg(0.9 * pi * x)) - 1 / 5 * sin(deg(0.8 * pi * x)) + 1};
+        \coordinate (lowleft) at (0, 0.92) {};
+        \coordinate (lowright) at (10, 0.92) {};
+        \coordinate (highleft) at (0, 1.08) {};
+        \coordinate (highright) at (10, 1.08) {};
+        \draw[densely dashed] (lowleft) -- (lowright);
+        \draw[densely dashed] (highleft) -- (highright);
+        \coordinate (high1) at (2.787510423576338, 1.08) {};
+        \coordinate (high2) at (5.130598832251654, 1.08) {};
+        \coordinate (high3) at (9.24310328929806, 1.08) {};
+        \coordinate (low1) at (0.1406287841447682, 0.92) {};
+        \coordinate (low2) at (3.914422480545889, 0.92) {};
+        \coordinate (low3) at (6.389335400875514, 0.92) {};
+    \end{axis}
+    \begin{axis}[
+        name = state,
+        at   = {(voltage.below south west)},
+        anchor=north west,
+        yshift=-1cm,
+        xtick = \empty,
+        ytick = {0, 1},
+        %
+        yticklabels = {\(L\), \(H\)},
+        %
+        xmin = 0, xmax = 10,
+        ymin = 0, ymax = 1.1,
+        %
+        ylabel = {State},
+        axis lines=left,
+        height=1.6cm,
+        width=8cm
+    ]
+    \draw[blue, thick] (low1 |- 0, 0) node (S1) {} --
+    (high1 |- 0, 0) -- (high1 |- 0, 1) node (S2) {} --
+    (low2 |- 0, 1) -- (low2 |- 0, 0) node (S3) {} --
+    (high2 |- 0, 0) -- (high2 |- 0, 1) node (S4) {} --
+    (low3 |- 0, 1) -- (low3 |- 0, 0) node (S5) {} --
+    (high3 |- 0, 0) -- (high3 |- 0, 1) node (S6) {} -- (10, 1);
+\end{axis}
+\draw[densely dashed, red] (low1) -- (S1);
+\draw[densely dashed, red] (high1) -- (S2);
+\draw[densely dashed, red] (low2) -- (S3);
+\draw[densely dashed, red] (high2) -- (S4);
+\draw[densely dashed, red] (low3) -- (S5);
+\draw[densely dashed, red] (high3) -- (S6);
+\end{tikzpicture}
+\end{document}

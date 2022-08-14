@@ -1,0 +1,57 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{colormaps}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        set layers,
+        axis line style={on layer=axis foreground},
+		xmin = -10, xmax = 10,
+		ymin = -10, ymax = 10,
+		%
+		axis equal image,
+		% axis lines = middle,
+        xtick = {-10, -5, 0, 5, 10},
+		ytick = {-10, -5, 0, 5, 10},
+        xticklabels = {\( \), \( \), \(0\), \( \), \( \)},
+        yticklabels = {\( \), \( \), \(0\), \( \), \( \)},
+        extra x tick style = {xticklabel = {\(v_s\)}},
+        extra x ticks = {3},
+        extra y tick style = {yticklabel = {\(i_s\)}},
+        extra y ticks = {3},
+		%
+        xtickmin = -10,
+        xtickmax = 10,
+        grid = both,
+        grid style = {line width = .1pt, draw = gray!10},
+        major grid style = {line width = .2pt, draw = black!30},
+        minor tick num = 4,
+        %
+		xlabel = {\(v\)},
+		ylabel = {\(i\)}
+	]
+    %
+    \draw[<->, blue] (-8, -8) -- (8, 8);
+    \addplot[
+        % color = {rgb:red,30;green,27;blue,98},
+        only marks,
+        mark size = 0.7,
+        blue
+    ]
+    coordinates {
+        (0, 0)
+        (3, 3)
+    };
+    \end{axis}
+\end{tikzpicture}
+\end{document}

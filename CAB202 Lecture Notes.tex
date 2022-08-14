@@ -11,6 +11,9 @@
     escapeinside=||
 }
 
+\usepackage{subcaption}
+\usepackage{multicol}
+
 % Header and footer
 \newcommand{\unitName}{Microprocessors and Digital Systems}
 \newcommand{\unitTime}{Semester 2, 2022}
@@ -611,19 +614,19 @@ Here each digit of the multiplier is multiplied to the multipicand and each part
 
 Given an \(m\)-bit and an \(n\)-bit number, the product is at most \((m+n)\)-bits wide.
 \begin{align*}
-    13 \times 43 & = 00001101_2 \times 00101011_2          \\
+    13 \times 43 & = 00001101_2 \times 00101011_2                \\
                  & = \begin{aligned}[t]
-                          &   & 00001101_2 & & \times & & 1_2      \\
-                          & + & 00001101_2 & & \times & & 10_2     \\
-                          & + & 00001101_2 & & \times & & 1000_2   \\
-                          & + & 00001101_2 & & \times & & 100000_2
+                          &   & 00001101_2 &  & \times &  & 1_2      \\
+                          & + & 00001101_2 &  & \times &  & 10_2     \\
+                          & + & 00001101_2 &  & \times &  & 1000_2   \\
+                          & + & 00001101_2 &  & \times &  & 100000_2
                      \end{aligned} \\
                  & = \begin{aligned}[t]
                           &   & 00001101_2  \\
                           & + & 00011010_2  \\
                           & + & 01101000_2  \\
                           & + & 110100000_2
-                     \end{aligned}                    \\
+                     \end{aligned}                          \\
                  & = 1000101111
 \end{align*}
 Using AVR assembly, we can use the \mintinline{ca65}{|\keyword{mul}|} instruction to perform multiplication.
@@ -655,4 +658,485 @@ so that dividing an integer \(n\) by \(6.4\) is approximately equivalent to:
     \frac{n}{6.4} \approx \left( n \times 10 \right) \gg 6
 \end{equation*}
 When the divisor is not exactly representable as a power of 2 we can use fractional exponents to represent the divisor, however this requires a floating point system implementation which is not provided on the AVR.
+\section{Microcontroller Interfacing}
+\subsection{Logic Levels}
+\subsubsection{Discretisation}
+The process of discretisation translates a continuous signal into a discrete signal (bits).
+As an example, we can translate \textbf{voltage levels} on microcontroller pins into digital \textbf{logic levels}.
+\subsubsection{Logic Levels}
+For digital input/output (IO), conventionally:
+\begin{itemize}
+    \item The voltage level of the positive power supply represents a \textbf{logical 1}, or the \textbf{high state}, and
+    \item \qty{0}{V} (ground) represents a \textbf{logical 0}, or the \textbf{low state}.
+\end{itemize}
+The QUTy is supplied \qty{3.3}{V} so that when a digital output is high,
+the voltage present on the corresponding pin will be around \qty{3.3}{V}.
+Because voltage is a continuous quantity, we must discretise the full range of voltages into logical levels using \textbf{thresholds}.
+\begin{itemize}
+    \item A voltage \textbf{above} the input \textbf{high threshold} \(t_H\) is considered \textbf{high}.
+    \item A voltage \textbf{below} the input \textbf{low threshold} \(t_L\) is considered \textbf{low}.
+\end{itemize}
+The interpretation of a voltage between these states is determined by \textbf{hysteresis}.
+\subsubsection{Hysteresis}
+Hysteresis refers to the property of a system whose state is \textbf{dependent} on
+its \textbf{history}. In electronic circuits, this avoids ambiguity in determining
+the state of an input as it switches between voltage levels.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 5cm, keepaspectratio = true]{figures/hysteresis.pdf}
+    \caption{Example of hysteresis.} % \label{}
+\end{figure}
+Given a transition:
+\begin{itemize}
+    \item If an input is currently in the \textbf{low state}, it has not transitioned to the \textbf{high state} until the voltage crosses the \textbf{high input voltage} threshold.
+    \item If an input is currently in the \textbf{high state}, it has not transitioned to the \textbf{low state} until the voltage crosses the \textbf{low input voltage} threshold.
+\end{itemize}
+It is therefore always preferrable to drive a digital input to an unambiguous voltage level.
+\subsection{Electrical Quantities}
+\subsubsection{Voltage}
+\textbf{Voltage} \(v\) measures the electrical \textit{potential difference} between two points in a circuit, measured in \textbf{Volts (\unit{V})}.
+\begin{itemize}
+    \item Voltage is measured across a circuit element, or between two points in a circuit, most commonly with respect to a \qty{0}{V} reference (ground).
+    \item It represents the \textbf{potential} of the electrical system to do \textbf{work}.
+\end{itemize}
+\subsubsection{Current}
+\textbf{Current} \(i\) measures the \textit{rate of flow of electrical charge} through a circuit, measured in \textbf{Amperes (\unit{A})}.
+\begin{itemize}
+    \item Current is measured through a circuit element.
+\end{itemize}
+\subsubsection{Power}
+\textbf{Power} \(p\) is the rate of energy transferred per unit time, measured in \textbf{Watts (\unit{W})}.
+Power can be determined through the equation
+\begin{equation*}
+    p = v i.
+\end{equation*}
+\subsubsection{Resistance}
+\textbf{Resistance} \(R\) is a property of a material to \textit{resist the flow of current}, measured in \textbf{Ohms (\unit{\ohm})}.
+Ohm's law states that the voltage across a component is proportional to the current that flows through it:
+\begin{equation*}
+    v = i R.
+\end{equation*}
+Note that not all circuit elements are resistive (or Ohmic), such that they
+do not follow Ohm's law, this can be seen in diodes.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[height=4.5cm]{figures/vi_ohmic.pdf}
+        \caption{VI curve for Ohmic components.}
+    \end{subfigure}
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[height=4.5cm]{figures/vi_diode.pdf}
+        \caption{VI curve for diodes.}
+    \end{subfigure}
+    \caption{Voltage-current characteristic curves for various components.}
+\end{figure}
+Although the wires used to connect a circuit are resistive, we usually assume that they are ideal, that is,
+they have zero resistance.
+\subsection{Electrical Components}
+\subsubsection{Resistors}
+A \textbf{resistor} is a circuit element that is designed to have a specific resistance \(R\).
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2.5cm, keepaspectratio = true]{figures/resistor.pdf}
+    \caption{Resistor circuit symbol.} % \label{}
+\end{figure}
+\subsubsection{Switches}
+A \textbf{switch} is used to connect and disconnect different elements in a circuit. It can be \textbf{open}
+or \textbf{closed}.
+\begin{itemize}
+    \item In the \textbf{open} state, the switch \textbf{will not conduct}\footnote{Conductance is a measure of the ability for electric charge to flow in a certain path.} current
+    \item In the \textbf{closed} state, the switch \textbf{will conduct} current
+\end{itemize}
+Switches can take a variety of forms:
+\begin{itemize}
+    \item \textbf{Poles} --- the number of circuits the switch can control.
+    \item \textbf{Throw} --- the number of output connections each pole can connect its input to.
+    \item Momentary or toggle action
+    \item Different form factors, e.g., push button, slide, toggle, etc.
+\end{itemize}
+Switches are typically for user input.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[width=2.5cm]{figures/spst.pdf}
+        \caption{Single pole single throw switch.}
+    \end{subfigure}
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[width=2.5cm]{figures/spdt.pdf}
+        \caption{Single pole double throw switch.}
+    \end{subfigure}
+
+    \vspace*{5ex}
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[width=2.5cm]{figures/dpst.pdf}
+        \caption{Double pole single throw switch.}
+    \end{subfigure}
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[width=2.5cm]{figures/dpdt.pdf}
+        \caption{Double pole double throw switch.}
+    \end{subfigure}
+    \caption{Various types of switches.}
+\end{figure}
+\subsubsection{Diodes}
+A \textbf{diode} is a semiconductor device that conducts current in
+only one direction: from the \textbf{anode} to the \textbf{cathode}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 2cm, keepaspectratio = true]{figures/diode.pdf}
+    \caption{Diode symbol.} % \label{}
+\end{figure}
+Diodes are a non-Ohmic device:
+\begin{itemize}
+    \item When \textbf{forward biased}, a diode \textbf{does} conduct current, and the anode-cathode voltage
+          is equal to the diodes \textbf{forward voltage}.
+    \item When \textbf{reverse biased}, a diode \textbf{does not} conduct current, and the cathode-anode voltage
+          is equal to the \textbf{applied voltage}.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[height=3.5cm]{figures/diode_forward_bias.pdf}
+        \caption{Forward biased diode. \\\(v_{AK} = v_f\) and \(i > 0\).}
+    \end{subfigure}
+    \begin{subfigure}{0.47\linewidth}
+        \centering
+        \includegraphics[height=3.5cm]{figures/diode_reverse_bias.pdf}
+        \caption{Reverse biased diode. \\\(v_{KA} > 0\) and \(i = 0\).}
+    \end{subfigure}
+    \caption{Diodes in forward and reverse bias.}
+\end{figure}
+A diode is only forward biased when the applied anode-cathode voltage \textbf{exceeds} the forward voltage \(v_f\).
+A typical forward voltage \(v_f\) for a silicon diode is in the range \qtyrange{0.6}{0.7}{V}, whereas for
+Light Emitting Diodes (LEDs), \(v_f\) ranges between \qtyrange{2}{3}{V}.
+\subsubsection{Integrated Circuit}
+An \textbf{integrated circuit} (IC) is a set of electronic circuits (typically) implemented on a
+single piece of semiconductor material, usually silicon. ICs comprise of hundreds to
+many thousands of transistors, resistors and capacitors; all implemented on silicon.
+ICs are \textbf{packaged}, and connections to the internal circuitry are exposed via \textbf{pins}.
+
+In general, the specific implementation of the IC is not important, but
+rather the \textbf{function of the device} and how it \textbf{interfaces} with the rest of the circuit.
+Hence ICs can be treated as a functional \textbf{black box}.
+
+For digital ICs:
+\begin{itemize}
+    \item \textbf{Input pins} are typically \textbf{high-impedance}, and they appear as an open circuit.
+    \item \textbf{Output pins} are typically \textbf{low-impedance}, and will actively drive the voltage
+          on a pin and any connected circuitry to a \textbf{high} or \textbf{low} state. They can also
+          drive connected loads.
+\end{itemize}
+\subsection{Digital Outputs}
+Digital output interfaces are designed to be able to drive connected circuitry to one of states,
+high, or low, however, the appropriate technique is \textbf{context specific}.
+When referring to digital outputs, we will refer to the states of a net. A \textbf{net}
+is defined as the common point of connection of multiple circuit components.
+
+In this section we will consider:
+\begin{itemize}
+    \item What kind of load the output drives?
+    \item Could more than one device be attempting to actively drive the net
+          to a specific logic level?
+\end{itemize}
+\subsubsection{Push-Pull Outputs}
+A push-pull digital output is the most common form of output used in digital outputs.
+The \textbf{output driver} \(A\) \textit{drives} the \textbf{output state} \(Y\) to:
+\begin{itemize}
+    \item \textbf{HIGH} by connecting the output net to the supply voltage \(+\unit{V}\).
+    \item \textbf{LOW} by connecting the output net to the ground voltage GND (\qty{0}{V}).
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/push_pull.pdf}
+    \caption{Push-pull output.} % \label{}
+\end{figure}
+Hence the output state \(Y\) is determined by the logic level of the output driver \(A\).
+\begin{equation*}
+    Y = A.
+\end{equation*}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c | c}
+        \toprule
+        \textbf{\(A\)} & \textbf{\(Y\)} \\
+        \midrule
+        LOW            & LOW            \\
+        HIGH           & HIGH           \\
+        \bottomrule
+    \end{tabular}
+    \caption{Truth table for a push-pull digital output.} % \label{}
+\end{table}
+The push-pull output \(Y\) can both source and sink current from the connected net.
+\subsubsection{High-Impedance Outputs}
+In many instances, a digital output is required to be placed in a high-impedance (HiZ) state.
+This is accomplished by using an \textbf{output enable} (OE) signal.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/HiZ.pdf}
+    \caption{High-impedance output.} % \label{}
+\end{figure}
+\begin{itemize}
+    \item When the OE signal is \textbf{HIGH}, the output state \(Y\) is determined by the output driver \(A\).
+    \item When the OE signal is \textbf{LOW}, the output state \(Y\) is in a \textbf{high-impedance} state.
+\end{itemize}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c | c}
+        \toprule
+        \textbf{\(A\)} & \textbf{OE} & \textbf{\(Y\)} \\
+        \midrule
+        LOW            & LOW         & HiZ            \\
+        HIGH           & LOW         & HiZ            \\
+        LOW            & HIGH        & LOW            \\
+        HIGH           & HIGH        & HIGH           \\
+        \bottomrule
+    \end{tabular}
+    \caption{Truth table for a push-pull digital output.} % \label{}
+\end{table}
+When the output is in \textbf{HiZ state}:
+\begin{itemize}
+    \item The output is an effective \textbf{open circuit}, meaning it has \textbf{no effect} on the rest of the circuit.
+    \item The voltage on the output net is determined by the \textbf{other circuitry} connected to the net.
+\end{itemize}
+HiZ outputs are typically used when multiple need to signal over the same wire(s).
+\subsubsection{Pull-up and Pull-down Resistors}
+When \textbf{no devices} are actively driving a net (e.g., all connected outputs are in the HiZ state),
+the state of the net is not well-defined. Hence we can use a \textbf{pull-up} or \textbf{pull-down} resistor
+to ensure that the state of the pin is always \textbf{well-defined}.
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 4cm, keepaspectratio = true]{figures/pullup_resistor.pdf}
+        \caption{Pull-up resistor.} % \label{}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 4cm, keepaspectratio = true]{figures/pulldown_resistor.pdf}
+        \caption{Pull-down resistor.} % \label{}
+    \end{figure}
+\end{multicols}
+\begin{itemize}
+    \item When \textbf{no circuitry} is actively driving the net, the resistor will passively pull the voltage to either the voltage supply, or ground.
+    \item When \textbf{another device} actively drives the net, the active device defines the voltage of the net. Hence the current from the resistor is simply sourced
+    or sunk by the \textbf{active device}.
+\end{itemize}
+The resistors used as pull-up and pull-down resistors are typically in the \unit{k\ohm} range.
+\subsubsection{Open-Drain Outputs}
+Multiple push-pull outputs should never be connected to the same net
+as when one output is driven HIGH and another is driven LOW,
+an effective short circuit is created and one or more devices may be damaged.
+While push-pull outputs with an output enable may be used,
+the timing must be carefully managed.
+
+Hence a more robust solution is to use open-drain outputs.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 4cm, keepaspectratio = true]{figures/open_drain.pdf}
+    \caption{Open-drain output.} % \label{}
+\end{figure}
+An open-drain output is either:
+\begin{itemize}
+    \item In the \textbf{high-impedance} state, where the pull-up resistor is used to pull the net to the \textbf{high state} when the net is \textbf{not driven low}.
+    \item \textbf{Connected to ground}, when the net is \textbf{driven low}.
+\end{itemize}
+\subsection{Microcontroller Pins}
+Microcontrollers are interfaced via their exposed pins.
+These pins are the only means to access inputs and outputs, and
+they are used to interface with other electronic circuits in order to achieve a required functionality.
+Pins can be used for:
+\begin{itemize}
+    \item General purpose input and output (GPIO) --- pin represents a digital state
+    \item Peripheral functions
+    \item Other functions (power supply, reset input, clock input, etc.)
+\end{itemize}
+Pins are typically organised into groups of related IO banks,
+referred to as \textbf{ports} on the AVR microcontroller.
+
+These ports and pins are assigned an alphanumeric identifier, (e.g., PB7 for pin 7 on port B).
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 8cm, keepaspectratio = true]{figures/PORT_block_diagram.pdf}
+    \caption{ATtiny1626 PORT block diagram.} % \label{}
+\end{figure}
+To summarise this diagram:
+\begin{itemize}
+    \item The data direction register (DIR) controls the push-pull output enable.
+    \item The output driver register (OUT) drives the output state.
+    \item The input register (IN) reads the output state.
+    \item The internal pull-up register enabled through software.
+    \item The physical voltage on the pin can be routed to an analogue to digital converter (ADC)
+    \item Other peripheral functions can override port pin configurations and the output state.
+\end{itemize}
+\subsubsection{Configuring an Output in Assembly}
+\begin{enumerate}
+    \item Place the port pin in a \textbf{safe initial state}
+    by writing to the OUT register (HIGH or LOW depending on the context).
+    \item Configure the port pin as an output by \textbf{setting} the corresponding bits in the DIR register.
+    \item Set the desired pin state by writing to the OUT register.
+\end{enumerate}
+\begin{minted}{ca65}
+; Load macros for easy access to port data space addresses.
+#include <avr/io.h>
+
+; Bitmask for pin 5
+|\keyword{ldi}| r16, PIN5_bm
+
+; Set initial safe state
+|\keyword{sts}| PORTB_OUTCLR, r16 ; LOW if active HIGH
+|\keyword{sts}| PORTB_OUTSET, r16 ; HIGH if active LOW
+
+; Enable output
+|\keyword{sts}| PORTB_DIRSET, r16 ; Enable output on PB5
+
+; Set output state to desired value
+|\keyword{sts}| PORTB_OUTSET, r16 ; Set state of PB5 to HIGH
+\end{minted}
+\subsubsection{Configuring an Input in Assembly}
+\begin{enumerate}
+    \item If required, enable the internal pull-up resistor by \textbf{setting}
+    the PULLUPEN bit in the \linebreak corresponding PINnCTRL register.
+    \item Read the IN register to get the current state of the pin.
+    \item Isolate the relevant pin using the AND operator.
+\end{enumerate}
+\begin{minted}{ca65}
+; Load macros for easy access to port data space addresses.
+#include <avr/io.h>
+
+; Bitmask for pin 5
+|\keyword{ldi}| r16, PIN5_bm
+
+; Enable internal pull-up resistor if required
+|\keyword{sts}| PORTB_PIN5CTRL, r16
+
+; Read output state from data space
+|\keyword{lds}| r17, PORTA_IN
+; Read output state using virtual PORT
+|\keyword{in}| r17, VPORTA_IN
+
+; Isolate desired pin
+|\keyword{andi}| r17, r16
+\end{minted}
+\subsubsection{Peripheral Multiplexing}
+Pins can be used to connect internal peripheral functions
+to external devices.
+As microcontrollers have more peripheral functions than available pins,
+peripheral functions are typically multiplexed onto pins.
+\begin{definition}[Multiplexing]
+    Multiplexing is a method by which \textbf{multiple peripheral} \linebreak \textbf{functions}
+    are mapped to the \textbf{same pin}.
+    In this scenario, only one function can be enabled at a time, and the pin
+    cannot be used for GPIO\@.
+\end{definition}
+\begin{itemize}
+    \item Peripheral functions can be mapped to different \textbf{sets of pins} to provide
+    flexibility and to avoid clashes when multiple peripherals are used in
+    an application.
+    \item When enabled, peripheral functions \textbf{override} standard port functions.
+    \item The \textbf{Port Multiplexer} (PORTMUX) is used to select which
+    \textbf{pin set} should be used by a peripheral.
+    \item Certain peripherals can have their inputs/outputs mapped to different
+    \textbf{sets of pins} through the PORTMUX\@.
+\end{itemize}
+Note that we cannot re-map a single peripheral function to another pin, but must consider the entire set.
+\subsection{Interfacing to Simple IO}
+\subsubsection{Driving LEDs}
+The \textbf{brightness} of an LED is proportional to the \textbf{current}
+passing through it. As LEDs are non-Ohmic, we cannot drive them directly
+with a voltage as this would result in an uncontrolled flow of current that
+may damage the LED or driver.
+
+Instead, LEDs are paired with a \textbf{series resistor} to limit the flow of current.
+The appropriate current is dependent on the specific LED that is used
+and the capability of the driver device (microcontroller).
+A typical indictor LED requires a current of \qtyrange{1}{2}{mA}.
+\subsubsection{Interfacing to LEDs}
+An LED can be driven in two different configurations from a microcontroller pin:
+\begin{itemize}
+    \item \textbf{active high}; in which case the LED is \textbf{lit} when the pin is \textbf{HIGH}.
+    \item \textbf{active low}; in which case the LED is \textbf{lit} when the pin is \textbf{LOW}.
+\end{itemize}
+Both of these configurations have their benefits, and the best configuration depends entirely on the context.
+\pagebreak
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 4cm, keepaspectratio = true]{figures/active_high_LED.pdf}
+        \caption{LED in an active high configuration.} % \label{}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 4cm, keepaspectratio = true]{figures/active_low_LED.pdf}
+        \caption{LED in an active low configuration.} % \label{}
+    \end{figure}
+\end{multicols}
+On the QUTy, the LED display is driven in the \textbf{active low} configuration.
+This has a number of advantages:
+\begin{itemize}
+    \item If the internal pull-up resistors are mistakenly enabled, no current will
+    flow into the LEDs.
+    \item The microcontroller pins can sink higher currents than they can source,
+    allowing us to drive the display to a higher brightness.
+    \item The display used on the QUTy has a common anode configuration, hence we must use an
+    active low configuration to drive the display segments independently.
+\end{itemize}
+An LED is an example of a simple \textbf{digital output}, as we can map \textbf{logical states}
+to \textbf{LED states} (lit or unlit) for a digital output.
+\subsubsection{Switches as Digital Inputs}
+The state of a switch can be used to \textbf{set} the state of a pin.
+As the switch has two states (open or closed), these can be mapped directly to
+\textbf{logical states}.
+
+This can be done by connecting the switch between the pin and voltage source
+representing one of the logic levels (ground or a positive supply).
+\begin{multicols}{2}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 5cm, keepaspectratio = true]{figures/active_high_switch.pdf}
+        \caption{Switch in an active high \\ configuration.} % \label{}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[height = 5cm, keepaspectratio = true]{figures/active_low_switch.pdf}
+        \caption{Switch in an active low configuration.} % \label{}
+    \end{figure}
+\end{multicols}
+\begin{itemize}
+    \item When the switch is \textbf{open}, the pull-up/pull-down resistor is used to define the state of the switch.
+    \item When the switch is \textbf{closed}, the state of the pin is defined by the voltage connected to via the switch.
+\end{itemize}
+\subsubsection{Interfacing to Switches}
+As with LEDs, we can interface switches to microcontroller pins in two different configurations:
+\begin{itemize}
+    \item \textbf{active high}; in which case the pin is \textbf{HIGH} when the switch is \textbf{closed}.
+    \item \textbf{active low}; in which case the pin is \textbf{LOW} when the switch is \textbf{closed}.
+\end{itemize}
+An \textbf{active low} configuration is usually preferred as:
+\begin{itemize}
+    \item it allows for the utilisation of an \textbf{internal pull-up resistor} that is commonly
+    implemented in microcontrollers.
+    \item It eliminates the risk of unsafe voltages being applied to the pin from the power supply in an active high configuration.
+    \item It is easier to access a ground reference on a circuit board.
+\end{itemize}
+\subsubsection{Interfacing to Integrated Circuits}
+For digital ICs,
+\begin{itemize}
+    \item \textbf{Inputs} are typically \textbf{high impedance}
+    \item \textbf{Outputs} are typically \textbf{push-pull}
+\end{itemize}
+This generally means that we can interface an IC by connecting its pins directly to the pins of a microcontroller.
+\begin{itemize}
+    \item For \textbf{IC inputs}, the microcontroller pin is configured as an \textbf{output},
+    and the \textbf{microcontroller sets} the logic level of the net.
+    \item For \textbf{IC outputs}, the microcontroller pin is configured as an \textbf{input},
+    and the \textbf{IC sets} the logic level of the net.
+\end{itemize}
+As microcontroller pins are typically configured as \textbf{inputs on reset}, a
+pull-up/pull-down resistor may be required if it is important for an IC input to
+have a \textbf{known state} prior to the configuration of the relevant microcontroller pins as outputs.
 \end{document}

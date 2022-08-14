@@ -1,0 +1,21 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{siunitx}
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    \draw (0, 0) node[ieeestd buffer port] (b) {};
+    \draw (b.up) -- ++ (0, 0.5) node[vcc] {\(+\unit{V}\)};
+    \draw (b.down) -- ++ (0, -0.5) node[rground] (gnd) {};
+    \draw[draw=none] (gnd.south) -- ++ (0, -0.4) node {GND};
+    \draw (b.in) node[label={[label distance=0.5]180:\(A\)}] {};
+    \draw (b.out) node[label={[label distance=0.5]0:\(Y\)}] {};
+\end{circuitikz}
+\end{document}

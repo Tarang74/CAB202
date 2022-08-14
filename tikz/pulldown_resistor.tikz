@@ -1,0 +1,21 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    \draw (0, 0) node[ieeestd buffer port] (b) {};
+    \draw (b.up) -- ++ (0, 1) node[label={90:OE}] {};
+    \draw (b.in) node[label={[label distance=0.5]180:\(A\)}] {};
+    \draw (b.out) to[openbarrier, -*] ++ (1, 0) node[label={[label distance=0.5]0:\(Y\)}] {}
+    to[R, l={pull-down}] ++ (0, -2) node[rground] (gnd) {};
+    \draw[draw=none] (gnd.south) -- ++ (0, -0.4) node {GND};
+\end{circuitikz}
+\end{document}
+

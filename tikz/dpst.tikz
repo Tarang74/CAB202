@@ -1,0 +1,22 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    % DPST
+    \draw (3, 1.1) node[cuteclosingswitchshape] (dpst1) {};
+    \draw (3, -0.1) node[cuteclosingswitchshape] (dpst2) {};
+    \draw (dpst1.in) to[short] ++ (-0.5, 0)
+    (dpst1.out) to[short] ++ (0.5, 0)
+    (dpst2.in) to[short] ++ (-0.5, 0)
+    (dpst2.out) to[short] ++ (0.5, 0);
+    \draw[densely dashed] (dpst1.mid) -- (dpst2.mid);
+\end{circuitikz}
+\end{document}
