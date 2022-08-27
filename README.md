@@ -23,6 +23,7 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 1. Microcontroller Fundamentals
 2. Digital Representations and Operations
 3. Microcontroller Interfacing
+4. Assembly Programming
 
 ---
 
