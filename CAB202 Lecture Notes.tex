@@ -16,6 +16,7 @@
 
 \usepackage{subcaption}
 \usepackage{multicol}
+\usepackage{multirow}
 
 % Header and footer
 \newcommand{\unitName}{Microprocessors and Digital Systems}
@@ -1694,4 +1695,520 @@ main_loop:
     |\keyword{pop}| r0
 \end{minted}
 Note that it is preferrable to return values using registers.
+\section{C Programming}
+C is a programming language developed in the early 1970s by Dennis Richie.
+C is a compiled language, meaning that a separate program is used to
+efficiently translate the source code into assembly.
+Its compilers are capable of targetting a wide variety of microprocessor architectures
+and hence it is used to implement all major operating system kernels.
+Compared to many other languages, C is a very efficient programming
+language as its constructs map directly onto machine instructions.
+\subsection{Introduction}
+\subsubsection{Main Function}
+C is a procedural language and hence all code subsides in a procedure (known as a \textbf{function}).
+In C, the \mintinline{c}{main} function is the \textbf{entry point} to the program.
+Program execution will generally begin in this function, where we can make calls to other functions.
+\begin{minted}{c}
+int main()
+{
+    // Function body
+    return 0;
+}
+\end{minted}
+The purpose of returning a zero at the end of the \mintinline{c}{main} function
+is to signify the \textbf{exit status code} of the process. An exit status of \mintinline{c}{0} is traditionally
+used to indicate success, while all non-zero values indicate failure.
+\subsubsection{Statements}
+C programs are made up of statements. Statements are placed within scopes (indicated by braces (\mintinline{c}{{}}))
+and are executed in the order they are placed. All statements in C must terminate with a semicolon (\mintinline{c}{;}).
+Although assembly instructions translate to a single OPCODE, a single C statement can translate to multiple OPCODEs.
+\begin{minted}{c}
+int main()
+{
+    int x = 3;
+    {
+        int y = 4;
+        x = x + y;
+    }
+    // x is now 7
+    // y is no longer in scope
+    return 0;
+}
+\end{minted}
+\subsubsection{Comments}
+C supports two styles of comments. The first of these are known as ``C-style comments'', which
+allow multi-line/block comments. Multi-line comments use the \mintinline{c}{/* */} syntax.
+\begin{minted}{c}
+/*
+    This is a multi-line comment.
+    It can span multiple lines.
+*/
+\end{minted}
+The second style is known as ``C++-style comments'', which allow single-line comments.
+These comments are denoted by the \mintinline{c}{//} syntax.
+\begin{minted}{c}
+// This is a single-line comment.
+int x = 3; // It can be placed after a statement.
+\end{minted}
+All comments in C are ignored by the compiler.
+\section{Variables}
+Variables are used to temporarily store values in memory.
+Variables have a \textbf{type} and a \textbf{name} and must be declared before use.
+\subsection{Declaration}
+To declare a variable in C, we must specify the type and name of that variable.
+\begin{minted}{c}
+int x;
+\end{minted}
+This variable can then be \textbf{assigned to} using the \mintinline{c}{=} operator.
+\begin{minted}{c}
+x = 4;
+\end{minted}
+\subsection{Initialisation}
+To optionally assign a value during declaration, we can apply the assignment operator after
+the declaration. This is known as a variable \textbf{initialisation}, as we are assigning an initial value to the variable.
+\begin{minted}{c}
+int x = 4;
+\end{minted}
+Note that using \textbf{uninitialised variables} results in \textbf{unspecified behaviour} in C, meaning that
+the value of such variables is unpredictable.
+\subsection{Types}
+While AVR assembly supports 8-bit registers, C supports larger data types by treating them as a sequence of bytes.
+We can also create compound data types with \mintinline{c}{struct} and \mintinline{c}{union}.
+\subsubsection{Type Specifiers}
+Type specifiers in declarations define the type of the variable.
+The \mintinline{c}{signed char}, \mintinline{c}{signed int}, and
+\mintinline{c}{signed short int}, \mintinline{c}{signed long int} types, together with their \mintinline{c}{unsigned} variants
+and \mintinline{c}{enum}, are all known as \textbf{integral} types.
+\mintinline{c}{float}, \mintinline{c}{double}, and \mintinline{c}{long double} are known as \textbf{floating} or \textbf{floating-point} types.
+Arithmetic between
+
+The following table summarises various numeric types in C\@:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+        \toprule
+        \textbf{Description}           & \textbf{Size} & \textbf{Equivalent Definitions}                              \\
+        \midrule
+        Character data                 & \qty{1}{B}    & \mintinline{c}{signed char c; char c;}                       \\
+        Signed short                   & \qty{2}{B}    & \mintinline{c}{signed short int s; signed short s; short s;} \\
+        Unsigned short                 & \qty{2}{B}    & \mintinline{c}{unsigned short int us; unsigned short us;}    \\
+        Signed integer                 & \qty{4}{B}    & \mintinline{c}{signed int i; signed i; int i;}               \\
+        Unsigned integer               & \qty{4}{B}    & \mintinline{c}{unsigned int ui; unsigned ui;}                \\
+        Signed long                    & \qty{8}{B}    & \mintinline{c}{signed long int l; signed long l; long l;}    \\
+        Unsigned long                  & \qty{8}{B}    & \mintinline{c}{unsigned long int ul; unsigned long ul;}      \\
+        Single precision floating      & \qty{4}{B}    & \mintinline{c}{float f;}                                     \\
+        Double precision floating      & \qty{8}{B}    & \mintinline{c}{double d;}                                    \\
+        Long double precision floating & \qty{16}{B}   & \mintinline{c}{long double ld;}                              \\
+        \bottomrule
+    \end{tabular}
+    % \caption{} % \label{}
+\end{table}
+Note that the size of these types is not necessarily the same across platforms, hence it is discouraged to use these keywords for
+platform specific tasks. \emph{See the section on \hyperref[sec:exact_width_types]{Exact Width Types} for more information}.
+\subsubsection{Type Qualifiers}
+Types can be qualified with additional keywords to modify the properties of
+the identifier. Three common qualifiers are \textbf{const}, \textbf{static}, and \textbf{volatile}.
+\begin{itemize}
+    \item \mintinline{c}{const} --- indicates that the variable is \textbf{constant} and cannot be modified.
+    \item \mintinline{c}{static} --- indicates that the variable has a global lifetime (maintains value between function invocations).
+    \item \mintinline{c}{volatile} --- indicates that the variable can be modified or accessed by other programs or hardware.
+\end{itemize}
+\subsubsection{Portable Types}
+C has a set of standard types that are defined in the language specification,
+however the type specifiers shown above may have different storage sizes depending on the platform.
+Although this may be insignificant for most platforms, microcontrollers
+use specific sizes for registers, meaning it is important to refer to the correct
+type specifiers when declaring a variable.
+\subsubsection{Exact Width Types}\label{sec:exact_width_types}
+The standard integer (\mintinline{c}{stdint.h}) library provides \textbf{exact-width} type definitions that are specific to
+the development platform. This ensures that variables can be initialised with the correct size on any platform.
+\begin{minted}{c}
+#include <stdint.h>
+
+int main()
+{
+    int8_t i8;
+    int16_t i16;
+    int32_t i32;
+    int64_t i64;
+
+    uint8_t ui8;
+    uint16_t ui16;
+    uint32_t ui32;
+    uint64_t ui64;
+
+    return 0;
+}
+\end{minted}
+\subsubsection{Floating-Point Types}
+The \mintinline{c}{float} and \mintinline{c}{double} types can store \textbf{floating-point} value types in C.
+Their implementation allows for variable levels of precision, i.e., extremely large and extremely small values.
+These types are very useful on systems with a floating point unit (FPU) or equivalent.
+
+As the ATtiny1626 does not have an FPU, arithmetic involving floating point values is highly inefficient. Therefore,
+integer arithmetic should be utilised when possible. Note that a single floating point number or operation causes
+the entire floating point library to be included which can require a large amount of memory.
+\section{Literals}
+\subsection{Integer Prefixes}
+Integer literals are assumed to be base 10 unless a prefix is specified. C supports
+all of the following prefixes:
+\begin{itemize}
+    \item \textbf{Binary} (base 2) --- \mintinline{c}{0b}
+    \item \textbf{Octal} (base 8) --- \mintinline{c}{0}
+    \item \textbf{Decimal} (base 10) --- no prefix
+    \item \textbf{Hexadecimal} (base 16) --- \mintinline{c}{0x}
+\end{itemize}
+\subsection{Integer Suffixes}
+Integer literals can be suffixed to specify the size/type of the value:
+\begin{itemize}
+    \item \textbf{Unsigned} --- \mintinline{c}{U}
+    \item \textbf{Long} --- \mintinline{c}{L}
+    \item \textbf{Long Long} --- \mintinline{c}{LL}
+\end{itemize}
+Suffixes are generally only required when clarifying ambiguity of values where the user wishes to use a different type than the default type.
+\begin{minted}{c}
+#include <stdio.h>
+
+int main()
+{
+    printf("%d\n", 2147483648); // Treated as signed integer and throws warning
+    printf("%d\n", 2147483648U); // Treated as unsigned integer
+
+    return 0;
+}
+\end{minted}
+\subsection{Floating Point Suffixes}
+As with integer types, floating point values can also be suffixed to specify which type to use.
+\begin{itemize}
+    \item \textbf{Float} --- \mintinline{c}{f}
+    \item \textbf{Double} --- \mintinline{c}{d}
+\end{itemize}
+\subsection{Character and String Literals}
+\begin{itemize}
+    \item \textbf{Character} --- surrounded by single quotes \mintinline{c}{'A'}
+    \item \textbf{String} --- surrounded by double quotes \mintinline{c}{"Hello World"}
+\end{itemize}
+\subsection{Flow Control}
+\subsubsection{If Statements}
+C provides a standard branching control structure known as an \mintinline{c}{if} statement.
+This structure tests a condition and executes a block of code if that condition is \textbf{true}.
+\begin{minted}{c}
+if (condition)
+{
+    // Code to execute if condition is true
+}
+\end{minted}
+This structure can be nested and also supports \mintinline{c}{else} and \mintinline{c}{else if} statements.
+\begin{minted}{c}
+if (x > 1)
+{
+    // Code to execute if x is greater than 1
+    if (x < 10)
+    {
+        // Code to execute if x is greater than 1 and less than 10
+    }
+} else if (x < -1)
+{
+    // Code to execute if x is less than -1
+    if (x > -10)
+    {
+        // Code to execute if x is less than -1 and greater than -10
+    }
+} else
+{
+    // Code to execute if x is not greater than 1 and not less than -1
+}
+\end{minted}
+\subsubsection{While Loops}
+The simplest loop structure in C is achieved by using a \mintinline{c}{while} loop.
+This loop executes a block of code while the condition is \textbf{true}.
+\begin{minted}{c}
+while (condition)
+{
+    // Code to execute while condition is true
+}
+\end{minted}
+An \mintinline{c}{do} while loop is similar to a \mintinline{c}{while} loop, but the loop will execute at least once.
+\begin{minted}{c}
+do
+{
+    // Code to execute at least once
+} while (condition);
+\end{minted}
+This loop structure is typically accompanied by a looping variable known as an iterator:
+\begin{minted}{c}
+int i = 0; // Iterator
+
+// Execute code 10 times
+while (i < 10)
+{
+    // Code to execute while i is less than 10
+
+    i++; // Increment i by 1
+}
+\end{minted}
+\subsubsection{For Loops}
+\mintinline{c}{for} loops are similar to \mintinline{c}{while} loops, but they usually result in more understandable code.
+\begin{minted}{c}
+for (initialisation; condition; increment)
+{
+    // Code to execute while condition is true
+}
+\end{minted}
+Note the initialisation and increment statements are optional, and while the condition statement is also optional,
+we must ensure that the loop can terminate from within the structure (see next section).
+\subsubsection{Break and Continue Statements}
+\mintinline{c}{break} and \mintinline{c}{continue} statements are used to terminate a loop early.
+\begin{minted}{c}
+for (int i = 0; i < 10; i++)
+{
+    if (i == 5)
+    {
+        break; // Terminate loop early
+    }
+    printf("%d\n", i);
+}
+\end{minted}
+\begin{minted}{c}
+for (int i = 0; i < 10; i++)
+{
+    if (i == 5)
+    {
+        continue; // Skip current iteration and continue with next iteration
+    }
+    printf("%d\n", i);
+}
+\end{minted}
+If the loop is nested within another loop, the \mintinline{c}{break} and \mintinline{c}{continue} statements will only terminate the innermost loop.
+\begin{minted}{c}
+for (int i = 0; i < 10; i++)
+{
+    for (int j = 0; j < 10; j++)
+    {
+        if (j == 5)
+        {
+            break; // Terminate inner loop early
+        }
+        printf("%d\n", j);
+    }
+}
+\end{minted}
+\subsection{Expressions}
+C provides a number of operators which can be used to perform arithmetic/logical operations on values.
+C follows the same precedence rules as mathematics, however caution should be used when
+comparing precedence of certain logical and bitwise operations.
+\subsubsection{Operation Precedence}
+\setminted{escapeinside={?*}{*?}}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+        \toprule
+        \textbf{Operation}            & \textbf{Operator Symbol}                                                                                                                                                          & \textbf{Associativity}         \\
+        \midrule
+        Postfix                       & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                            & \multirow{5}{*}{Left to right} \\
+        Function call                 & \mintinline{c}{()}                                                                                                                                                                &                                \\
+        Array subscripting            & \mintinline{c}{[]}                                                                                                                                                                &                                \\
+        Member access                 & \mintinline{c}{.}                                                                                                                                                                 &                                \\
+        Member access through pointer & \mintinline{c}{->}                                                                                                                                                                &                                \\
+        \midrule
+        Prefix                        & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                            & \multirow{7}{*}{Right to left} \\
+        Unary                         & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                              &                                \\
+        Logical NOT and bitwise NOT   & \mintinline{c}{!}, \mintinline{c}{~}                                                                                                                                              &                                \\
+        Type cast                     & \mintinline{c}{(type)}                                                                                                                                                            &                                \\
+        Dereference                   & \mintinline{c}{*}                                                                                                                                                                 &                                \\
+        Address-of                    & \mintinline{c}{&}                                                                                                                                                                 &                                \\
+        Size-of                       & \mintinline{c}{sizeof}                                                                                                                                                            &                                \\
+        \midrule
+        Multiplicative                & \mintinline{c}{*}, \mintinline{c}{/}, \mintinline{c}{%}                                                                                                                           & Left to right                  \\
+        Additive                      & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                              & Left to right                  \\
+        Bitwise shift                 & \mintinline{c}{<<}, \mintinline{c}{>>}                                                                                                                                            & Left to right                  \\
+        Relational                    & \mintinline{c}{<}, \mintinline{c}{>}, \mintinline{c}{<=}, \mintinline{c}{>=}                                                                                                      & Left to right                  \\
+        Equality                      & \mintinline{c}{==}, \mintinline{c}{!=}                                                                                                                                            & Left to right                  \\
+        Bitwise AND                   & \mintinline{c}{&}                                                                                                                                                                 & Left to right                  \\
+        Bitwise XOR                   & \mintinline{c}{^}                                                                                                                                                                 & Left to right                  \\
+        Bitwise OR                    & \mintinline{c}{|}                                                                                                                                                                 & Left to right                  \\
+        Logical AND                   & \mintinline{c}{&&}                                                                                                                                                                & Left to right                  \\
+        Logical OR                    & \mintinline{c}{||}                                                                                                                                                                & Left to right                  \\
+        Conditional                   & \mintinline{c}{? :}                                                                                                                                                               & Right to left                  \\
+        Assignment                    & \mintinline{c}{=}, \mintinline{c}{+=}, \mintinline{c}{-=}, \mintinline{c}{*=}, \mintinline{c}{/=}, \mintinline{c}{%=}, \mintinline{c}{&=}, \mintinline{c}{^=}, \mintinline{c}{|=} & Right to left                  \\
+        Sequential evaluation         & \mintinline{c}{,}                                                                                                                                                                 & Left to right                  \\
+        \bottomrule
+    \end{tabular}
+    % \caption{} % \label{}
+\end{table}
+\subsubsection{Arithmetic Operations}
+All arithmetic operations work as expected, noting that integer division is truncated.
+
+If an arithmetic operation causes a type overflow, the result will depend on the type.
+For signed integers, the result of an overflow is \textbf{undefined} in C. For unsigned integers,
+the result is truncated to the type size (or the value modulo the type size).
+\subsubsection{Operator Types}
+\begin{itemize}
+    \item \textbf{Unary} operators --- have a single operand. For example, \mintinline{c}{++} and \mintinline{c}{--}, or \mintinline{c}{+} and \mintinline{c}{-}.
+    \item \textbf{Binary} operators --- have two operands. For example, \mintinline{c}{+}, \mintinline{c}{-}, \mintinline{c}{*}, and \mintinline{c}{/}.
+    \item \textbf{Ternary} operators --- have three operands. For example, \mintinline{c}{? :}.
+\end{itemize}
+\subsubsection{Assignment}
+To assign a value to a variable, use the assignment (\mintinline{c}{=}) operator.
+\begin{minted}{c}
+int x = 5;
+\end{minted}
+\subsubsection{Multiple Assignment}
+If we want to assign values to multiple variables of the same type, we can use the comma (\mintinline{c}{,}) operator.
+\begin{minted}{c}
+int x = 1, y = 2, z = 3;
+\end{minted}
+We can also use the assignment (\mintinline{c}{=}) operator to assign the same value to multiple variables of the same type.
+\begin{minted}{c}
+int x, y, z;
+x = y = z = 5;
+\end{minted}
+\subsubsection{Compound Assignment}
+Compound assignment operators perform the operation specified by the additional operator,
+then assign the result to the left operand.
+\begin{minted}{c}
+char x = 0b11001010;
+x |= 0b00000001; // x = 0b11001010 | 0b00000001 = 0b11001011
+
+int y = 25;
+y += 5; // y = 25 + 5 = 30
+
+char z = 0b10000010;
+z <<= 1; // z = 0b10000010 << 1 = 0b00000100
+\end{minted}
+\subsubsection{Bitwise Operations}
+Binary operators behave as expected in C.
+\begin{minted}{c}
+char x = 0b11001010;
+unsigned char y = 0b01100001;
+
+char a = ~x;     // a = ~0b11001010 = 0b00110101
+char b = x & y;  // b = 0b11001010 & 0b01100001 = 0b01000000
+char c = x | y;  // c = 0b11001010 | 0b01100001 = 0b11101011
+char d = x ^ y;  // d = 0b11001010 ^ 0b01100001 = 0b10101011
+
+char e = x << 1; // e = 0b11001010 << 1 = 0b10010100
+char f = x >> 1; // f = 0b11001010 >> 1 = 0b11100101
+char g = y >> 1; // g = 0b01100001 >> 1 = 0b00110000
+\end{minted}
+Note that right shifts are automatically sign-extended in C.
+\subsubsection{Relational Operations}
+Relational operators can be used to compare two values.
+\begin{minted}{c}
+int x = 5;
+int y = 10;
+int z = 15;
+
+if (x < y) {
+    printf("x is less than y\n");
+}
+
+if (x != 15)
+{
+    printf("x is not equal to 15\n");
+}
+\end{minted}
+\subsubsection{Logical Operations}
+Logical operators can be used to combine two boolean expressions.
+\begin{minted}{c}
+int x = 5;
+int y = 10;
+int z = 15;
+
+if (x < y && x != 15) {
+    printf("x is less than y and x is not equal to 15\n");
+}
+\end{minted}
+\subsection{Preprocessor}
+The preprocessor processes C code before it is passed onto the compiler.
+The preprocessor strips out comments, handles \textbf{preprocessor directives}, and replaces macros.
+Preprocessors begin with the \mintinline{c}{#} character and no non-whitespace characters can
+appear on the line before the preprocessor directive.
+\subsubsection{Includes}
+The \mintinline{c}{#include} directive is used to include the contents of another file into the current file.
+This directive has two forms.
+\begin{itemize}
+    \item \mintinline{c}{#include <filename>} --- include header files for the C standard library and other header files associated with the target platform.
+    \item \mintinline{c}{#include "filename"} --- include programmer-defined header files that are typically in the same directory as the file containing the directive.
+\end{itemize}
+When this directive is used, it is equivalent to copying the contents of the file into the current file,
+at the location of the directive. The included file is also preprocessed and may contain other include directives.
+\subsubsection{Header Files}
+Object files containing \textbf{compiled code} can be linked into a program to allow programmers to
+call existing functions. For C to have knowledge of the functions in this object file,
+the authors of those functions should store the function prototypes in a \textbf{header file}.
+
+Header files end in the \mintinline{text}{.h} extension.
+They can be included into the source file using the \mintinline{c}{#include} directive and can significantly
+reduce compile times by reducing the amount of code that needs to be compiled.
+
+In the following example, we will define an \mintinline{c}{add} function and include
+it into another C program.
+\begin{minted}{c}
+// add.c
+int add(int x, int y)
+{
+    return x + y;
+}
+\end{minted}
+This file is compiled to \mintinline{text}{add.o}. To allow the \mintinline{c}{add} function to be called from the main program,
+we need to create a header file containing the function prototype of \mintinline{c}{add}.
+\begin{minted}{c}
+// add.h
+int add(int x, int y);
+\end{minted}
+We can then include this header file into the main program.
+\begin{minted}{c}
+// main.c
+#include <stdio.h> // Include printf definition
+#include "add.h" // Include add function definition
+
+int main()
+{
+    int x = 5;
+    int y = 10;
+
+    int z = add(x, y);
+    printf("%d\n", z);
+
+    return 0;
+}
+\end{minted}
+\subsubsection{Definitions}
+The \mintinline{c}{#define} directive is used to define \textbf{preprocessor macros}.
+Whenever these macros appear in the source file, they are replaced with the value specified by the macro.
+Macros are a simple text replacement mechanism, an thus must be defined carefully to avoid
+invalid code from being generated.
+\begin{minted}{c}
+#include <stdio.h>
+#define PI 3.14159265358979
+
+int main()
+{
+    printf("%f\n", 2 * PI);
+    return 0;
+}
+\end{minted}
+Aside from constant values, macros can also be used to create small compile-time ``functions'',
+that expand to code:
+\begin{minted}{c}
+#include <stdio.h>
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+
+int main()
+{
+    int x = 5;
+    int y = 10;
+
+    int z = MAX(x, y);
+    printf("%d\n", z);
+
+    return 0;
+}
+\end{minted}
+Note that the semi-colon is omitted at the end of the macro definition,
+as it would also be substituted into the program.
+
+Only a single preprocessor directives can appear on a line, and the directives
+must occupy a single line (note that a backslash (\mintinline{c}{\}) can be used to break long lines).
 \end{document}
