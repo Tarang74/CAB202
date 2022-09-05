@@ -1,6 +1,6 @@
 %!TEX TS-program = xelatex
 %!TEX options = -aux-directory=Debug -shell-escape -file-line-error -interaction=nonstopmode -halt-on-error -synctex=1 "%DOC%"
-\documentclass{article}
+\documentclass{report}
 \input{LaTeX-Submodule/template.tex}
 
 % Additional packages & macros
@@ -58,8 +58,9 @@
 \tableofcontents
 \newpage
 %
-\section{Microcontroller Fundamentals}
-\subsection{Architecture of a Computer}
+\part{Microcontrollers}
+\chapter{Microcontroller Fundamentals}
+\section{Architecture of a Computer}
 \begin{definition}[Computer]
     A computer is a digital electronic machine that can be programmed to carry
     out sequences of arithmetic or logical operations (computation) automatically.
@@ -70,13 +71,13 @@
 \begin{definition}[Arithmetic logic unit]
     The arithmetic logic unit (ALU) performs computations required by the control unit.
 \end{definition}
-\subsection{Microprocessors \& Microcontrollers}
+\section{Microprocessors \& Microcontrollers}
 While a microcontroller puts the CPU and all peripherals onto the same chip,
 a microprocessor houses a more powerful CPU on a single chip that connects to external peripherals.
 The peripherals include memory, I/O, and control units.
 
 The QUTy uses a microcontroller called ATtiny1626, that are within a family of microcontrollers called AVRs.
-\subsection{ATtiny1626 Microcontroller}
+\section{ATtiny1626 Microcontroller}
 The ATtiny1626 microcontroller has the following features:
 \begin{itemize}
     \item CPU:\@ AVR Core (AVRxt variant)
@@ -88,7 +89,7 @@ The ATtiny1626 microcontroller has the following features:
           \end{itemize}
     \item Peripherals:\@ Implemented in hardware (part of the chip) in order to offload complexity
 \end{itemize}
-\subsubsection{Flash Memory}
+\subsection{Flash Memory}
 \begin{itemize}
     \item Non-volatile --- memory is not lost when power is removed
     \item Inexpensive
@@ -98,21 +99,21 @@ The ATtiny1626 microcontroller has the following features:
     \item Generally read-only. Programmed via an external tool, which is loaded once and remains static during the lifetime of the program
     \item Writing is slow
 \end{itemize}
-\subsubsection{SRAM}
+\subsection{SRAM}
 \begin{itemize}
     \item Volatile --- memory is lost when power is removed
     \item Expensive
     \item Faster than flash memory and is used to store variables and temporary data
     \item Can access individual bytes (large chunk erases are not required)
 \end{itemize}
-\subsubsection{EEPROM}
+\subsection{EEPROM}
 \begin{itemize}
     \item Older technology
     \item Expensive
     \item Non-volatile
     \item Can erase individual bytes
 \end{itemize}
-\subsection{AVR Core}
+\section{AVR Core}
 \begin{definition}[Computer programme]
     A computer programme is a sequence or set of instructions in a programming language
     for a computer to execute.
@@ -128,7 +129,7 @@ Some key characteristics of the AVR Core are:
     \item Stack Pointer --- temporary data that doesn't fit into the registers
     \item 8-bit core --- all data, registers, and operations, operate within 8-bits
 \end{itemize}
-\subsection{Programme Execution}
+\section{Programme Execution}
 At the time of reset, PC = 0. The following steps are then performed:
 \begin{enumerate}
     \item Fetch instruction (from memory)
@@ -147,7 +148,7 @@ This is illustrated in the following figure:
     \includegraphics[height = 12cm, keepaspectratio = true]{figures/AVR_CPU.pdf}
     % \caption{} % \label{}
 \end{figure}
-\subsection{Instructions}
+\section{Instructions}
 \begin{itemize}
     \item The CPU understands and can execute a limited set of instructions --- \textasciitilde88 unique instructions for the ATtiny1626
     \item Instructions are encoded in programme memory as opcodes. Most instructions are two bytes long, but some instructions are four bytes long
@@ -161,7 +162,7 @@ This is illustrated in the following figure:
               \item Control --- changing what the CPU is doing
           \end{itemize}
 \end{itemize}
-\subsection{Interacting with memory and peripherals}
+\section{Interacting with memory and peripherals}
 \begin{itemize}
     \item The CPU interacts with both memory and peripherals via the data space
     \item From the perspective of the CPU, the data space is single large array of
@@ -173,13 +174,13 @@ This is illustrated in the following figure:
     \item Different devices, peripherals and memory can be included in a memory map
           (and sometimes a device can be accessed at multiple different addresses)
 \end{itemize}
-\subsection{Memory map}
+\section{Memory map}
 \begin{figure}[H]
     \centering
     \includegraphics[height = 8cm, keepaspectratio = true]{figures/memory_map.pdf}
     \caption{ATtiny1626 memory map.} % \label{}
 \end{figure}
-\subsection{Assembly code}
+\section{Assembly code}
 \begin{itemize}
     \item The opcodes placed into programme memory are called
           machine code (i.e., code the machine operates on directly)
@@ -193,8 +194,8 @@ This is illustrated in the following figure:
     \item An assembler takes assembly code and translates it into opcodes that can
           be loaded into programme memory
 \end{itemize}
-\section{Digital Representations and Operations}
-\subsection{Digital Systems}
+\chapter{Digital Representations and Operations}
+\section{Digital Systems}
 A \textbf{bit}\footnote{The term \textit{bit} comes from \textbf{b}inary dig\textbf{it}.}
 is the most basic unit of information in a digital system.
 A bit encodes a logical state with one of two possible values (i.e., binary).
@@ -211,8 +212,8 @@ common representation of data in digital systems.
 A sequence of \textit{four} bits is known as a \textbf{nibble}.
 
 A sequence of \(n\) bits can represent up to \(2^n\) states.
-\subsection{Representation}
-\subsubsection{Binary Representation}
+\section{Representation}
+\subsection{Binary Representation}
 The \textbf{binary system} is a base-2 system that uses a sequence of bits to represent a number.
 Bits are written left-to-right from \textbf{most significant} to \textbf{least significant} bit.
 
@@ -228,7 +229,7 @@ The first bit is the ``most significant'' bit because it is associated with the 
     0011_2 & = 3 & 0111_2 & = 7 & 1011_2 & = 11 & 1111_2 = 15
 \end{align*}
 The subscript 2 indicates that the number is represented using a base-2 system.
-\subsubsection{Hexadecimal Representation}
+\subsection{Hexadecimal Representation}
 The \textbf{hexadecimal system} (hex) is a base-16 system. As we need 16 digits in this system, we use the letters A to F to represent digits 10 to 15.
 
 Hex is a convenient notation when working with digital systems as each hex digit maps to a nibble.
@@ -238,7 +239,7 @@ Hex is a convenient notation when working with digital systems as each hex digit
     2_{16} & = 0010_2 & 6_{16} & = 0110_2 & A_{16} & = 1010_2 & E_{16} = 1110_2 \\
     3_{16} & = 0011_2 & 7_{16} & = 0111_2 & B_{16} & = 1011_2 & F_{16} = 1111_2
 \end{align*}
-\subsubsection{Numeric Literals}
+\subsection{Numeric Literals}
 When a fixed value is declared directly in a program, it is referred to as a \textbf{literal}.
 Generally, numeric literals can be expressed as either binary, decimal, or hexadecimal, so we
 use prefixes to denote various bases. Typically,
@@ -248,7 +249,7 @@ use prefixes to denote various bases. Typically,
     \item \textbf{Hexadecimal} notation requires the prefix \mintinline{ca65}{0x}
 \end{itemize}
 For example, \mintinline{ca65}{0x80 |=| 0b10000000 |=| 128}.
-\subsection{Unsigned Integers}
+\section{Unsigned Integers}
 The \textbf{unsigned integers} represent the set of counting (natural) numbers, starting at 0.
 In the \textbf{decimal system} (base-10), the unsigned integers are encoded using a sequence of decimal digits (0--9).
 
@@ -282,7 +283,7 @@ The range of values an \(n\)-bit binary number can hold when encoding an unsigne
     \end{tabular}
     \caption{Range of available values in binary representations.} % \label{}
 \end{table}
-\subsection{Signed Integers}
+\section{Signed Integers}
 Signed integers are used to represent integers that can be positive or negative.
 The following representations allow us to encode negative integers using a sequence of binary bits:
 \begin{itemize}
@@ -290,7 +291,7 @@ The following representations allow us to encode negative integers using a seque
     \item One's complement
     \item Two's complement (most common)
 \end{itemize}
-\subsubsection{Sign-Magnitude}
+\subsection{Sign-Magnitude}
 In sign-magnitude representation, the most significant bit encodes the sign of the
 integer. In an 8-bit sequence, the remaining 7-bits are used to
 encode the value of the bit.
@@ -311,7 +312,7 @@ However, there are some issues with this representation.
     \item Arithmetic and comparison requires inspecting the sign bit
     \item The range is reduced by 1 (due to the redundant zero representation)
 \end{enumerate}
-\subsubsection{One's Complement}
+\subsection{One's Complement}
 In one's complement representation, a negative number is represented by
 inverting the bits of a positive number (i.e., \(0 \to 1\) and \(1 \to 0\)).
 
@@ -324,7 +325,7 @@ addition is performed via standard binary addition with \textit{end-around carry
 \begin{equation*}
     a - b = a + \left( \text{\textasciitilde} b \right) + C.
 \end{equation*}
-\subsubsection{Two's Complement}
+\subsection{Two's Complement}
 In two's complement representation, the most significant bit encodes a negative weighting of
 \(-2^{n - 1}\). For example, in 8-bit sequences, index-7 represents a value of \(-128\).
 
@@ -339,8 +340,8 @@ and subtraction is performed by adding the two's complement of the subtrahend.
 \begin{equation*}
     a - b = a + \left( \text{\textasciitilde} b + 1 \right).
 \end{equation*}
-\subsection{Logical Operators}
-\subsubsection{Boolean Functions}
+\section{Logical Operators}
+\subsection{Boolean Functions}
 A Boolean function is a function whose arguments and results assume values
 from a two-element set, (usually \(\left\{ 0,\: 1 \right\}\) or \mintinline{text}{{false, true}}).
 
@@ -353,7 +354,7 @@ The most common logical functions available to microprocessors and most programm
     \item Exclusive disjunction: \keywordinline{XOR}
 \end{itemize}
 By convention, we map a bit value of \mintinline{ca65}{0} to \mintinline{ca65}{false}, and a bit value of \mintinline{ca65}{1} to \mintinline{ca65}{true}.
-\subsubsection{Negation}
+\subsection{Negation}
 \mintinline{ca65}{NOT} is a unary operator that is used to \textbf{invert} a bit.
 It is typically expressed as:
 \begin{itemize}
@@ -373,7 +374,7 @@ Truth table:
         \bottomrule
     \end{tabular}
 \end{table}
-\subsubsection{Conjunction}
+\subsection{Conjunction}
 \mintinline{ca65}{AND} is a binary operator whose output is true if \textbf{both} inputs are \textbf{true}.
 It is typically expressed as:
 \begin{itemize}
@@ -396,7 +397,7 @@ Truth table:
         \bottomrule
     \end{tabular}
 \end{table}
-\subsubsection{Disjunction}
+\subsection{Disjunction}
 \keywordinline{OR} is a binary operator whose output is true if \textbf{either} input is \textbf{true}.
 It is typically expressed as:
 \begin{itemize}
@@ -419,7 +420,7 @@ Truth table:
         \bottomrule
     \end{tabular}
 \end{table}
-\subsubsection{Exclusive Disjunction}
+\subsection{Exclusive Disjunction}
 \keywordinline{XOR} (Exclusive \keywordinline{OR}) is a binary operator whose output is true if \textbf{only one} input is \textbf{true}.
 It is typically expressed as:
 \begin{itemize}
@@ -441,9 +442,9 @@ Truth table:
         \bottomrule
     \end{tabular}
 \end{table}
-\subsubsection{Bitwise Operations}
+\subsection{Bitwise Operations}
 When applying logical operators to a sequence of bits, the operation is performed in a \textbf{bitwise} manner. The result of each operation is stored in the corresponding bit index also.
-\subsection{Bit Manipulation}
+\section{Bit Manipulation}
 Often we need to modify individual bits within a byte, \textbf{without} modifying other bits.
 This is accomplished by performing a bitwise operation on the byte using a \textbf{bit mask} or \textbf{bit field}.
 
@@ -453,7 +454,7 @@ These operations can:
     \item \textbf{Clear} specific bits (change value to \mintinline{ca65}{0})
     \item \textbf{Toggle} specific bits (change values from \(0 \to 1\), or \(1 \to 0\))
 \end{itemize}
-\subsubsection{Setting Bits}
+\subsection{Setting Bits}
 To \textbf{set} a bit, we take the bitwise \keywordinline{OR} of the byte, with a bit mask
 that has a \textbf{1} in each position where the bit should be set.
 \begin{figure}[H]
@@ -461,7 +462,7 @@ that has a \textbf{1} in each position where the bit should be set.
     \includegraphics[height = 4cm, keepaspectratio = true]{figures/bit_set.pdf}
     \caption{Setting bits using the logical or.} % \label{}
 \end{figure}
-\subsubsection{Clearing Bits}
+\subsection{Clearing Bits}
 To \textbf{clear} a bit, we take the bitwise \mintinline{ca65}{AND} of the byte, with a bit mask
 that has a \textbf{0} in each position where the bit should be cleared.
 \begin{figure}[H]
@@ -469,7 +470,7 @@ that has a \textbf{0} in each position where the bit should be cleared.
     \includegraphics[height = 4cm, keepaspectratio = true]{figures/bit_clear.pdf}
     \caption{Clearing bits using the logical and.} % \label{}
 \end{figure}
-\subsubsection{Toggling Bits}
+\subsection{Toggling Bits}
 To \textbf{toggle} a bit, we take the bitwise \keywordinline{XOR} of the byte, with a bit mask
 that has a \textbf{1} in each position where the bit should be toggled.
 \begin{figure}[H]
@@ -488,15 +489,15 @@ Other bitwise operations act on the entire byte.
           \end{itemize}
     \item Rotations
 \end{itemize}
-\subsubsection{One's Complement}
+\subsection{One's Complement}
 The one's complement of a byte inverts every bit in the operand. This is done by
 taking the bitwise \keywordinline{NOT} of the byte.
 
 Similarly, we can subtract the byte from \mintinline{ca65}{0xFF} to get the one's complement.
-\subsubsection{Two's Complement}
+\subsection{Two's Complement}
 The two's complement of a byte is the one's complement of the byte plus one.
 Therefore, we can apply take the bitwise \keywordinline{NOT} of the byte, and then add one to it.
-\subsubsection{Shifts}
+\subsection{Shifts}
 Shifts are used to move bits within a byte. In many programming languages this is represented by two greater than \mintinline{ca65}{>>} or two less than \mintinline{ca65}{<<} characters.
 \begin{equation*}
     a \gg s
@@ -524,7 +525,7 @@ When using signed integers, the arithmetic shift is used to preserve the value o
     \caption{Arithmetic right shift using \keyword{\ttfamily{asr}} in AVR Assembly.} % \label{}
 \end{figure}
 Left shifts are used to multiply numbers by 2, whereas right shifts are used to divide numbers by 2 (with truncation).
-\subsubsection{Rotations}
+\subsection{Rotations}
 Rotatations are used to shift bits with a carry from the previous instruction.
 \begin{figure}[H]
     \centering
@@ -539,8 +540,8 @@ Rotatations are used to shift bits with a carry from the previous instruction.
 Here the blue bit is carried from the previous instruction, and the carry bit is updated
 to the value of the bit that was shifted out.
 Rotations are used to perform multi-byte shifts and arithmetic operations.
-\subsection{Arithmetic Operations}
-\subsubsection{Addition}
+\section{Arithmetic Operations}
+\subsection{Addition}
 Addition is performed using the same process as decimal addition except we only use two digits, 0 and 1.
 \begin{enumerate}
     \item \mintinline{ca65}{0b0 + 0b0 = 0b0}
@@ -568,7 +569,7 @@ Below is a graphical illustration of the above code.
     \includegraphics[height = 3cm, keepaspectratio = true]{figures/add.pdf}
     \caption{Overflow addition using \keyword{\ttfamily{add}} in AVR Assembly.} % \label{}
 \end{figure}
-\subsubsection{Overflows}
+\subsection{Overflows}
 When the sum of two 8-bit numbers is greater than 8-bit (255), an \textbf{overflow} occurs.
 Here we must utilise a second register to store the high byte so that the result is represented as
 a 16-bit number.
@@ -608,11 +609,11 @@ Below is a graphical representation of the above code.
     \includegraphics[height = 6cm, keepaspectratio = true]{figures/adc.pdf}
     \caption{Overflow addition using \mintinline{ca65}{adc} in AVR Assembly.} % \label{}
 \end{figure}
-\subsubsection{Subtraction}
+\subsection{Subtraction}
 Subtraction is performed using the same process as binary addition, with the
 subtrahend in two's complement form.
 In the case of overflows, the carry bit is discarded.
-\subsubsection{Multiplication}
+\subsection{Multiplication}
 Multiplication is understood as the sum of a set of partial products, similar to the process used in decimal multiplication.
 Here each digit of the multiplier is multiplied to the multipicand and each partial product is added to the result.
 
@@ -644,7 +645,7 @@ Using AVR assembly, we can use the \keywordinline{mul} instruction to perform mu
 |\keyword{mul}| r16, r17 ; R1:R0 <- 0b00000010:0b00101111 = 2:47
 \end{minted}
 The result is stored in the register pair \mintinline{text}{R1:R0}.
-\subsubsection{Division}
+\subsection{Division}
 Division, square roots and many other functions are very expensive to implement in hardware,
 and thus are typically not found in conventional ALUs, but rather
 implemented in software.
@@ -662,12 +663,12 @@ so that dividing an integer \(n\) by \(6.4\) is approximately equivalent to:
     \frac{n}{6.4} \approx \left( n \times 10 \right) \gg 6
 \end{equation*}
 When the divisor is not exactly representable as a power of 2 we can use fractional exponents to represent the divisor, however this requires a floating point system implementation which is not provided on the AVR.
-\section{Microcontroller Interfacing}
-\subsection{Logic Levels}
-\subsubsection{Discretisation}
+\chapter{Microcontroller Interfacing}
+\section{Logic Levels}
+\subsection{Discretisation}
 The process of discretisation translates a continuous signal into a discrete signal (bits).
 As an example, we can translate \textbf{voltage levels} on microcontroller pins into digital \textbf{logic levels}.
-\subsubsection{Logic Levels}
+\subsection{Logic Levels}
 For digital input/output (IO), conventionally:
 \begin{itemize}
     \item The voltage level of the positive power supply represents a \textbf{logical 1}, or the \textbf{high state}, and
@@ -681,7 +682,7 @@ Because voltage is a continuous quantity, we must discretise the full range of v
     \item A voltage \textbf{below} the input \textbf{low threshold} \(t_L\) is considered \textbf{low}.
 \end{itemize}
 The interpretation of a voltage between these states is determined by \textbf{hysteresis}.
-\subsubsection{Hysteresis}
+\subsection{Hysteresis}
 Hysteresis refers to the property of a system whose state is \textbf{dependent} on
 its \textbf{history}. In electronic circuits, this avoids ambiguity in determining
 the state of an input as it switches between voltage levels.
@@ -696,25 +697,25 @@ Given a transition:
     \item If an input is currently in the \textbf{high state}, it has not transitioned to the \textbf{low state} until the voltage crosses the \textbf{low input voltage} threshold.
 \end{itemize}
 It is therefore always preferrable to drive a digital input to an unambiguous voltage level.
-\subsection{Electrical Quantities}
-\subsubsection{Voltage}
+\section{Electrical Quantities}
+\subsection{Voltage}
 \textbf{Voltage} \(v\) measures the electrical \textit{potential difference} between two points in a circuit, measured in \textbf{Volts (\unit{V})}.
 \begin{itemize}
     \item Voltage is measured across a circuit element, or between two points in a circuit, most commonly with respect to a \qty{0}{V} reference (ground).
     \item It represents the \textbf{potential} of the electrical system to do \textbf{work}.
 \end{itemize}
-\subsubsection{Current}
+\subsection{Current}
 \textbf{Current} \(i\) measures the \textit{rate of flow of electrical charge} through a circuit, measured in \textbf{Amperes (\unit{A})}.
 \begin{itemize}
     \item Current is measured through a circuit element.
 \end{itemize}
-\subsubsection{Power}
+\subsection{Power}
 \textbf{Power} \(p\) is the rate of energy transferred per unit time, measured in \textbf{Watts (\unit{W})}.
 Power can be determined through the equation
 \begin{equation*}
     p = v i.
 \end{equation*}
-\subsubsection{Resistance}
+\subsection{Resistance}
 \textbf{Resistance} \(R\) is a property of a material to \textit{resist the flow of current}, measured in \textbf{Ohms (\unit{\ohm})}.
 Ohm's law states that the voltage across a component is proportional to the current that flows through it:
 \begin{equation*}
@@ -738,15 +739,15 @@ do not follow Ohm's law, this can be seen in diodes.
 \end{figure}
 Although the wires used to connect a circuit are resistive, we usually assume that they are ideal, that is,
 they have zero resistance.
-\subsection{Electrical Components}
-\subsubsection{Resistors}
+\section{Electrical Components}
+\subsection{Resistors}
 A \textbf{resistor} is a circuit element that is designed to have a specific resistance \(R\).
 \begin{figure}[H]
     \centering
     \includegraphics[height = 2.5cm, keepaspectratio = true]{figures/resistor.pdf}
     \caption{Resistor circuit symbol.} % \label{}
 \end{figure}
-\subsubsection{Switches}
+\subsection{Switches}
 A \textbf{switch} is used to connect and disconnect different elements in a circuit. It can be \textbf{open}
 or \textbf{closed}.
 \begin{itemize}
@@ -787,7 +788,7 @@ Switches are typically for user input.
     \end{subfigure}
     \caption{Various types of switches.}
 \end{figure}
-\subsubsection{Diodes}
+\subsection{Diodes}
 A \textbf{diode} is a semiconductor device that conducts current in
 only one direction: from the \textbf{anode} to the \textbf{cathode}.
 \begin{figure}[H]
@@ -819,7 +820,7 @@ Diodes are a non-Ohmic device:
 A diode is only forward biased when the applied anode-cathode voltage \textbf{exceeds} the forward voltage \(v_f\).
 A typical forward voltage \(v_f\) for a silicon diode is in the range \qtyrange{0.6}{0.7}{V}, whereas for
 Light Emitting Diodes (LEDs), \(v_f\) ranges between \qtyrange{2}{3}{V}.
-\subsubsection{Integrated Circuit}
+\subsection{Integrated Circuit}
 An \textbf{integrated circuit} (IC) is a set of electronic circuits (typically) implemented on a
 single piece of semiconductor material, usually silicon. ICs comprise of hundreds to
 many thousands of transistors, resistors and capacitors; all implemented on silicon.
@@ -836,7 +837,7 @@ For digital ICs:
           on a pin and any connected circuitry to a \textbf{high} or \textbf{low} state. They can also
           drive connected loads.
 \end{itemize}
-\subsection{Digital Outputs}
+\section{Digital Outputs}
 Digital output interfaces are designed to be able to drive connected circuitry to one of states,
 high, or low, however, the appropriate technique is \textbf{context specific}.
 When referring to digital outputs, we will refer to the states of a net. A \textbf{net}
@@ -848,7 +849,7 @@ In this section we will consider:
     \item Could more than one device be attempting to actively drive the net
           to a specific logic level?
 \end{itemize}
-\subsubsection{Push-Pull Outputs}
+\subsection{Push-Pull Outputs}
 A push-pull digital output is the most common form of output used in digital outputs.
 The \textbf{output driver} \(A\) \textit{drives} the \textbf{output state} \(Y\) to:
 \begin{itemize}
@@ -877,7 +878,7 @@ Hence the output state \(Y\) is determined by the logic level of the output driv
     \caption{Truth table for a push-pull digital output.} % \label{}
 \end{table}
 The push-pull output \(Y\) can both source and sink current from the connected net.
-\subsubsection{High-Impedance Outputs}
+\subsection{High-Impedance Outputs}
 In many instances, a digital output is required to be placed in a high-impedance (HiZ) state.
 This is accomplished by using an \textbf{output enable} (OE) signal.
 \begin{figure}[H]
@@ -909,7 +910,7 @@ When the output is in \textbf{HiZ state}:
     \item The voltage on the output net is determined by the \textbf{other circuitry} connected to the net.
 \end{itemize}
 HiZ outputs are typically used when multiple need to signal over the same wire(s).
-\subsubsection{Pull-up and Pull-down Resistors}
+\subsection{Pull-up and Pull-down Resistors}
 When \textbf{no devices} are actively driving a net (e.g., all connected outputs are in the HiZ state),
 the state of the net is not well-defined. Hence we can use a \textbf{pull-up} or \textbf{pull-down} resistor
 to ensure that the state of the pin is always \textbf{well-defined}.
@@ -931,7 +932,7 @@ to ensure that the state of the pin is always \textbf{well-defined}.
           or sunk by the \textbf{active device}.
 \end{itemize}
 The resistors used as pull-up and pull-down resistors are typically in the \unit{k\ohm} range.
-\subsubsection{Open-Drain Outputs}
+\subsection{Open-Drain Outputs}
 Multiple push-pull outputs should never be connected to the same net
 as when one output is driven HIGH and another is driven LOW,
 an effective short circuit is created and one or more devices may be damaged.
@@ -949,7 +950,7 @@ An open-drain output is either:
     \item In the \textbf{high-impedance} state, where the pull-up resistor is used to pull the net to the \textbf{high state} when the net is \textbf{not driven low}.
     \item \textbf{Connected to ground}, when the net is \textbf{driven low}.
 \end{itemize}
-\subsection{Microcontroller Pins}
+\section{Microcontroller Pins}
 Microcontrollers are interfaced via their exposed pins.
 These pins are the only means to access inputs and outputs, and
 they are used to interface with other electronic circuits in order to achieve a required functionality.
@@ -977,7 +978,7 @@ To summarise this diagram:
     \item The physical voltage on the pin can be routed to an analogue to digital converter (ADC)
     \item Other peripheral functions can override port pin configurations and the output state.
 \end{itemize}
-\subsubsection{Configuring an Output in Assembly}
+\subsection{Configuring an Output in Assembly}
 \begin{enumerate}
     \item Place the port pin in a \textbf{safe initial state}
           by writing to the OUT register (HIGH or LOW depending on the context).
@@ -1001,7 +1002,7 @@ To summarise this diagram:
 ; Set output state to desired value
 |\keyword{sts}| PORTB_OUTSET, r16 ; Set state of PB5 to HIGH
 \end{minted}
-\subsubsection{Configuring an Input in Assembly}
+\subsection{Configuring an Input in Assembly}
 \begin{enumerate}
     \item If required, enable the internal pull-up resistor by \textbf{setting}
           the PULLUPEN bit in the \linebreak corresponding PINnCTRL register.
@@ -1026,7 +1027,7 @@ To summarise this diagram:
 ; Isolate desired pin
 |\keyword{andi}| r17, r16
 \end{minted}
-\subsubsection{Peripheral Multiplexing}
+\subsection{Peripheral Multiplexing}
 Pins can be used to connect internal peripheral functions
 to external devices.
 As microcontrollers have more peripheral functions than available pins,
@@ -1048,8 +1049,8 @@ peripheral functions are typically multiplexed onto pins.
           \textbf{sets of pins} through the PORTMUX\@.
 \end{itemize}
 Note that we cannot re-map a single peripheral function to another pin, but must consider the entire set.
-\subsection{Interfacing to Simple IO}
-\subsubsection{Driving LEDs}
+\section{Interfacing to Simple IO}
+\subsection{Driving LEDs}
 The \textbf{brightness} of an LED is proportional to the \textbf{current}
 passing through it. As LEDs are non-Ohmic, we cannot drive them directly
 with a voltage as this would result in an uncontrolled flow of current that
@@ -1059,7 +1060,7 @@ Instead, LEDs are paired with a \textbf{series resistor} to limit the flow of cu
 The appropriate current is dependent on the specific LED that is used
 and the capability of the driver device (microcontroller).
 A typical indictor LED requires a current of \qtyrange{1}{2}{m.A}.
-\subsubsection{Interfacing to LEDs}
+\subsection{Interfacing to LEDs}
 An LED can be driven in two different configurations from a microcontroller pin:
 \begin{itemize}
     \item \textbf{active high}; in which case the LED is \textbf{lit} when the pin is \textbf{HIGH}.
@@ -1091,7 +1092,7 @@ This has a number of advantages:
 \end{itemize}
 An LED is an example of a simple \textbf{digital output}, as we can map \textbf{logical states}
 to \textbf{LED states} (lit or unlit) for a digital output.
-\subsubsection{Switches as Digital Inputs}
+\subsection{Switches as Digital Inputs}
 The state of a switch can be used to \textbf{set} the state of a pin.
 As the switch has two states (open or closed), these can be mapped directly to
 \textbf{logical states}.
@@ -1114,7 +1115,7 @@ representing one of the logic levels (ground or a positive supply).
     \item When the switch is \textbf{open}, the pull-up/pull-down resistor is used to define the state of the switch.
     \item When the switch is \textbf{closed}, the state of the pin is defined by the voltage connected to via the switch.
 \end{itemize}
-\subsubsection{Interfacing to Switches}
+\subsection{Interfacing to Switches}
 As with LEDs, we can interface switches to microcontroller pins in two different configurations:
 \begin{itemize}
     \item \textbf{active high}; in which case the pin is \textbf{HIGH} when the switch is \textbf{closed}.
@@ -1127,7 +1128,7 @@ An \textbf{active low} configuration is usually preferred as:
     \item It eliminates the risk of unsafe voltages being applied to the pin from the power supply in an active high configuration.
     \item It is easier to access a ground reference on a circuit board.
 \end{itemize}
-\subsubsection{Interfacing to Integrated Circuits}
+\subsection{Interfacing to Integrated Circuits}
 For digital ICs,
 \begin{itemize}
     \item \textbf{Inputs} are typically \textbf{high impedance}
@@ -1143,11 +1144,11 @@ This generally means that we can interface an IC by connecting its pins directly
 As microcontroller pins are typically configured as \textbf{inputs on reset}, a
 pull-up/pull-down resistor may be required if it is important for an IC input to
 have a \textbf{known state} prior to the configuration of the relevant microcontroller pins as outputs.
-\section{Assembly Programming}
+\part{Assembly Programming}
 \begin{definition}[Word]
     A word refers to a value that is two bytes in size (16-bit).
 \end{definition}
-\subsection{Registers}
+\section{Registers}
 A register refers to a memory location that is 1 byte in size (8-bit).
 The ATtiny1626 has 32 registers of which \mintinline{ca65}{r16} to \mintinline{ca65}{r31} can be loaded with an immediate value (\numrange{0}{255}) using \keywordinline{ldi}.
 \begin{minted}{ca65}
@@ -1156,7 +1157,7 @@ The ATtiny1626 has 32 registers of which \mintinline{ca65}{r16} to \mintinline{c
 |\keyword{ldi}| r31, 0xFF
 \end{minted}
 Values are commonly loaded into registers as many other operations can be performed on them.
-\subsection{Flow Control}
+\section{Flow Control}
 Instructions on the AVR Core increment the PC by 1 or 2 (depending on whether the OPCODE is 1 or 2 words) when they are executed so that any successive
 instructions are executed after the first. To divert execution to a different location, we can utilise
 \textbf{change of flow} instructions. The AVR Core has many change of flow instructions, that each have a different
@@ -1165,7 +1166,7 @@ effect on the execution of the program.
 The \mintinline{ca65}{jmp} (jump) instruction is used the simplest to jump to a different location in the program.
 This instruction is capable of jumping to an address withtin the entire 4M (words) program memory, however,
 this is highly excessive for the ATtiny1626.
-\subsection{Labels}
+\section{Labels}
 Most change of flow instructions take an \textbf{address} in program memory as a parameter.
 Hence to make this process easier, we can use labels to refer to locations in program memory (and also RAM).
 \begin{minted}{ca65}
@@ -1184,7 +1185,7 @@ addresses and the assembler will automatically adjust the address to the correct
 
 Additionally, labels can also be used as parameters to other immediate instructions if we store the high and low
 bytes in registers and wish to reference the location in an indirect jumping instruction.
-\subsection{Absolute and Relative Addresses}
+\section{Absolute and Relative Addresses}
 \mintinline{ca65}{jmp} is a 32-bit instruction, which uses 22 bits to specify an address between \mintinline{ca65}{0x000000}
 and \mintinline{ca65}{0x3FFFFF}, or \(2^{23} - 1\) bits of memory (\qty{8}{MB}). As mentioned earlier, this is much larger
 than what the 16-bit PC can address on the ATtiny1626 (\qty{64}{KB}).
@@ -1197,7 +1198,7 @@ The \keywordinline{rjmp} (relative jump) instruction works in the same manner as
 CPU cycles and because the assembler calculates the relative address locations, we do not need to determine the relative distances.
 
 Note the assembler throw an error if the address is not within the range of the PC\@.
-\subsection{Branching}
+\section{Branching}
 A branching instruction jumps to a different location in response to something that occurs, i.e., user input, internal state, or other external factors.
 Many change of flow instructions are conditional, and will alter the PC differently based on register value(s) or flags.
 In AVR there are two main categories of branching instructions:
@@ -1205,7 +1206,7 @@ In AVR there are two main categories of branching instructions:
     \item Branch instructions
     \item Skip instructions
 \end{itemize}
-\subsubsection{Branch Instructions}
+\subsection{Branch Instructions}
 Branch instructions use the following logic:
 \begin{enumerate}
     \item Check if the specified flag in SREG is cleared/set
@@ -1221,7 +1222,7 @@ All other branching instructions are specific cases of the above instructions, t
 As these instructions check the bits in the SREG, they are usually preceded by an ALU operation such as \keywordinline{cp} or \keywordinline{cpi} to trigger the required flags.
 
 As only 7 bits are allocated to the destination in the OPCODE, branch instructions jump shorter distances than relative jumps.
-\subsubsection{Compare Instructions}
+\subsection{Compare Instructions}
 Both the \keywordinline{cp} and \keywordinline{cpi} instructions are used to compare the values in one or two registers.
 The ALU performs a subtraction operation whose result is used to update the SREG\@. Note that the result is not stored or used in any way.
 \begin{itemize}
@@ -1241,7 +1242,7 @@ new_location:
 \end{minted}
 Note that many instructions are able to set the Z flag, which is used to indicate if the result of the operation is zero.
 In these cases, the compare instruction may be redundant.
-\subsubsection{Skip Instructions}
+\subsection{Skip Instructions}
 The skip instructions are less flexible then branch instructions, but can sometimes require less space or fewer cycles.
 Skip instructions skip the next instruction if the condition is true.
 
@@ -1306,7 +1307,7 @@ entry:
 
 new_location:
 \end{minted}
-\subsection{Loops}
+\section{Loops}
 By jumping to an earlier address, we can loop over a block of instructions.
 \begin{minted}{ca65}
 infinite_loop:
@@ -1337,7 +1338,7 @@ button_pressed:
 
     |\keyword{rjmp}| main_loop ; Return to main loop
 \end{minted}
-\subsection{Delays}
+\section{Delays}
 Loops can be utilised to delay the execution of instructions. These instructions do
 not execute any useful code. This is useful for when we wish to wait for an external event to occur.\footnote{Note that this type of loop is not recommended for time-sharing systems, such as a personal computer, as the lost CPU cycles cannot be used by other programs. In these cases, clock interrupts are preferred. However, on a device such as the ATtiny1626, delay loops can be utilised to precisely insert delays in a program.}
 
@@ -1424,7 +1425,7 @@ This approach can be extended to create delays of any length.
 
 If needed, we can also include the \mintinline{ca65}{nop} (no operation) instruction which requires 1 CPU cycle and does nothing.
 In addition to this, we can also utilise nested loops, however the timing is more complex to determine.
-\subsection{Memory and IO}
+\section{Memory and IO}
 On the AVR Core, as both I/O and SRAM are accessed through the data space, they can be
 directly accessed using instructions that read/write to memory. This approach is known as memory-mapped I/O (MMIO)
 and it significantly reduces chip complexity.
@@ -1455,7 +1456,7 @@ several \linebreak VPORT\{A, B, C\} (virtual ports) addresses are mapped to this
 accessed through these single cycle instructions.
 
 VPORT addresses simply hold a copy of their corresponding PORTs.
-\subsubsection{Load/Store Indirect}
+\subsection{Load/Store Indirect}
 Although the \keywordinline{lds}/\keywordinline{sts} instructions can be used to access exact addresses
 of bytes, they are generally not suitable for accessing data structures such as arrays.
 
@@ -1514,7 +1515,7 @@ loop:
     dec r16
     |\keyword{brne}| loop
 \end{minted}
-\subsubsection{Load/Store Indirect with Displacement}
+\subsection{Load/Store Indirect with Displacement}
 In addition to the \keywordinline{ld}/\keywordinline{st} instructions, the \keywordinline{ldd}/\keywordinline{std}
 instructions are a special form that allow us to load/store from/to the address of the pointer register
 \textbf{plus} \(q = \left\{ \numrange{0}{63} \right\}\).
@@ -1527,7 +1528,7 @@ instructions are a special form that allow us to load/store from/to the address 
 ; Note Y still points to RAMSTART
 \end{minted}
 Note this form is only available for \keywordinline{Y}, and \keywordinline{Z}.
-\subsection{Stack}
+\section{Stack}
 The stack is a last-in first-out (LIFO) data structure in SRAM\@.
 It is accessed through a register called the stack pointer (SP),
 which is not part of the register file like SREG\@.
@@ -1552,7 +1553,7 @@ store the value of that register on the stack, and pop it back when we are done:
 |\keyword{pop}| ZL
 \end{minted}
 Notice that the values are popped in reverse order.
-\subsection{Procedures}
+\section{Procedures}
 Procedures allow us to write modular, reusable code which makes them powerful when working on
 complex projects. Although they are usually associated with high level languages as
 methods, or functions, they are also available in assembly.
@@ -1564,7 +1565,7 @@ procedure:
     ; Procedure body
     |\keyword{ret}| ; Return to caller
 \end{minted}
-\subsubsection{Saving Context}
+\subsection{Saving Context}
 To ensure that procedures are maximally flexible and place no constraints on the caller,
 we must always restore any modified registers before returning to the caller. The same is
 true for the SREG\@.
@@ -1590,7 +1591,7 @@ main_loop:
 
     |\keyword{push}| r16 ; r16 should still be 10
 \end{minted}
-\subsubsection{Parameters and Return Values}
+\subsection{Parameters and Return Values}
 Parameters can be passed using registers or the stack depending on the size of
 the inputs.
 \begin{minted}{ca65}
@@ -1695,7 +1696,7 @@ main_loop:
     |\keyword{pop}| r0
 \end{minted}
 Note that it is preferrable to return values using registers.
-\section{C Programming}
+\part{C Programming}
 C is a programming language developed in the early 1970s by Dennis Richie.
 C is a compiled language, meaning that a separate program is used to
 efficiently translate the source code into assembly.
@@ -1703,8 +1704,8 @@ Its compilers are capable of targetting a wide variety of microprocessor archite
 and hence it is used to implement all major operating system kernels.
 Compared to many other languages, C is a very efficient programming
 language as its constructs map directly onto machine instructions.
-\subsection{Introduction}
-\subsubsection{Main Function}
+\chapter{Introduction}
+\section{Main Function}
 C is a procedural language and hence all code subsides in a procedure (known as a \textbf{function}).
 In C, the \mintinline{c}{main} function is the \textbf{entry point} to the program.
 Program execution will generally begin in this function, where we can make calls to other functions.
@@ -1718,7 +1719,7 @@ int main()
 The purpose of returning a zero at the end of the \mintinline{c}{main} function
 is to signify the \textbf{exit status code} of the process. An exit status of \mintinline{c}{0} is traditionally
 used to indicate success, while all non-zero values indicate failure.
-\subsubsection{Statements}
+\section{Statements}
 C programs are made up of statements. Statements are placed within scopes (indicated by braces (\mintinline{c}{{}}))
 and are executed in the order they are placed. All statements in C must terminate with a semicolon (\mintinline{c}{;}).
 Although assembly instructions translate to a single OPCODE, a single C statement can translate to multiple OPCODEs.
@@ -1735,7 +1736,7 @@ int main()
     return 0;
 }
 \end{minted}
-\subsubsection{Comments}
+\section{Comments}
 C supports two styles of comments. The first of these are known as ``C-style comments'', which
 allow multi-line/block comments. Multi-line comments use the \mintinline{c}{/* */} syntax.
 \begin{minted}{c}
@@ -1751,10 +1752,10 @@ These comments are denoted by the \mintinline{c}{//} syntax.
 int x = 3; // It can be placed after a statement.
 \end{minted}
 All comments in C are ignored by the compiler.
-\section{Variables}
+\chapter{Variables}
 Variables are used to temporarily store values in memory.
 Variables have a \textbf{type} and a \textbf{name} and must be declared before use.
-\subsection{Declaration}
+\section{Declaration}
 To declare a variable in C, we must specify the type and name of that variable.
 \begin{minted}{c}
 int x;
@@ -1763,7 +1764,7 @@ This variable can then be \textbf{assigned to} using the \mintinline{c}{=} opera
 \begin{minted}{c}
 x = 4;
 \end{minted}
-\subsection{Initialisation}
+\section{Initialisation}
 To optionally assign a value during declaration, we can apply the assignment operator after
 the declaration. This is known as a variable \textbf{initialisation}, as we are assigning an initial value to the variable.
 \begin{minted}{c}
@@ -1771,10 +1772,10 @@ int x = 4;
 \end{minted}
 Note that using \textbf{uninitialised variables} results in \textbf{unspecified behaviour} in C, meaning that
 the value of such variables is unpredictable.
-\subsection{Types}
+\section{Types}
 While AVR assembly supports 8-bit registers, C supports larger data types by treating them as a sequence of bytes.
 We can also create compound data types with \mintinline{c}{struct} and \mintinline{c}{union}.
-\subsubsection{Type Specifiers}
+\subsection{Type Specifiers}
 Type specifiers in declarations define the type of the variable.
 The \mintinline{c}{signed char}, \mintinline{c}{signed int}, and
 \mintinline{c}{signed short int}, \mintinline{c}{signed long int} types, together with their \mintinline{c}{unsigned} variants
@@ -1805,7 +1806,7 @@ The following table summarises various numeric types in C\@:
 \end{table}
 Note that the size of these types is not necessarily the same across platforms, hence it is discouraged to use these keywords for
 platform specific tasks. \emph{See the section on \hyperref[sec:exact_width_types]{Exact Width Types} for more information}.
-\subsubsection{Type Qualifiers}
+\subsection{Type Qualifiers}
 Types can be qualified with additional keywords to modify the properties of
 the identifier. Three common qualifiers are \textbf{const}, \textbf{static}, and \textbf{volatile}.
 \begin{itemize}
@@ -1813,13 +1814,13 @@ the identifier. Three common qualifiers are \textbf{const}, \textbf{static}, and
     \item \mintinline{c}{static} --- indicates that the variable has a global lifetime (maintains value between function invocations).
     \item \mintinline{c}{volatile} --- indicates that the variable can be modified or accessed by other programs or hardware.
 \end{itemize}
-\subsubsection{Portable Types}
+\subsection{Portable Types}
 C has a set of standard types that are defined in the language specification,
 however the type specifiers shown above may have different storage sizes depending on the platform.
 Although this may be insignificant for most platforms, microcontrollers
 use specific sizes for registers, meaning it is important to refer to the correct
 type specifiers when declaring a variable.
-\subsubsection{Exact Width Types}\label{sec:exact_width_types}
+\subsection{Exact Width Types}\label{sec:exact_width_types}
 The standard integer (\mintinline{c}{stdint.h}) library provides \textbf{exact-width} type definitions that are specific to
 the development platform. This ensures that variables can be initialised with the correct size on any platform.
 \begin{minted}{c}
@@ -1840,7 +1841,7 @@ int main()
     return 0;
 }
 \end{minted}
-\subsubsection{Floating-Point Types}
+\subsection{Floating-Point Types}
 The \mintinline{c}{float} and \mintinline{c}{double} types can store \textbf{floating-point} value types in C.
 Their implementation allows for variable levels of precision, i.e., extremely large and extremely small values.
 These types are very useful on systems with a floating point unit (FPU) or equivalent.
@@ -1848,8 +1849,8 @@ These types are very useful on systems with a floating point unit (FPU) or equiv
 As the ATtiny1626 does not have an FPU, arithmetic involving floating point values is highly inefficient. Therefore,
 integer arithmetic should be utilised when possible. Note that a single floating point number or operation causes
 the entire floating point library to be included which can require a large amount of memory.
-\section{Literals}
-\subsection{Integer Prefixes}
+\chapter{Literals}
+\section{Integer Prefixes}
 Integer literals are assumed to be base 10 unless a prefix is specified. C supports
 all of the following prefixes:
 \begin{itemize}
@@ -1858,7 +1859,7 @@ all of the following prefixes:
     \item \textbf{Decimal} (base 10) --- no prefix
     \item \textbf{Hexadecimal} (base 16) --- \mintinline{c}{0x}
 \end{itemize}
-\subsection{Integer Suffixes}
+\section{Integer Suffixes}
 Integer literals can be suffixed to specify the size/type of the value:
 \begin{itemize}
     \item \textbf{Unsigned} --- \mintinline{c}{U}
@@ -1877,19 +1878,19 @@ int main()
     return 0;
 }
 \end{minted}
-\subsection{Floating Point Suffixes}
+\section{Floating Point Suffixes}
 As with integer types, floating point values can also be suffixed to specify which type to use.
 \begin{itemize}
     \item \textbf{Float} --- \mintinline{c}{f}
     \item \textbf{Double} --- \mintinline{c}{d}
 \end{itemize}
-\subsection{Character and String Literals}
+\section{Character and String Literals}
 \begin{itemize}
     \item \textbf{Character} --- surrounded by single quotes \mintinline{c}{'A'}
     \item \textbf{String} --- surrounded by double quotes \mintinline{c}{"Hello World"}
 \end{itemize}
-\subsection{Flow Control}
-\subsubsection{If Statements}
+\chapter{Flow Control}
+\section{If Statements}
 C provides a standard branching control structure known as an \mintinline{c}{if} statement.
 This structure tests a condition and executes a block of code if that condition is \textbf{true}.
 \begin{minted}{c}
@@ -1919,7 +1920,7 @@ if (x > 1)
     // Code to execute if x is not greater than 1 and not less than -1
 }
 \end{minted}
-\subsubsection{While Loops}
+\section{While Loops}
 The simplest loop structure in C is achieved by using a \mintinline{c}{while} loop.
 This loop executes a block of code while the condition is \textbf{true}.
 \begin{minted}{c}
@@ -1947,7 +1948,7 @@ while (i < 10)
     i++; // Increment i by 1
 }
 \end{minted}
-\subsubsection{For Loops}
+\section{For Loops}
 \mintinline{c}{for} loops are similar to \mintinline{c}{while} loops, but they usually result in more understandable code.
 \begin{minted}{c}
 for (initialisation; condition; increment)
@@ -1957,7 +1958,7 @@ for (initialisation; condition; increment)
 \end{minted}
 Note the initialisation and increment statements are optional, and while the condition statement is also optional,
 we must ensure that the loop can terminate from within the structure (see next section).
-\subsubsection{Break and Continue Statements}
+\section{Break and Continue Statements}
 \mintinline{c}{break} and \mintinline{c}{continue} statements are used to terminate a loop early.
 \begin{minted}{c}
 for (int i = 0; i < 10; i++)
@@ -1993,11 +1994,11 @@ for (int i = 0; i < 10; i++)
     }
 }
 \end{minted}
-\subsection{Expressions}
+\chapter{Expressions}
 C provides a number of operators which can be used to perform arithmetic/logical operations on values.
 C follows the same precedence rules as mathematics, however caution should be used when
 comparing precedence of certain logical and bitwise operations.
-\subsubsection{Operation Precedence}
+\section{Operation Precedence}
 \setminted{escapeinside={?*}{*?}}
 \begin{table}[H]
     \centering
@@ -2036,24 +2037,24 @@ comparing precedence of certain logical and bitwise operations.
     \end{tabular}
     % \caption{} % \label{}
 \end{table}
-\subsubsection{Arithmetic Operations}
+\section{Arithmetic Operations}
 All arithmetic operations work as expected, noting that integer division is truncated.
 
 If an arithmetic operation causes a type overflow, the result will depend on the type.
 For signed integers, the result of an overflow is \textbf{undefined} in C. For unsigned integers,
 the result is truncated to the type size (or the value modulo the type size).
-\subsubsection{Operator Types}
+\section{Operator Types}
 \begin{itemize}
     \item \textbf{Unary} operators --- have a single operand. For example, \mintinline{c}{++} and \mintinline{c}{--}, or \mintinline{c}{+} and \mintinline{c}{-}.
     \item \textbf{Binary} operators --- have two operands. For example, \mintinline{c}{+}, \mintinline{c}{-}, \mintinline{c}{*}, and \mintinline{c}{/}.
     \item \textbf{Ternary} operators --- have three operands. For example, \mintinline{c}{? :}.
 \end{itemize}
-\subsubsection{Assignment}
+\section{Assignment}
 To assign a value to a variable, use the assignment (\mintinline{c}{=}) operator.
 \begin{minted}{c}
 int x = 5;
 \end{minted}
-\subsubsection{Multiple Assignment}
+\section{Multiple Assignment}
 If we want to assign values to multiple variables of the same type, we can use the comma (\mintinline{c}{,}) operator.
 \begin{minted}{c}
 int x = 1, y = 2, z = 3;
@@ -2063,7 +2064,7 @@ We can also use the assignment (\mintinline{c}{=}) operator to assign the same v
 int x, y, z;
 x = y = z = 5;
 \end{minted}
-\subsubsection{Compound Assignment}
+\section{Compound Assignment}
 Compound assignment operators perform the operation specified by the additional operator,
 then assign the result to the left operand.
 \begin{minted}{c}
@@ -2076,7 +2077,7 @@ y += 5; // y = 25 + 5 = 30
 char z = 0b10000010;
 z <<= 1; // z = 0b10000010 << 1 = 0b00000100
 \end{minted}
-\subsubsection{Bitwise Operations}
+\section{Bitwise Operations}
 Binary operators behave as expected in C.
 \begin{minted}{c}
 char x = 0b11001010;
@@ -2092,7 +2093,7 @@ char f = x >> 1; // f = 0b11001010 >> 1 = 0b11100101
 char g = y >> 1; // g = 0b01100001 >> 1 = 0b00110000
 \end{minted}
 Note that right shifts are automatically sign-extended in C.
-\subsubsection{Relational Operations}
+\section{Relational Operations}
 Relational operators can be used to compare two values.
 \begin{minted}{c}
 int x = 5;
@@ -2108,7 +2109,7 @@ if (x != 15)
     printf("x is not equal to 15\n");
 }
 \end{minted}
-\subsubsection{Logical Operations}
+\section{Logical Operations}
 Logical operators can be used to combine two boolean expressions.
 \begin{minted}{c}
 int x = 5;
@@ -2119,12 +2120,25 @@ if (x < y && x != 15) {
     printf("x is less than y and x is not equal to 15\n");
 }
 \end{minted}
-\subsection{Preprocessor}
+\section{Increment and Decrement}
+Increment and decrement operators are unary operators that can be used to increment or decrement a variable by 1.
+\begin{minted}{c}
+int x = 5;
+x++; // x = 6
+\end{minted}
+The increment and decrement operators can be used as either prefix or postfix operators.
+\begin{minted}{c}
+int x = 5;
+int y = x++; // y = 5, x = 6
+int z = ++x; // z = 7, x = 7
+\end{minted}
+Prefix operators are evaluated before the statement is executed, while postfix operators are evaluated after the statement is executed.
+\chapter{Preprocessor}
 The preprocessor processes C code before it is passed onto the compiler.
 The preprocessor strips out comments, handles \textbf{preprocessor directives}, and replaces macros.
 Preprocessors begin with the \mintinline{c}{#} character and no non-whitespace characters can
 appear on the line before the preprocessor directive.
-\subsubsection{Includes}
+\section{Includes}
 The \mintinline{c}{#include} directive is used to include the contents of another file into the current file.
 This directive has two forms.
 \begin{itemize}
@@ -2133,7 +2147,7 @@ This directive has two forms.
 \end{itemize}
 When this directive is used, it is equivalent to copying the contents of the file into the current file,
 at the location of the directive. The included file is also preprocessed and may contain other include directives.
-\subsubsection{Header Files}
+\section{Header Files}
 Object files containing \textbf{compiled code} can be linked into a program to allow programmers to
 call existing functions. For C to have knowledge of the functions in this object file,
 the authors of those functions should store the function prototypes in a \textbf{header file}.
@@ -2174,7 +2188,7 @@ int main()
     return 0;
 }
 \end{minted}
-\subsubsection{Definitions}
+\section{Definitions}
 The \mintinline{c}{#define} directive is used to define \textbf{preprocessor macros}.
 Whenever these macros appear in the source file, they are replaced with the value specified by the macro.
 Macros are a simple text replacement mechanism, an thus must be defined carefully to avoid
@@ -2211,4 +2225,507 @@ as it would also be substituted into the program.
 
 Only a single preprocessor directives can appear on a line, and the directives
 must occupy a single line (note that a backslash (\mintinline{c}{\}) can be used to break long lines).
+\chapter{Pointers}
+When a variable is declared, the compiler automatically allocates a block of memory to store that variable.
+If we want to access this block of memory indirectly, we must use a \textbf{pointer}.
+In C, pointers are declared as ``pointing to'' an object of another type.
+\begin{minted}{c}
+uint8_t *ptr; // Pointer to a uint8_t variable
+\end{minted}
+This code declares a variable \mintinline{c}{ptr} that points to a \mintinline{c}{uint8_t}.
+Note this is not the same as declaring a \mintinline{c}{uint8_t} variable.
+
+Internally, a pointer contains a \textbf{memory address}, which on the ATtiny1626 is 16-bit wide.
+\section{Addressing}
+When the location we want to access is known in advance, pointers can be declared with a
+specific address:
+\begin{minted}{c}
+volatile uint8_t *ptr = (volatile uint8_t *)0x0421; // The address of PORTB DIRSET
+\end{minted}
+Note the type-cast will be discussed in the next sections.
+
+A more common usage of pointers is to \textit{reference} \textbf{other variables}.
+\begin{minted}{c}
+uint8_t x = 5;
+uint8_t *ptr = &x; // Address of x
+\end{minted}
+The amperstand (\mintinline{c}{&}) operator is used to return the \textbf{address of} the variable \mintinline{c}{x}.
+Here the pointer type of \mintinline{c}{ptr} must match the type of \mintinline{c}{x}.
+\section{Dereferencing}
+Once we have a pointer, we can access the value at the address it points to using the
+\textbf{unary dereference} operator (\mintinline{c}{*}).
+\begin{minted}{c}
+uint8_t x = 5;
+uint8_t *ptr = &x; // Address of x
+
+// Read the value at the address pointed to by ptr
+uint8_t y = *ptr; // y = Value at ptr = 5
+
+// Write the value 10 to the address pointed to by ptr
+*ptr = 10; // Value at ptr := 10
+// c = 10 but y = 5
+\end{minted}
+This is also known as \textbf{indirection}, as we are \textit{indirectly accessing} a value through a pointer.
+\section{Strings}
+In C, strings are represented as arrays of characters, terminated by a character with the value 0.
+Strings are declared using double quotes (\mintinline{c}{""}) and are automatically terminated by a null character.
+\begin{minted}{c}
+char *str = "Hello World";
+
+printf("%s\n", str); // Prints "Hello World\n"
+
+// Because str is a pointer, it can be printed directly.
+printf(str); // Prints "Hello World"
+printf("\n"); // Prints "\n"
+\end{minted}
+In the example above, the compiler automatically allocates a block of memory to store the string,
+which in this case is 12 bytes long (11 characters + null terminator).
+
+The pointer \mintinline{c}{str} points to the first character in the string.
+\begin{minted}{c}
+char *str = "Hello World";
+*str == 'H'; // True
+\end{minted}
+When using the \mintinline{c}{printf} function, the null terminator is required to indicate the end of the string.
+We will see how to index into strings in the section on arrays.
+\section{Qualifiers}
+Various \textbf{qualifiers} can be used to modify the type of a pointer.
+Typically these qualifiers apply to the memory pointed to by the pointer.
+
+If the variable which the pointer points to is \textbf{constant}, the dereference operator
+cannot be used to reassign the value of the variable.
+\begin{minted}{c}
+const uint8_t a = 100; // Constant
+uint8_t *ptr = &a; // Points to the constant `a`
+
+*ptr = 200; // Error: Cannot modify `a` because `a` is constant
+\end{minted}
+If the pointer is declared as \textbf{constant}, the pointer imposes
+a \textbf{read-only} restriction on the memory it points to.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+const uint8_t *ptr = &a; // Points to `a` but treats it as constant
+
+*ptr = 200; // Error: Cannot modify `a` because `ptr` is constant
+\end{minted}
+Note this does not mean that the pointer itself is constant, only that the memory it points to is constant.
+The following is valid:
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+uint8_t b = 200; // Variable
+
+const uint8_t *ptr = &a; // Points to `a` but treats it as constant
+ptr = &b; // Valid: `ptr` is not constant
+\end{minted}
+If the qualifier is placed after the asterisk, the pointer itself is constant, meaning that
+it cannot be reassigned to another address.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+uint8_t b = 200; // Variable
+
+uint8_t *const ptr = &a; // Points to `a` but cannot be reassigned
+*ptr = 200; // Valid: `ptr` points to `a` which is not constant
+ptr = &b; // Error: Cannot reassign `ptr`
+\end{minted}
+If we wish, we can apply the qualifiers to both the pointer and the variable which that pointer points to.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+uint8_t b = 200; // Variable
+
+const uint8_t *const ptr = &a; // Points to `a` but cannot be reassigned nor modified
+ptr = &b; // Error: Cannot reassign `ptr`
+*ptr = 200; // Error: Cannot modify `a` because `ptr` is constant
+\end{minted}
+All of the above also applies to the \mintinline{c}{volatile} qualifier.
+\subsection{Pointers to Pointers}
+Pointers can also point to other pointers.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+
+uint8_t *ptr = &a; // Points to `a`
+uint8_t **ptr2 = &ptr; // Points to `ptr`
+\end{minted}
+This can be used to modify the \textbf{address} of a pointer indirectly.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+uint8_t b = 200; // Variable
+
+uint8_t *ptr = &a; // Points to `a`
+uint8_t **ptr2 = &ptr; // Points to `ptr`
+
+*ptr2 = &b; // `ptr` now points to `b`
+\end{minted}
+For high levels of indirection, we can use more asterisks, although this is uncommon.
+
+Qualifiers can also be applied to pointers to pointers.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+
+uint8_t *ptr = &a; // Points to `a`
+
+const uint8_t **ptr1 = &ptr; // Pointer to pointer to constant uint8_t
+
+uint8_t * const *ptr2 = &ptr; // Pointer to constant pointer to uint8_t
+
+uint8_t ** const ptr3 = &ptr; // Constant pointer to pointer to uint8_t
+\end{minted}
+\subsection{Pointer Arithmetic}
+Pointers can be changed with arithmetic operators such as \mintinline{c}{+} and \mintinline{c}{-}.
+Arithmetic on pointers affects the address of the pointer, so that the pointer points to another location.
+
+When performing arithmetic on pointers, the size of an increment is determined by the type of the variable
+that the pointer is pointing to.
+\begin{minted}{c}
+uint8_t a = 100; // Variable
+
+uint8_t *ptr = &a; // Points to `a`
+
+ptr++; // Increment by 1 byte (size of uint8_t)
+// ptr now points to the next byte after `a`
+\end{minted}
+\subsection{Void Pointers}
+When a pointer needs to point to a memory address of an unknown type, it
+can be declared with the \mintinline{MATLAB}{void} keyword.
+\begin{minted}{c}
+void *ptr;
+\end{minted}
+Void pointers have no type, so they cannot be dereferenced.
+Pointers of other types can be assigned to void pointers, but not vice versa.
+\begin{minted}{c}
+uint8_t a = 100;
+
+void *ptr = &a; // Pointer to uint8_t
+uint8_t *ptr2 = ptr; // Error: Cannot assign void pointer to uint8_t pointer
+\end{minted}
+\subsection{Size-of}
+The \mintinline{c}{sizeof} function can be used to determine the size of a variable in bytes.
+\begin{minted}{c}
+uint8_t a = 100;
+uint16_t b = 200;
+
+sizeof(a); // Returns 1
+sizeof(b); // Returns 2
+\end{minted}
+\section{Arrays}
+Array types are used to hold multiple values of the same type
+in a contiguous block of memory.
+Arrays can be declared in the following ways:
+\begin{minted}{c}
+uint8_t a[10]; // Array of 10 uint8_t
+uint8_t b[10] = {0}; // Array of 10 uint8_t initialized to 0
+uint8_t c[] = {1, 2, 3}; // Array of 3 uint8_t initialized to 1, 2, 3
+uint8_t d[5] = {1, 2, 3}; // Array of 5 uint8_t initialized to 1, 2, 3, 0, 0
+\end{minted}
+The brace (\mintinline{c}{{ }}) syntax can only be used to initialise an array and if the length of the array which is being
+assigned is less than the length of the array being assigned to, the remaining values will be set to 0.
+\subsection{Character Arrays}
+A character array is a special type of array which is used to store strings.
+Character arrays can be declared using the \mintinline{c}{char} keyword.
+\begin{minted}{c}
+char a[] = "Hello World";
+
+// Equivalent to:
+char b[12] = {'H', 'e', 'l', 'l', 'o', ' ',
+              'W', 'o', 'r', 'l', 'd', '\0'};
+\end{minted}
+This method allocates 12 bytes of SRAM and
+initialises those bytes with the string \mintinline{c}{"Hello World"}.
+This means that the string can be modified later in the program.
+If we use the \mintinline{MATLAB}{const} keyword, the string will be stored in flash memory and cannot be modified.
+\begin{minted}{c}
+const char a[] = "Hello World";
+\end{minted}
+\subsection{Indexing}
+Array elements can be accessed with the array index operator (\mintinline{MATLAB}{[ ]}).
+In C, array indices start at 0.
+\begin{minted}{c}
+uint8_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+a[0]; // Returns 0
+a[1] = 10; // a is now {0, 10, 2, 3, 4, 5, 6, 7, 8, 9}
+\end{minted}
+It is undefined behaviour to access an array element which is out of bounds.
+However it is possible to have a pointer to an element one past the end of an array
+as long as the pointer is not dereferenced.
+\begin{minted}{c}
+uint8_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+uint8_t *ptr = &a[10];
+\end{minted}
+To loop through an array, we can use a \mintinline{c}{for} loop.
+\begin{minted}{c}
+uint8_t a[10];
+
+for (uint8_t i = 0; i < 10; i++) {
+    a[i] = i;
+}
+\end{minted}
+\subsection{Pointers and Arrays}
+Arrays are implicitly converted to pointers to the first element of the array.
+\begin{minted}{c}
+uint8_t a[10];
+
+uint8_t *ptr = a; // Equivalent to `uint8_t *ptr = &a[0]`
+*ptr = 100; // `a` is now {100, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+\end{minted}
+This is especially useful when passing arrays to functions, as
+arrays cannot be passed to functions by value, but rather the
+pointer to that array can.
+This lets us index into an array in a function
+and the changes will be reflected in the original array.
+\begin{minted}{c}
+void func(uint8_t *arr) {
+    arr[0] = 100;
+}
+
+uint8_t a[10];
+
+func(a); // `a` is now {100, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+\end{minted}
+The syntax \mintinline{MATLAB}{arr[i]} is equivalent to \mintinline{MATLAB}{*(arr + i)}.
+Note that this is possible because arrays are stored contiguously in memory.
+
+Note that it is not possible to change an array's address.
+\begin{minted}{c}
+uint8_t a[10];
+
+a++; // Error: Cannot change the address of an array
+\end{minted}
+\subsection{Array Length}
+The length of an array can be determined with the \mintinline{c}{sizeof} function.
+\begin{minted}{c}
+uint8_t a[10];
+uint16_t b[5];
+
+sizeof(a) / sizeof(a[0]); // Returns 10
+sizeof(b) / sizeof(b[0]); // Returns 5
+\end{minted}
+We divide by the size of the first element of the array because
+the type of the array may be larger than 1 byte.
+\subsection{Copying Arrays}
+Arrays can be copied in two ways.
+The first way is to use a \mintinline{c}{for} loop.
+\begin{minted}{c}
+uint8_t a[10];
+uint8_t b[10];
+
+for (uint8_t i = 0; i < sizeof(a) / sizeof(a[0]); i++) {
+    b[i] = a[i];
+}
+\end{minted}
+The second way is to use the \mintinline{c}{memcpy} function
+from the \mintinline{c}{string.h} library.
+\begin{minted}{c}
+uint8_t a[10];
+uint8_t b[10];
+
+memcpy(b, a, sizeof(a));
+\end{minted}
+\subsection{Multidimensional Arrays}
+Multidimensional arrays (also known as multiple subscript arrays)
+are used to hold multi-dimensional data.
+\begin{minted}{c}
+uint8_t a[][3] = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+\end{minted}
+To declare a multi-dimensional array, all dimensions but the first
+need to be specified. The rows of the array
+must be specified within additional braces (\mintinline{c}{{ }}).
+
+Elements can be accessed by specifying the index of each dimension.
+\begin{minted}{c}
+a[0][0]; // Returns 1
+a[1][2]; // Returns 6
+\end{minted}
+These arrays are also stored contiguously in memory,
+in \textbf{row-major} order, and hence pointer arithmetic is
+performed differently.
+\begin{minted}{c}
+uint8_t a[][3] = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+uint8_t rows = 3;
+uint8_t cols = 3;
+
+for (uint8_t i = 0; i < rows; i++) {
+    for (uint8_t j = 0; j < cols; j++) {
+        // Double indexing
+        printf("%d ", a[i][j]);
+
+        // Single indexing
+        printf("%d ", a[i * cols + j]);
+
+        // Pointer arithmetic
+        printf("%d ", *(*(a + i) + j));
+        // Equivalent to: printf("%d ", *(a[i] + j));
+        // Each row is a pointer to the first element of that row
+    }
+}
+\end{minted}
+\section{Functions}
+Procedures are called functions in C. Functions can return values
+and take arguments. The main function is the entry point of a program.
+\begin{minted}{c}
+int main(void) {
+    return 0;
+}
+\end{minted}
+Functions in C must be declared in the top-level of a C program, and
+thus cannot be declared inside other functions.
+Functions are declared with the following syntax:
+\begin{minted}{c}
+return_type function_name(param_type param_name, ...) {
+    // Function body
+}
+\end{minted}
+\subsection{Parameters}
+The parameters of a function are local variables scoped to that function.
+\begin{minted}{c}
+uint8_t add(uint8_t a, uint8_t b) { // `a` and `b` are parameters of `add`
+    return a + b;
+}
+
+int main(void) {
+    uint8_t a = 10;
+    uint8_t b = 20;
+
+    uint8_t c = add(a, b); // `a` and `b` are arguments to `add`
+    return 0;
+}
+\end{minted}
+To pass an array to a function, we can pass a pointer to that array.
+To do so, we must specify the length of the array as well.
+\begin{minted}{c}
+void print_array(uint8_t *arr, uint8_t len) {
+    for (uint8_t i = 0; i < len; i++) {
+        printf("%d ", arr[i]);
+    }
+}
+
+int main(void) {
+    uint8_t a[10];
+
+    for (uint8_t i = 0; i < sizeof(a) / sizeof(a[0]); i++) {
+        a[i] = i;
+    }
+
+    print_array(a, sizeof(a) / sizeof(a[0]));
+    return 0;
+}
+\end{minted}
+When a function does not take any arguments, we can specify \mintinline{c}{void} as the parameter list.
+\begin{minted}{c}
+void func(void) {
+    // Function body
+}
+\end{minted}
+\subsection{Return Values}
+To return a value from a function, we use the \mintinline{c}{return} keyword.
+When a function does not return a value, we can specify \mintinline{c}{void} as the return type.
+Note that a void function does not need to use the \mintinline{c}{return} keyword.
+\subsection{Function Prototypes}
+C uses \textbf{single-pass} compilation, meaning that functions
+need to be declared before they can be called.
+Function prototypes are used to declare a function without having to specify the
+entire body of the function.
+\begin{minted}{c}
+uint8_t add(uint8_t a, uint8_t b); // Function prototype
+
+int main(void) {
+    uint8_t a = 10;
+    uint8_t b = 20;
+
+    uint8_t c = add(a, b);
+    return 0;
+}
+
+uint8_t add(uint8_t a, uint8_t b) {
+    return a + b;
+}
+\end{minted}
+The compiler uses the function prototype to generate the code required
+to call the function without having to know the entire body of the function.
+The linker will then resolve all function calls to the appropriate function
+definitions. Note that parameter names are not required in function prototypes.
+\subsection{Passing by Reference}
+As seen previously, we can pass variables by value
+and arrays by reference through pointers.
+
+As functions only return one value, we can use pointers to pass
+multiple values back to the caller. These output values are
+also passed to the functions parameter list.
+\begin{minted}{c}
+void swap(uint8_t *a, uint8_t *b) {
+    uint8_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main(void) {
+    uint8_t a = 10;
+    uint8_t b = 20;
+
+    swap(&a, &b);
+    return 0;
+}
+\end{minted}
+\subsection{Stack}
+As functions can call other functions, or even call themselves,
+local variables inside functions are stored on the \textbf{stack}.
+The return address of where a function is called from is also stored
+on the stack so that the program counter can be set to that address
+when the function returns.
+
+Local variables inside functions do not increase the explicit SRAM usage
+reported by the compiler. Rather, this memory will be allocated
+on the stack when the function is called. Therefore it is
+important to ensure that the stack does not overflow, through
+recursive functions or large local variables.
+\section{Scope}
+Variables and other identifiers in C have scope.
+Scope affects the \textbf{visibility} and \textbf{lifecycle} of variables.
+Scope is \textbf{hierarchical}, meaning that variables declared in a parent scope
+are visible to all child scopes.
+
+Variables declared in a child scope can also hide variables
+declared in a parent scope declared with the same name.
+\subsection{Global Scope}
+Variables declared outside of any function are declared in the global scope.
+Global variables are visible to all functions in a program.
+\begin{minted}{c}
+uint8_t a = 10; // Global variable
+
+int main(void) {
+    uint8_t b = 20; // Local variable
+
+    a++; // `a` is visible to `main`
+    return 0;
+}
+\end{minted}
+Global variables are allocated a fixed location in SRAM and
+do not exist on the stack.
+\subsection{Local Scope}
+Variables declared inside a function are declared in the local scope.
+Their lifetime is limited to the function in which they are declared.
+By default, local variables go on the stack.
+\subsection{Block Scope}
+The block scope is a subset of the local scope.
+Variables declared inside blocks such as \mintinline{c}{if} statements
+have their own scope. These variables are only visible inside the block.
+We can create a new scope by using curly braces.
+\subsection{Static Variables}
+When applied to a \textbf{local variable}, the \mintinline{c}{static} keyword
+changes the lifetime of a variable to the lifetime of the program.
+This means that the variable will not be destroyed when the function
+returns, and will retain its value between function calls.
+Static variables are allocated in SRAM and not on the stack.
+
+When applied to a \textbf{global variable}, the \mintinline{c}{static} keyword
+changes the visibility of the variable to the file in which it is declared.
 \end{document}
