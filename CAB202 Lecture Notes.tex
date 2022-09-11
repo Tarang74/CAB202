@@ -2728,4 +2728,514 @@ Static variables are allocated in SRAM and not on the stack.
 
 When applied to a \textbf{global variable}, the \mintinline{c}{static} keyword
 changes the visibility of the variable to the file in which it is declared.
+\chapter{Types}
+\section{Accessing Registers}
+As seen in the previous chapter, we can use the \mintinline{c}{volatile} keyword
+to directly reference memory locations by address. This is useful for accessing
+memory mapped IO.
+\begin{minted}{c}
+volatile uint8_t *portb_outclr = 0x0426;
+*portb_outclr = 0b00100000;
+\end{minted}
+The \mintinline{c}{volatile} keyword is important because the variable
+is outside the control of the program. The compiler will therefore not optimize
+accesses to the variable.
+
+The \mintinline{text}{avr/io.h}
+header file includes macros and type definitions for accessing various
+registers on the AVR microcontroller.
+\begin{minted}{c}
+#include <avr/io.h>
+\end{minted}
+\section{Type Casting}
+Some type conversions are implicit, such as converting a \mintinline{c}{uint8_t}
+to a \mintinline{c}{uint16_t}. However, some implicit type conversions generate warnings
+usually because of a loss of information, or because the conversion is not portable across
+platforms.
+
+Therefore, to explicitly convert a variable to a different type, we can use the unary type casting operator.
+\begin{minted}{c}
+volatile uint8_t *portb_outclr = (volatile uint8_t *)0x0426;
+\end{minted}
+This does not make code more portable, but it tells the compiler that
+the programmer is aware of the conversion and that it is intentional.
+\subsection{Types of Type Casting}
+\subsubsection{Numeric Types}
+Numeric types (signed or unsigned) will expand or narrow the type,
+resulting in the value being truncated or zero extended.
+\begin{minted}{c}
+(uint8_t)-3 // 253
+\end{minted}
+\subsubsection{Floating Point Types}
+Conversion from floating point to integer will truncate the fractional part.
+\begin{minted}{c}
+(int16_t)-3.45 // -3
+\end{minted}
+\subsubsection{Pointer Types}
+Conversion between pointers will change the pointer type but will not affect the
+data. Note that these conversions are not portable across platforms.
+\begin{minted}{c}
+uint16_t a = 12345;
+uint8_t *b = (uint8_t *)&a; // likely contains 57, but may vary on different platforms
+\end{minted}
+Casting an integer to a pointer will make the pointer contain the address in that integer.
+\begin{minted}{c}
+uint8_t *ptr = (uint8_t *)0x1234;
+\end{minted}
+Likewise, casting a pointer to an integer will make the integer contain the address in the pointer.
+\begin{minted}{c}
+uint8_t *ptr = (uint8_t *)0x1234;
+uint16_t addr = (uint16_t)ptr; // addr = 0x1234
+\end{minted}
+These conversions are not portable, but can be necessary when accessing memory mapped IO.
+\subsubsection{Modfying Qualifiers}
+Casting can also be used to add/remove qualifiers such as \mintinline{c}{const} and \mintinline{c}{volatile}.
+
+Note that the following will not work on the ATtiny1626 because the \mintinline{c}{const} qualifier
+usually results in that variable being stored in SRAM or read-only memory locations.
+\begin{minted}{c}
+const uint8_t a = 10;
+const uint8_t *b = &a;
+
+*((uint8_t *)b) = 20; // May lead to undefined behaviour
+\end{minted}
+\subsubsection{Avoiding Truncation}
+Casting can also be used to avoid truncation errors when performing arithmetic.
+\begin{minted}{c}
+uint16_t a = 25000;
+uint16_t b = 10000;
+
+uint32_t c = a * b; // c = 45696
+uint32_t d = (uint32_t)a * b; // d = 250000000
+\end{minted}
+\section{Floating Point Types}
+In C, floating point types are represented as 32-bit IEEE 754 single precision
+floating point numbers. The \mintinline{c}{float} type is a 32-bit floating point number and
+the \mintinline{c}{double} type is a 64-bit floating point number.
+
+A single precision floating point number has a 1-bit sign, 8-bit exponent, and 23-bit mantissa.
+As such, the range of a single precision floating point number is \(-2^{127} \ldots 2^{127}\).
+A floating point number \(f\) can be represented as
+\begin{equation*}
+    f = \left( -1 \right)^s \left( 1 + 2^{-23} m \right) 2^{e - 127}
+\end{equation*}
+where \(s\) is the sign bit, \(m\) is the mantissa, and \(e\) is the exponent.
+Note that values are not equally spaced. There are several special values that
+can be represented by floating point numbers.
+\begin{itemize}
+    \item \(e = 2^{128}\) (all 1s):
+        \begin{itemize}
+            \item \(m = 0\) (all 0s): \mintinline{c}{INFINITY} if \(s = 0\), \mintinline{c}{-INFINITY} if \(s = 1\)
+            \item \(m\) is not all 0s: \mintinline{c}{NAN}
+        \end{itemize}
+    \item \(e = 2^{-126}\) (all 0s):
+        \begin{itemize}
+            \item \(m = 0\) (all 0s): \mintinline{c}{0.0} if \(s = 0\), \mintinline{c}{-0.0} if \(s = 1\)
+            \item \(m\) is not all 0s: Subnormal numbers
+        \end{itemize}
+\end{itemize}
+The flexibility of floating point numbers means that arithmetic operations
+are expensive if not performed on a Floating Point Unit (FPU). As AVR does not have an FPU, floating point operations
+must be handled using the ALU instructions which can be significantly slower than integer \linebreak operations.
+In addition, floating point operations require the \mintinline{c}{avr-libc} floating point library to be linked
+which increases the size of the program.
+\subsection{Fixed Point Math}
+Fixed point math is a technique for performing arithmetic operations on integers
+that are scaled by a power of two. This allows for integer arithmetic to be used
+instead of floating point arithmetic, which can be significantly faster
+at the cost of precision.
+
+For common operations such as sine and cosine, consider using lookup tables.
+\chapter{Objects}
+\section{Structures}
+Structures are a way to group related data together.
+\begin{minted}{c}
+struct Point {
+    uint8_t x;
+    uint8_t y;
+};
+
+struct Point p;
+\end{minted}
+The members of a structure can be accessed using the dot operator.
+\begin{minted}{c}
+p.x = 30;
+p.y = 40;
+\end{minted}
+Struct members can also be initialized using braces as with arrays.
+\begin{minted}{c}
+struct Point p = { 30, 40 };
+\end{minted}
+Unlike arrays, structures are not passed can be passed between functions
+and copied normally.
+\begin{minted}{c}
+void func(struct Point p) {
+    p.x = 50;
+}
+
+struct Point p = { 30, 40 };
+func(p);
+
+struct Point q = p; // q.x = 50, q.y = 40
+\end{minted}
+Due to this, structs can contain arrays which can be passed and copied by placing them
+in structs.
+
+Along with this, functions can also return structs.
+\begin{minted}{c}
+struct Point func() {
+    struct Point p = { 30, 40 };
+    return p;
+}
+
+struct Point p = func(); // p.x = 30, p.y = 40
+\end{minted}
+\subsection{Memory Layout}
+Struct members are stored in memory in the order they are declared.
+If the platform has alignment requirements, the compiler will insert padding
+to ensure that the next member is aligned correctly. This is done to
+ensure that the compiler can access the members of the struct efficiently.
+\subsection{Anonymous Structures}
+Structures can be declared without a name if they are only used once.
+\begin{minted}{c}
+struct {
+    uint8_t x;
+    uint8_t y;
+} p;
+\end{minted}
+The type of this variable is \mintinline{c}{unnamed}.
+\subsection{Structures Inside Structures}
+Structures can contain other structures.
+\begin{minted}{c}
+struct Point {
+    uint8_t x;
+    uint8_t y;
+};
+
+struct Rectangle {
+    struct Point p1;
+    struct Point p2;
+};
+
+struct Rectangle r = { { 10, 20 }, { 30, 40 } };
+\end{minted}
+\subsection{Structures and Pointers}
+Structures and members of structs can be addressed normally with the address-of operator.
+\begin{minted}{c}
+struct Point p = { 30, 40 };
+struct Point *ptr = &p;
+
+ptr->x = 50; // Equivalent to (*ptr).x = 50
+\end{minted}
+When accessing members of structs through pointers, the arrow operator (\mintinline{c}{->}) can be used.
+
+Structures can also contain pointers.
+\subsection{Typedef}
+Typedefs can be used to give a type an alias so that the variables type is
+determined by the typedef instead of the actual type.
+If we want to use a structure multiple times, we can use a typedef to give it a (new) name.
+\begin{minted}{c}
+typedef struct PointStruct {
+    uint8_t x;
+    uint8_t y;
+} Point;
+
+Point p = { 30, 40 }; // Point is an alias to struct PointStruct
+\end{minted}
+The type of this variable is \mintinline{c}{Point}.
+The struct also need not be defined inside of the typedef.
+\begin{minted}{c}
+struct PointStruct {
+    uint8_t x;
+    uint8_t y;
+};
+
+typedef struct PointStruct Point;
+
+Point p = { 30, 40 };
+\end{minted}
+This can be useful when the struct is defined in a header file and the typedef is defined in a source file.
+In both cases, it is possible to use the struct name to declare variables.
+\begin{minted}{c}
+struct PointStruct p;
+\end{minted}
+If the struct name is omitted, the type of the struct is \mintinline{c}{unnamed}.
+\begin{minted}{c}
+typedef struct {
+    uint8_t x;
+    uint8_t y;
+} Point;
+
+Point p = { 30, 40 }; // Point is an alias to an unnamed struct
+\end{minted}
+In this case, the struct name cannot be used to declare variables as it is anonymous.
+
+Typedefs can also be used with qualifiers to reduce the amount of typing.
+\section{Unions}
+Unions are similar to structures, however the members of a union share the same overlapping memory location.
+While structs have capacity to store multiple values, unions only have the capacity to store its largest value.
+\begin{minted}{c}
+union Character {
+    char character;
+    uint8_t integer;
+};
+
+union Character c = { 'A' };
+
+printf("%c\n", c.character); // Prints 'A'
+printf("%u\n", c.integer); // Prints 65
+\end{minted}
+This use allows us to access the same memory location interpretted as
+a different type without the need of casting pointers.
+
+When used with structs (or other aggregates), the order members in those structs is
+also maintained.
+\begin{minted}{c}
+struct a {
+    uint8_t i;
+    float f;
+};
+
+struct b {
+    uint8_t i;
+    char c[4];
+};
+
+union u {
+    struct a a;
+    struct b b;
+};
+
+union u u;
+
+u.a.i = 10;
+u.a.f = 3.14;
+
+// u.a.i = 10; u.a.f = 3.14
+
+u.b.c[0] = 'A';
+u.b.c[1] = 'B';
+u.b.c[2] = 'C';
+u.b.c[3] = 'D';
+
+// u.b.i = 10; u.b.c = { 'A', 'B', 'C', 'D' }
+\end{minted}
+\section{Bitfields}
+Bitfields can be used within structures or unions to specify types
+of specific \textbf{bit} sizes.
+\begin{minted}{c}
+struct {
+    uint8_t x : 4;
+    uint8_t y : 4;
+} bits;
+
+bits.x = 13;
+bits.y = 7;
+
+printf("%u\n", bits.x); // Prints 13
+printf("%u\n", bits.y); // Prints 7
+printf("%lu\n", sizeof(bits)); // Prints 1 (8 bits)
+\end{minted}
+In this example, the \mintinline{c}{x} and \mintinline{c}{y} members are 4 bits each.
+The base type of each member must be able to store the specified number of bits.
+\subsection{Properties of Bitfields}
+The address of a bitfield cannot be taken.
+\begin{minted}{c}
+struct {
+    uint8_t x : 4;
+    uint8_t y : 4;
+} bits;
+
+uint8_t *ptr = &bits.x; // Error
+\end{minted}
+A bitfield cannot be an array.
+\begin{minted}{c}
+struct {
+    uint8_t x : 4;
+    uint8_t y[4] : 4;
+} bits; // Error
+\end{minted}
+The name of a bitfield can be omitted, this will introduce padding.
+\begin{minted}{c}
+struct {
+    uint8_t x : 4;
+    uint8_t : 4;
+} bits;
+\end{minted}
+A zero-width bitfield can be used to align the next member
+to the next word boundary.
+\begin{minted}{c}
+struct {
+    uint8_t x : 4;
+    uint8_t : 0;
+    uint8_t y;
+} bits;
+
+printf("%lu\n", sizeof(bits)); // Prints 2
+\end{minted}
+Bitfield order is implementation defined. While bit
+\chapter{Interrupts}
+An interrupt is a signal sent to the processor to indicate that it should \textit{interrupt}
+the current code that is being executed to execute a function called an \textbf{interrupt service routine} (or \textit{interrupt handler}).
+Rather than polling for individual events (such as button presses), interrupts allow the processor to be notified when an event occurs.
+\section{Interrupts and the AVR}
+On the ATtiny1626, interrupts work as follows:
+\begin{enumerate}
+    \item An interrupt-worthy event occurs.
+    \item The appropriate interrupt flag (\mintinline{c}{INTFLAGS}) in the peripheral is set.
+    \item If the corresponding interrupt is enabled (\mintinline{c}{INTCTRL} field of the peripheral), the interrupt is triggered, and we proceed to the following step.
+    \item If the global interrupt flag (\mintinline{c}{SREG.I}) is set, the interrupt can be executed, and we proceed to the following step.
+    \item The PC is pushed onto the stack and jumps to the interrupt vector (the address of the interrupt handler).
+    See page 63--64 on the datasheet.
+\end{enumerate}
+\subsection{Interrupt Vectors}
+The \textbf{interrupt vector} is a table of addresses that the processor jumps to when an interrupt is triggered.
+These addresses are usually at the beginning of the program memory.
+\subsection{Interrupt Service Routine}
+The code that handles the interrupt is called the \textbf{interrupt service routine} (ISR) (or \textit{interrupt handler}).
+The ISR is a function that is executed as a result of the interrupt.
+
+When configuring an interrupt, we must temporarily disable interrupts globally to prevent the interrupt from being triggered while we are configuring it.
+\begin{minted}{c}
+// Disable interrupts globally
+cli();
+
+// Configure interrupt
+
+// Enable interrupts globally
+sei();
+\end{minted}
+It is also important to restore the state of the CPU or registers before the ISR returns.
+This is because another interrupt can be triggered while the ISR is executing.
+To tackle this, we can use the \mintinline{c}{ISR} macro from the \mintinline{c}{avr/interrupt.h}
+header file which will automatically save and restore the state of the CPU and registers.
+\begin{minted}{c}
+#include <avr/interrupt.h>
+
+ISR(TCB0_INT_vect) {
+    // Interrupt service routine for TCB0
+}
+\end{minted}
+This header file also sets aside program memory for the interrupt vector table.
+\subsection{Interrupt Flags}
+Each peripheral has an interrupt flag field (\mintinline{c}{INTFLAGS}) that is set when the conditions
+for that interrupt occur (even if interrupts are disabled).
+The exact format of this field depends on the type of interrupt, but in general a bit is
+set for the type of interrupt, see the datasheet for more information.
+
+As some peripherals have 1 interrupt vector with multiple interrupt sources,
+the interrupt flag fields can be used to determine the exact source of the interrupt.
+
+The interrupt flag field is cleared by writing a 1 to the corresponding bit.
+\subsection{Peripheral Interrupts}
+Peripherals differ in what causes interrupts to be raised and many have multiple interrupt sources.
+\subsubsection{Port Interrupts}
+To configure \mintinline{c}{BUTTON0} as an interrupt source, we must first enable the interrupt in the \mintinline{c}{PORTA.PIN4CTRL} peripheral.
+\begin{minted}{c}
+ISR(PORTA_PORT_vect) {
+    // Interrupt service routine for PORTA
+    VPORTA.INTFLAGS = PIN4_bm;
+}
+
+cli();
+// Enable pull-up resistor and interrupt on falling edge
+PORTA.PIN4CTRL |= PORT_PULLUPEN_bm | PORT_ISC_FALLING_gc;
+sei();
+\end{minted}
+\subsection{Interrupts and Synchronisation}
+ISR's may interact with state used by other code running at the same time,
+which can cause problems with synchronisation, similar to those faced with multithreaded programming.
+To avoid this, we should make use of the \mintinline{c}{volatile} keyword
+so that the compiler does not make assumptions about variable states.
+The \mintinline{c}{cli} and \mintinline{c}{sei} functions can also be used to disable interrupts
+and create a memory barrier which prevents instructions from being reordered by the compiler.
+\chapter{Compilation}
+C source code is translated into machine code through a \textbf{compiler}, whereas
+assembly code is translated into machine code through an \textbf{assembler}.
+While some compilers emit assembly code, others emit machine code directly.
+\section{Assembler}
+Program code run directly on CPUs is not designed to be written by humans.
+The assembler prioritises performance and size efficiency, and accounts for
+simplified chip design.
+
+They allow us to write programs in plain text without needing to memorise opcodes,
+or manually keep track of memory locations. Modern assemblers also provide features
+such as macros that assist in writing code. While the scope of an assembler is
+limited, the programmer decides exactly which instructions are used and the
+assembler simply translates them into machine code.
+\section{Compiler}
+A compiler is a program that translates source code written in a high-level language
+such as C. In a high level programming language, the desired program is described
+algorithmically by the programmer and the compiler produces an equivalent program
+which results in the same \textbf{side effects} when executed.
+\subsection{Compilation Process}
+Compilers can often be configured to produce code in various ways. Compiling without
+optimisations will produce code which closely resembles the source code, so that it is easier to debug.
+This also means that code generation is faster. Compilers can also be configured to
+optimise code for minimum code size or maximum speed (or a combination of both).
+\subsection{Advantages of Compilers}
+High level languages are more portable than assembly code, as they are not tied to a specific instruction set
+architecture. This means that the same source code can be used on another platform, granted
+that a compiler for that platform is available. Compilers also allow us to write efficient code
+through the use of compiler optimisations, which can be difficult to achieve manually in assembly code.
+\subsection{Disadvantages of Compilers}
+Some disadvantages of compilers are that hardware-specific features may only be available from assembly
+requiring the use of inline assembly or assembly language macros. Precise timing of code is also difficult
+due to the inability to predict how the compiler generates code.
+\section{Object Files}
+An object file is the output from the compilation or assembler phase.
+Object files mostly contain machine code, and also contain information about
+the symbols defined in the source code.
+
+Large modularised programs which split source code
+into multiple files can be compiled into object files
+with external references unresolved. This allows the linker to
+resolve the references and produce a single executable file.
+\section{Linker}
+The linker is a program that combines multiple object files and links them
+together to produce a single executable file. The linker resolves all
+external references and addresses are updated as required. The linking step is
+extremely fast compared to the compilation step, as only addresses
+need to be updated. The linker also performs some optimisations such as
+dead code elimination, which removes unused code.
+
+In assembly, the \mintinline{ca65}{.global} directive can be used to
+make labels available to the linker.
+\subsection{Linker in Assembly}
+\begin{minted}{ca65}
+// function.S
+.global function
+
+function:
+    ret
+
+// main.S
+rcall function
+\end{minted}
+In this example, both files can be compiled into object files even though
+the \mintinline{ca65}{function} label is not defined in \mintinline{ca65}{main.S}.
+The linker will resolve the reference to \mintinline{ca65}{function} and
+produce a single executable file.
+\subsection{Linker in C}
+In C, top-level symbols are public by default, but can be made private
+to the current translation unit by using the \mintinline{c}{static} keyword.
+\begin{minted}{c}
+// main.c
+static int a = 0;
+
+// file1.c
+a = 1; // Error: a is not visible
+\end{minted}
+To make a symbol visible to other translation units, the \mintinline{c}{extern} keyword
+can be used.
+\begin{minted}{c}
+// main.c
+extern int a;
+printf("%d\n", a); // Prints 5
+
+// file1.c
+extern int a;
+int a = 5;
+\end{minted}
+Note that variable must be declared first before it can be used.
 \end{document}
