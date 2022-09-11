@@ -86,6 +86,17 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 64. Arrays
 65. Functions
 66. Scope
+67. Accessing Registers
+68. Type Casting
+69. Floating Point Types
+70. Structures
+71. Unions
+72. Bitfields
+73. Interrupts and the AVR
+74. Assembler
+75. Compiler
+76. Object Files
+77. Linker
 
 ---
 
