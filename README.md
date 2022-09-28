@@ -97,6 +97,10 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 75. Compiler
 76. Object Files
 77. Linker
+78. Configuring Hardware Peripherals
+79. Timers
+80. Pulse Width Modulation
+81. Analog to Digital Conversion
 
 ---
 
