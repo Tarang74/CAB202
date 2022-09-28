@@ -115,7 +115,7 @@ The ATtiny1626 microcontroller has the following features:
 \end{itemize}
 \section{AVR Core}
 \begin{definition}[Computer programme]
-    A computer programme is a sequence or set of instructions in a programming language
+    A computer programme is a sequence or set of \linebreak instructions in a programming language
     for a computer to execute.
 \end{definition}
 The main function of the AVR Core Central Processing Unit (CPU) is to ensure correct program execution.
@@ -146,7 +146,7 @@ This is illustrated in the following figure:
 \begin{figure}[H]
     \centering
     \includegraphics[height = 12cm, keepaspectratio = true]{figures/AVR_CPU.pdf}
-    % \caption{} % \label{}
+    \caption{Program execution on the ATtiny1626.} % \label{}
 \end{figure}
 \section{Instructions}
 \begin{itemize}
@@ -248,7 +248,7 @@ use prefixes to denote various bases. Typically,
     \item \textbf{Decimal} notation does not require prefixes
     \item \textbf{Hexadecimal} notation requires the prefix \mintinline{ca65}{0x}
 \end{itemize}
-For example, \mintinline{ca65}{0x80 |=| 0b10000000 |=| 128}.
+For example, \mintinline{ca65}{0x80 |=| 0b10000000 |=| 128}. % chktex 29
 \section{Unsigned Integers}
 The \textbf{unsigned integers} represent the set of counting (natural) numbers, starting at 0.
 In the \textbf{decimal system} (base-10), the unsigned integers are encoded using a sequence of decimal digits (0--9).
@@ -662,7 +662,9 @@ so that dividing an integer \(n\) by \(6.4\) is approximately equivalent to:
 \begin{equation*}
     \frac{n}{6.4} \approx \left( n \times 10 \right) \gg 6
 \end{equation*}
-When the divisor is not exactly representable as a power of 2 we can use fractional exponents to represent the divisor, however this requires a floating point system implementation which is not provided on the AVR.
+When the divisor is not exactly representable as a power of 2 we can use fractional
+exponents to represent the divisor, however this requires a floating point
+system implementation which is not provided on the AVR\@.
 \chapter{Microcontroller Interfacing}
 \section{Logic Levels}
 \subsection{Discretisation}
@@ -699,13 +701,13 @@ Given a transition:
 It is therefore always preferrable to drive a digital input to an unambiguous voltage level.
 \section{Electrical Quantities}
 \subsection{Voltage}
-\textbf{Voltage} \(v\) measures the electrical \textit{potential difference} between two points in a circuit, measured in \textbf{Volts (\unit{V})}.
+\textbf{Voltage} \(v\) is the electrical \textit{potential difference} between two points in a circuit, measured in \textbf{Volts (\unit{V})}.
 \begin{itemize}
-    \item Voltage is measured across a circuit element, or between two points in a circuit, most commonly with respect to a \qty{0}{V} reference (ground).
+    \item Voltage is measured across a circuit element, or between two points in a circuit, commonly with respect to a \qty{0}{V} reference (ground).
     \item It represents the \textbf{potential} of the electrical system to do \textbf{work}.
 \end{itemize}
 \subsection{Current}
-\textbf{Current} \(i\) measures the \textit{rate of flow of electrical charge} through a circuit, measured in \textbf{Amperes (\unit{A})}.
+\textbf{Current} \(i\) is the \textit{rate of flow of electrical charge} through a circuit, measured in \textbf{Amperes (\unit{A})}.
 \begin{itemize}
     \item Current is measured through a circuit element.
 \end{itemize}
@@ -867,7 +869,7 @@ Hence the output state \(Y\) is determined by the logic level of the output driv
 \end{equation*}
 \begin{table}[H]
     \centering
-    \begin{tabular}{c | c}
+    \begin{tabular}{c | c} % chktex 44
         \toprule
         \textbf{\(A\)} & \textbf{\(Y\)} \\
         \midrule
@@ -883,7 +885,7 @@ In many instances, a digital output is required to be placed in a high-impedance
 This is accomplished by using an \textbf{output enable} (OE) signal.
 \begin{figure}[H]
     \centering
-    \includegraphics[height = 4cm, keepaspectratio = true]{figures/HiZ.pdf}
+    \includegraphics[height = 3cm, keepaspectratio = true]{figures/HiZ.pdf}
     \caption{High-impedance output.} % \label{}
 \end{figure}
 \begin{itemize}
@@ -892,7 +894,7 @@ This is accomplished by using an \textbf{output enable} (OE) signal.
 \end{itemize}
 \begin{table}[H]
     \centering
-    \begin{tabular}{c c | c}
+    \begin{tabular}{c c | c} % chktex 44
         \toprule
         \textbf{\(A\)} & \textbf{OE} & \textbf{\(Y\)} \\
         \midrule
@@ -914,6 +916,7 @@ HiZ outputs are typically used when multiple need to signal over the same wire(s
 When \textbf{no devices} are actively driving a net (e.g., all connected outputs are in the HiZ state),
 the state of the net is not well-defined. Hence we can use a \textbf{pull-up} or \textbf{pull-down} resistor
 to ensure that the state of the pin is always \textbf{well-defined}.
+\pagebreak
 \begin{multicols}{2}
     \begin{figure}[H]
         \centering
@@ -987,7 +990,7 @@ To summarise this diagram:
 \end{enumerate}
 \begin{minted}{ca65}
 ; Load macros for easy access to port data space addresses.
-\#include <avr/io.h>
+#include <avr/io.h>
 
 ; Bitmask for pin 5
 |\keyword{ldi}| r16, PIN5_bm
@@ -1072,12 +1075,12 @@ Both of these configurations have their benefits, and the best configuration dep
     \begin{figure}[H]
         \centering
         \includegraphics[height = 4cm, keepaspectratio = true]{figures/active_high_LED.pdf}
-        \caption{LED in an active high configuration.} % \label{}
+        \caption{Active high configuration.} % \label{}
     \end{figure}
     \begin{figure}[H]
         \centering
         \includegraphics[height = 4cm, keepaspectratio = true]{figures/active_low_LED.pdf}
-        \caption{LED in an active low configuration.} % \label{}
+        \caption{Active low configuration.} % \label{}
     \end{figure}
 \end{multicols}
 On the QUTy, the LED display is driven in the \textbf{active low} configuration.
@@ -1103,12 +1106,12 @@ representing one of the logic levels (ground or a positive supply).
     \begin{figure}[H]
         \centering
         \includegraphics[height = 5cm, keepaspectratio = true]{figures/active_high_switch.pdf}
-        \caption{Switch in an active high \\ configuration.} % \label{}
+        \caption{Active high configuration.} % \label{}
     \end{figure}
     \begin{figure}[H]
         \centering
         \includegraphics[height = 5cm, keepaspectratio = true]{figures/active_low_switch.pdf}
-        \caption{Switch in an active low configuration.} % \label{}
+        \caption{Active low configuration.} % \label{}
     \end{figure}
 \end{multicols}
 \begin{itemize}
@@ -1186,8 +1189,8 @@ addresses and the assembler will automatically adjust the address to the correct
 Additionally, labels can also be used as parameters to other immediate instructions if we store the high and low
 bytes in registers and wish to reference the location in an indirect jumping instruction.
 \section{Absolute and Relative Addresses}
-\mintinline{ca65}{jmp} is a 32-bit instruction, which uses 22 bits to specify an address between \mintinline{ca65}{0x000000}
-and \mintinline{ca65}{0x3FFFFF}, or \(2^{23} - 1\) bits of memory (\qty{8}{MB}). As mentioned earlier, this is much larger
+\mintinline{ca65}{jmp} is a 32-bit instruction, which uses 22 bits to specify an address between \mintinline{ca65}{0x000000} % chktex 29
+and \mintinline{ca65}{0x3FFFFF}, or \(2^{23} - 1\) bits of memory (\qty{8}{MB}). As mentioned earlier, this is much larger % chktex 29
 than what the 16-bit PC can address on the ATtiny1626 (\qty{64}{KB}).
 
 As we will only need to jump within \qty{64}{KB} of memory, it is inefficient to use the \mintinline{ca65}{jmp} instruction as it
@@ -1230,7 +1233,7 @@ The ALU performs a subtraction operation whose result is used to update the SREG
     \item \mintinline{ca65}{|\keyword{cpi}| Rd, K} performs \mintinline{ca65}{Rd} \(-\) \mintinline{ca65}{K}
 \end{itemize}
 Note \keywordinline{cp} compares the values in two registers, whereas \keywordinline{cpi} compares the value in a register with an immediate value.
-The result of this operation is used to set the appropriate flags in the SREG.
+The result of this operation is used to set the appropriate flags in the SREG\@.
 \begin{minted}{ca65}
 entry:
     |\keyword{ldi}| r16, 0
@@ -1533,7 +1536,7 @@ The stack is a last-in first-out (LIFO) data structure in SRAM\@.
 It is accessed through a register called the stack pointer (SP),
 which is not part of the register file like SREG\@.
 
-Upon reset, SP is set to the last available address in SRAM (\mintinline{ca65}{0x3FFF}),
+Upon reset, SP is set to the last available address in SRAM (\mintinline{ca65}{0x3FFF}), % chktex 29
 and can be modified through \keywordinline{push}/\keywordinline{pop} and other methods that are generally not recommended.
 \begin{itemize}
     \item \keywordinline{push} stores a register to SP then decrements SP (\(\mathrm{SP} \leftarrow \mathrm{SP} - 1\))
@@ -1887,7 +1890,7 @@ As with integer types, floating point values can also be suffixed to specify whi
 \section{Character and String Literals}
 \begin{itemize}
     \item \textbf{Character} --- surrounded by single quotes \mintinline{c}{'A'}
-    \item \textbf{String} --- surrounded by double quotes \mintinline{c}{"Hello World"}
+    \item \textbf{String} --- surrounded by double quotes \mintinline{c}{"Hello World"} % chktex 18
 \end{itemize}
 \chapter{Flow Control}
 \section{If Statements}
@@ -2004,35 +2007,35 @@ comparing precedence of certain logical and bitwise operations.
     \centering
     \begin{tabular}{c c c}
         \toprule
-        \textbf{Operation}            & \textbf{Operator Symbol}                                                                                                                                                          & \textbf{Associativity}         \\
+        \textbf{Operation}            & \textbf{Operator Symbol}                                                                                                                                                            & \textbf{Associativity}         \\
         \midrule
-        Postfix                       & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                            & \multirow{5}{*}{Left to right} \\
-        Function call                 & \mintinline{c}{()}                                                                                                                                                                &                                \\
-        Array subscripting            & \mintinline{c}{[]}                                                                                                                                                                &                                \\
-        Member access                 & \mintinline{c}{.}                                                                                                                                                                 &                                \\
-        Member access through pointer & \mintinline{c}{->}                                                                                                                                                                &                                \\
+        Postfix                       & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                              & \multirow{5}{*}{Left to right} \\
+        Function call                 & \mintinline{c}{()}                                                                                                                                                                  &                                \\
+        Array subscripting            & \mintinline{c}{[]}                                                                                                                                                                  &                                \\
+        Member access                 & \mintinline{c}{.}                                                                                                                                                                   &                                \\
+        Member access through pointer & \mintinline{c}{->}                                                                                                                                                                  &                                \\
         \midrule
-        Prefix                        & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                            & \multirow{7}{*}{Right to left} \\
-        Unary                         & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                              &                                \\
-        Logical NOT and bitwise NOT   & \mintinline{c}{!}, \mintinline{c}{~}                                                                                                                                              &                                \\
-        Type cast                     & \mintinline{c}{(type)}                                                                                                                                                            &                                \\
-        Dereference                   & \mintinline{c}{*}                                                                                                                                                                 &                                \\
-        Address-of                    & \mintinline{c}{&}                                                                                                                                                                 &                                \\
-        Size-of                       & \mintinline{c}{sizeof}                                                                                                                                                            &                                \\
+        Prefix                        & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                              & \multirow{7}{*}{Right to left} \\
+        Unary                         & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                &                                \\
+        Logical NOT and bitwise NOT   & \mintinline{c}{!}, \mintinline{c}{~}                                                                                                                                                &                                \\
+        Type cast                     & \mintinline{c}{(type)}                                                                                                                                                              &                                \\
+        Dereference                   & \mintinline{c}{*}                                                                                                                                                                   &                                \\
+        Address-of                    & \mintinline{c}{\&}                                                                                                                                                                  &                                \\
+        Size-of                       & \mintinline{c}{sizeof}                                                                                                                                                              &                                \\
         \midrule
-        Multiplicative                & \mintinline{c}{*}, \mintinline{c}{/}, \mintinline{c}{%}                                                                                                                           & Left to right                  \\
-        Additive                      & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                              & Left to right                  \\
-        Bitwise shift                 & \mintinline{c}{<<}, \mintinline{c}{>>}                                                                                                                                            & Left to right                  \\
-        Relational                    & \mintinline{c}{<}, \mintinline{c}{>}, \mintinline{c}{<=}, \mintinline{c}{>=}                                                                                                      & Left to right                  \\
-        Equality                      & \mintinline{c}{==}, \mintinline{c}{!=}                                                                                                                                            & Left to right                  \\
-        Bitwise AND                   & \mintinline{c}{&}                                                                                                                                                                 & Left to right                  \\
-        Bitwise XOR                   & \mintinline{c}{^}                                                                                                                                                                 & Left to right                  \\
-        Bitwise OR                    & \mintinline{c}{|}                                                                                                                                                                 & Left to right                  \\
-        Logical AND                   & \mintinline{c}{&&}                                                                                                                                                                & Left to right                  \\
-        Logical OR                    & \mintinline{c}{||}                                                                                                                                                                & Left to right                  \\
-        Conditional                   & \mintinline{c}{? :}                                                                                                                                                               & Right to left                  \\
-        Assignment                    & \mintinline{c}{=}, \mintinline{c}{+=}, \mintinline{c}{-=}, \mintinline{c}{*=}, \mintinline{c}{/=}, \mintinline{c}{%=}, \mintinline{c}{&=}, \mintinline{c}{^=}, \mintinline{c}{|=} & Right to left                  \\
-        Sequential evaluation         & \mintinline{c}{,}                                                                                                                                                                 & Left to right                  \\
+        Multiplicative                & \mintinline{c}{*}, \mintinline{c}{/}, \mintinline{c}{\%}                                                                                                                            & Left to right                  \\
+        Additive                      & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                & Left to right                  \\
+        Bitwise shift                 & \mintinline{c}{<<}, \mintinline{c}{>>}                                                                                                                                              & Left to right                  \\
+        Relational                    & \mintinline{c}{<}, \mintinline{c}{>}, \mintinline{c}{<=}, \mintinline{c}{>=}                                                                                                        & Left to right                  \\
+        Equality                      & \mintinline{c}{==}, \mintinline{c}{!=}                                                                                                                                              & Left to right                  \\
+        Bitwise AND                   & \mintinline{c}{\&}                                                                                                                                                                  & Left to right                  \\
+        Bitwise XOR                   & \mintinline{c}{^}                                                                                                                                                                   & Left to right                  \\
+        Bitwise OR                    & \mintinline{c}{|}                                                                                                                                                                   & Left to right                  \\
+        Logical AND                   & \mintinline{c}{\&\&}                                                                                                                                                                & Left to right                  \\
+        Logical OR                    & \mintinline{c}{||}                                                                                                                                                                  & Left to right                  \\
+        Conditional                   & \mintinline{c}{? :}                                                                                                                                                                 & Right to left                  \\ % chktex 26
+        Assignment                    & \mintinline{c}{=}, \mintinline{c}{+=}, \mintinline{c}{-=}, \mintinline{c}{*=}, \mintinline{c}{/=}, \mintinline{c}{\%=}, \mintinline{c}{\&=}, \mintinline{c}{^=}, \mintinline{c}{|=} & Right to left                  \\
+        Sequential evaluation         & \mintinline{c}{,}                                                                                                                                                                   & Left to right                  \\
         \bottomrule
     \end{tabular}
     % \caption{} % \label{}
@@ -2047,7 +2050,7 @@ the result is truncated to the type size (or the value modulo the type size).
 \begin{itemize}
     \item \textbf{Unary} operators --- have a single operand. For example, \mintinline{c}{++} and \mintinline{c}{--}, or \mintinline{c}{+} and \mintinline{c}{-}.
     \item \textbf{Binary} operators --- have two operands. For example, \mintinline{c}{+}, \mintinline{c}{-}, \mintinline{c}{*}, and \mintinline{c}{/}.
-    \item \textbf{Ternary} operators --- have three operands. For example, \mintinline{c}{? :}.
+    \item \textbf{Ternary} operators --- have three operands. For example, \mintinline{c}{? :}. % chktex 26
 \end{itemize}
 \section{Assignment}
 To assign a value to a variable, use the assignment (\mintinline{c}{=}) operator.
@@ -2143,7 +2146,7 @@ The \mintinline{c}{#include} directive is used to include the contents of anothe
 This directive has two forms.
 \begin{itemize}
     \item \mintinline{c}{#include <filename>} --- include header files for the C standard library and other header files associated with the target platform.
-    \item \mintinline{c}{#include "filename"} --- include programmer-defined header files that are typically in the same directory as the file containing the directive.
+    \item \mintinline{c}{#include "filename"} --- include programmer-defined header files that are typically in the same directory as the file containing the directive. % chktex 18
 \end{itemize}
 When this directive is used, it is equivalent to copying the contents of the file into the current file,
 at the location of the directive. The included file is also preprocessed and may contain other include directives.
@@ -2224,7 +2227,7 @@ Note that the semi-colon is omitted at the end of the macro definition,
 as it would also be substituted into the program.
 
 Only a single preprocessor directives can appear on a line, and the directives
-must occupy a single line (note that a backslash (\mintinline{c}{\}) can be used to break long lines).
+must occupy a single line (note that a backslash (\mintinline{c}{\\}) can be used to break long lines).
 \chapter{Pointers}
 When a variable is declared, the compiler automatically allocates a block of memory to store that variable.
 If we want to access this block of memory indirectly, we must use a \textbf{pointer}.
@@ -2268,7 +2271,7 @@ uint8_t y = *ptr; // y = Value at ptr = 5
 This is also known as \textbf{indirection}, as we are \textit{indirectly accessing} a value through a pointer.
 \section{Strings}
 In C, strings are represented as arrays of characters, terminated by a character with the value 0.
-Strings are declared using double quotes (\mintinline{c}{""}) and are automatically terminated by a null character.
+Strings are declared using double quotes (\mintinline{c}{""}) and are automatically terminated by a null character. % chktex 18
 \begin{minted}{c}
 char *str = "Hello World";
 
@@ -2429,7 +2432,7 @@ char b[12] = {'H', 'e', 'l', 'l', 'o', ' ',
               'W', 'o', 'r', 'l', 'd', '\0'};
 \end{minted}
 This method allocates 12 bytes of SRAM and
-initialises those bytes with the string \mintinline{c}{"Hello World"}.
+initialises those bytes with the string \mintinline{c}{"Hello World"}. % chktex 18
 This means that the string can be modified later in the program.
 If we use the \mintinline{MATLAB}{const} keyword, the string will be stored in flash memory and cannot be modified.
 \begin{minted}{c}
@@ -2522,7 +2525,7 @@ uint8_t b[10];
 memcpy(b, a, sizeof(a));
 \end{minted}
 \subsection{Multidimensional Arrays}
-Multidimensional arrays (also known as multiple subscript arrays)
+Multi-dimensional arrays (or multiple subscript arrays)
 are used to hold multi-dimensional data.
 \begin{minted}{c}
 uint8_t a[][3] = {
@@ -2732,7 +2735,7 @@ changes the visibility of the variable to the file in which it is declared.
 \section{Accessing Registers}
 As seen in the previous chapter, we can use the \mintinline{c}{volatile} keyword
 to directly reference memory locations by address. This is useful for accessing
-memory mapped IO.
+memory mapped IO\@.
 \begin{minted}{c}
 volatile uint8_t *portb_outclr = 0x0426;
 *portb_outclr = 0b00100000;
@@ -2787,7 +2790,7 @@ Likewise, casting a pointer to an integer will make the integer contain the addr
 uint8_t *ptr = (uint8_t *)0x1234;
 uint16_t addr = (uint16_t)ptr; // addr = 0x1234
 \end{minted}
-These conversions are not portable, but can be necessary when accessing memory mapped IO.
+These conversions are not portable, but can be necessary when accessing memory mapped IO\@.
 \subsubsection{Modfying Qualifiers}
 Casting can also be used to add/remove qualifiers such as \mintinline{c}{const} and \mintinline{c}{volatile}.
 
@@ -2824,15 +2827,15 @@ Note that values are not equally spaced. There are several special values that
 can be represented by floating point numbers.
 \begin{itemize}
     \item \(e = 2^{128}\) (all 1s):
-        \begin{itemize}
-            \item \(m = 0\) (all 0s): \mintinline{c}{INFINITY} if \(s = 0\), \mintinline{c}{-INFINITY} if \(s = 1\)
-            \item \(m\) is not all 0s: \mintinline{c}{NAN}
-        \end{itemize}
+          \begin{itemize}
+              \item \(m = 0\) (all 0s): \mintinline{c}{INFINITY} if \(s = 0\), \mintinline{c}{-INFINITY} if \(s = 1\)
+              \item \(m\) is not all 0s: \mintinline{c}{NAN}
+          \end{itemize}
     \item \(e = 2^{-126}\) (all 0s):
-        \begin{itemize}
-            \item \(m = 0\) (all 0s): \mintinline{c}{0.0} if \(s = 0\), \mintinline{c}{-0.0} if \(s = 1\)
-            \item \(m\) is not all 0s: Subnormal numbers
-        \end{itemize}
+          \begin{itemize}
+              \item \(m = 0\) (all 0s): \mintinline{c}{0.0} if \(s = 0\), \mintinline{c}{-0.0} if \(s = 1\)
+              \item \(m\) is not all 0s: Subnormal numbers
+          \end{itemize}
 \end{itemize}
 The flexibility of floating point numbers means that arithmetic operations
 are expensive if not performed on a Floating Point Unit (FPU). As AVR does not have an FPU, floating point operations
@@ -3073,7 +3076,6 @@ struct {
 
 printf("%lu\n", sizeof(bits)); // Prints 2
 \end{minted}
-Bitfield order is implementation defined. While bit
 \chapter{Interrupts}
 An interrupt is a signal sent to the processor to indicate that it should \textit{interrupt}
 the current code that is being executed to execute a function called an \textbf{interrupt service routine} (or \textit{interrupt handler}).
@@ -3086,7 +3088,7 @@ On the ATtiny1626, interrupts work as follows:
     \item If the corresponding interrupt is enabled (\mintinline{c}{INTCTRL} field of the peripheral), the interrupt is triggered, and we proceed to the following step.
     \item If the global interrupt flag (\mintinline{c}{SREG.I}) is set, the interrupt can be executed, and we proceed to the following step.
     \item The PC is pushed onto the stack and jumps to the interrupt vector (the address of the interrupt handler).
-    See page 63--64 on the datasheet.
+          See page 63--64 on the datasheet.
 \end{enumerate}
 \subsection{Interrupt Vectors}
 The \textbf{interrupt vector} is a table of addresses that the processor jumps to when an interrupt is triggered.
@@ -3130,7 +3132,7 @@ The interrupt flag field is cleared by writing a 1 to the corresponding bit.
 \subsection{Peripheral Interrupts}
 Peripherals differ in what causes interrupts to be raised and many have multiple interrupt sources.
 \subsubsection{Port Interrupts}
-To configure \mintinline{c}{BUTTON0} as an interrupt source, we must first enable the interrupt in the \mintinline{c}{PORTA.PIN4CTRL} peripheral.
+To configure \mintinline{c}{BUTTON0} as an interrupt source, we must enable the interrupt in the \mintinline{c}{PORTA.PIN4CTRL} peripheral.
 \begin{minted}{c}
 ISR(PORTA_PORT_vect) {
     // Interrupt service routine for PORTA
@@ -3169,8 +3171,8 @@ such as C. In a high level programming language, the desired program is describe
 algorithmically by the programmer and the compiler produces an equivalent program
 which results in the same \textbf{side effects} when executed.
 \subsection{Compilation Process}
-Compilers can often be configured to produce code in various ways. Compiling without
-optimisations will produce code which closely resembles the source code, so that it is easier to debug.
+Compilers can be configured to produce code in various ways. Compiling without
+optimisation will produce code which closely resembles the source code, so that it is easier to debug.
 This also means that code generation is faster. Compilers can also be configured to
 optimise code for minimum code size or maximum speed (or a combination of both).
 \subsection{Advantages of Compilers}
@@ -3238,4 +3240,206 @@ extern int a;
 int a = 5;
 \end{minted}
 Note that variable must be declared first before it can be used.
+\chapter{Hardware Peripherals}
+Microcontrollers typically include a variety of hardware peripherals
+that remove the burden of having to write software
+for common functionality such as
+timers, serial communication,
+and analogue to digital conversion.
+
+They can provide very precise timing and very fast (nanosecond) response times.
+
+Hardware peripherals can run independent of the CPU (in parallel)
+so that:
+\begin{itemize}
+    \item peripherals can perform tasks without software intervention
+    \item peripherals are not subject to timing constrains (execution time of instructions, CPU clock speed)
+    \item the CPU can be used to perform other computations while the peripheral is busy
+\end{itemize}
+All control of, and communication with peripherals is done through \textbf{peripheral registers}
+which the CPU can access via the memory map. Peripherals also typically have direct access
+to hardware resources such as pins.
+\section{Configuring Hardware Peripherals}
+Upon reset, most hardware peripherals are \textbf{disabled by default}
+and must be \textbf{configured and enabled} by writing to the appropriate peripheral registers.
+This is often done once at the start of the program, but can also be reconfigured dynamically
+if required, depending on the application. Information about peripheral registers is found in the
+datasheet and often recommended steps are also provided.
+
+In general:
+\begin{enumerate}
+    \item Set bits on peripheral registers to configure the peripheral in the correct mode
+    \item Enable peripheral interrupts and define an associated ISR, if required
+    \item Enable the peripheral
+\end{enumerate}
+It is best practice to globally disable interrupts when configuring peripherals.
+\section{Timers}
+Timers provide precise measurements of \textbf{elapsed clock cycles} in
+hardware, independent of software and the CPU\@.
+Timers are used to generate periodic events (via an interrupt),
+measure time between two events, generate periodic signals on a pin
+that are frequency of pulse width modulated etc.
+\subsection{Timer Implementations}
+Most timer implementations use the same basic structure,
+a \textbf{counter} which is incremented or decremented by a clock/event/etc.
+By comparing the value of this counter, the timer can perform
+more complex behaviours such as generating an interrupt, changing pin state etc.
+\subsection{Timer Counters}
+The ATtiny1626 has two timers, Timer Counter A and B (TCA/TCB)
+that are both 16-bit counters. As both timers are highly configurable,
+the datasheet should be consulted for more information.
+
+In general, the counter, \mintinline{c}{CNT}, increments
+by 1 each clock cycle. The clock cycle can be configured with a prescaler
+to increase the duration of a timer.
+
+The capture compare register \mintinline{c}{CCMP} can be used to
+generate an interrupt when the counter reaches a certain value.
+
+The period register \mintinline{c}{PER} can also be used to
+set the maximum value of the counter. This register can also generate
+interrupts when the counter reaches the maximum value (overflow).
+\subsection{Timer Periods}
+The period \(T\) is the duration of a timer cycle, that is, the time before the counter
+resets to 0. To configure the timer counter to cycle according to this period, we must
+configure the register \mintinline{c}{PER}, which is the \textbf{number of counts} \(n\) of the
+timer clock, depending on the \textbf{clock frequency} \(f_\mathrm{clk}\) of the timer clock.
+
+One period of the timer clock is given by:
+\begin{equation*}
+    T_\mathrm{clk} = \frac{1}{f_\mathrm{clk} / \mathrm{prescaler}}
+\end{equation*}
+so that the number of timer clock cycles in a period \(T\) is given by:
+\begin{equation*}
+    n = \frac{T}{T_\mathrm{clk}}.
+\end{equation*}
+The prescalared used to configure the timer clock leads to a trade-off between
+the timer period and the timer resolution, as the interval between timer clock cycles \(T_\mathrm{clk}\)
+is increased.
+\subsection{Timer Counter B Example Configuration}
+\begin{minted}{c}
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+void tcb_init() {
+    TCB0.CTRLB = TCB_CNTMODE_INT_gc; // Configure TCB0 in periodic interrupt mode
+    TCB0.CCMP = 3333;                // Set period for 1 ms (3333 clocks @ 3.33 MHz)
+    TCB0.INTCTRL = TCB_CAPT_bm;      // Enable CAPT interrupt source
+    TCB0.CTRLA = TCB_ENABLE_bm;      // Enable TCB0
+}
+
+int main(void)
+{
+    sei();
+    tcb_init();
+    cli();
+
+    while (1);
+}
+\end{minted}
+\section{Pulse Width Modulation}
+Pulse width modulation (PWM) is a technique used to generate a \textbf{periodic signal}
+with a variable duty cycle. The \textbf{duty cycle} \(D\) of a signal
+is a measure of the ratio of the HIGH time of the signal compared to the total PWM period.
+\begin{equation*}
+    D = \frac{T_\mathrm{HIGH}}{T_\mathrm{HIGH} + T_\mathrm{LOW}} = \frac{T_\mathrm{HIGH}}{T}
+\end{equation*}
+A duty cycle of 0\% means that the signal is always LOW, while a duty cycle of 100\%
+means that the signal is always HIGH\@.
+
+PWM can be used as a form of digital to analogue conversion, where a \textbf{modulating signal}
+is used to set the duty cycle of a PWM output. In analogue, a triangular waveform known as the \textbf{carrier}
+is compared with this modulating signal so that the PWM output is high when the modulating signal is greater than the carrier.
+\subsection{PWM Implementation}
+On the ATtiny1626, the carrier is generated by a timer counter (i.e., \mintinline{c}{TCA0.CNT}) and the modulating signal
+is the compare value \mintinline{c}{TCA0.CCMP}. By setting the compare value to a value less than the counter value,
+the PWM output's duty cycle can be controlled, via the following equation:
+\begin{equation*}
+    D_\mathrm{PWM} = \frac{\mintinline{c}{TCA0.CCMP}}{\mintinline{c}{TCA0.CNT} + 1}
+\end{equation*}
+\subsection{PWM Brightness Control Example}
+\begin{minted}{c}
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+void tca_init() {
+    // DISP EN
+    PORTB.OUT = PIN1_bm;
+    PORTB.DIR = PIN1_bm;
+
+    // Set waveform generation mode to single slope
+    // Waveform output controls PA1 PWM (display brightness)
+    TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_SINGLESLOPE_gc | TCA_SINGLE_CMP1EN_bm;
+    TCA0.SINGLE.PER = 0xFFFF;                 // Set period to maximum value
+    TCA0.SINGLE.CMP1 = 0xFFFE;                // 100% duty cycle
+    TCA0.SINGLE.CTRLA = TCA_SINGLE_ENABLE_bm; // Enable TCA0
+}
+
+int main(void)
+{
+    sei();
+    tca_init();
+    cli();
+
+    while (1);
+}
+\end{minted}
+To dynamically change the brightness of the display, the compare value can be changed
+using the buffered register \mintinline{c}{TCA0.SINGLE.CMP1BUF}.
+\section{Analog to Digital Conversion}
+Analog to digital conversion (ADC) is a technique used to convert an analogue signal
+to a digital signal. The analogue signal is sampled at a regular interval and the
+sampled value is converted to a digital value.
+
+Digital quantities are both discrete in amplitude and time.
+\subsection{Quantisation}
+When we \textbf{discretise in amplitude}, this is referred to as \textbf{quantisation}.
+
+Each amplitude is assigned a digital \textbf{code}. The \textbf{code width}
+determines the \textbf{amplitude resolution} and introduces \textbf{quantisation error}.
+\subsection{Sampling}
+When we \textbf{discretise in time}, this is referred to as \textbf{sampling}.
+The \textbf{sampling rate} determines the \textbf{time resolution} and introduces \textbf{aliasing error}.
+This rate is typically the period of the CPU clock.
+\subsection{ADC Implementation}
+Analogue to digitalconversion is the process of discretising a continuous signal (typically a voltage)
+into a digital code. Specialised hardware called an \textbf{analogue to digital converter} (ADC)
+performs this function. The ADC samples the analogue signal at a regular interval at an instant in time, and
+converts the sampled value to a digital value.
+\subsection{ADC Potentiometer Example}
+\begin{minted}{c}
+#include <stdio.h>
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+void adc_init() {
+    // Select AIN2 (potentiometer R1)
+    ADC0.MUXPOS = ADC_MUXPOS_AIN2_gc;
+
+    // Need 4 CLK_PER cycles @ 3.3 MHz for 1us, select VDD as ref
+    ADC0.CTRLC = (4 << ADC_TIMEBASE_gp) | ADC_REFSEL_VDD_gc;
+    // Sample duration of 64
+    ADC0.CTRLE = 64;
+    // Free running
+    ADC0.CTRLF = ADC_FREERUN_bm;
+    // Select 8-bit resolution, single-ended
+    ADC0.COMMAND = ADC_MODE_SINGLE_8BIT_gc | ADC_START_IMMEDIATE_gc;
+
+    // Enable ADC
+    ADC0.CTRLA = ADC_ENABLE_bm;
+}
+
+int main(void)
+{
+    sei();
+    adc_init();
+    cli();
+
+    while (1)
+    {
+        printf("%u\n", ADC0.RESULT0);
+    }
+}
+\end{minted}
 \end{document}
