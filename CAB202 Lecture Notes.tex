@@ -2007,35 +2007,35 @@ comparing precedence of certain logical and bitwise operations.
     \centering
     \begin{tabular}{c c c}
         \toprule
-        \textbf{Operation}            & \textbf{Operator Symbol}                                                                                                                                                            & \textbf{Associativity}         \\
+        \textbf{Operation}            & \textbf{Operator Symbol}                                                                                                                                                                                                  & \textbf{Associativity}         \\
         \midrule
-        Postfix                       & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                              & \multirow{5}{*}{Left to right} \\
-        Function call                 & \mintinline{c}{()}                                                                                                                                                                  &                                \\
-        Array subscripting            & \mintinline{c}{[]}                                                                                                                                                                  &                                \\
-        Member access                 & \mintinline{c}{.}                                                                                                                                                                   &                                \\
-        Member access through pointer & \mintinline{c}{->}                                                                                                                                                                  &                                \\
+        Postfix                       & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                                                                    & \multirow{5}{*}{Left to right} \\
+        Function call                 & \mintinline{c}{()}                                                                                                                                                                                                        &                                \\
+        Array subscripting            & \mintinline{c}{[]}                                                                                                                                                                                                        &                                \\
+        Member access                 & \mintinline{c}{.}                                                                                                                                                                                                         &                                \\
+        Member access through pointer & \mintinline{c}{->}                                                                                                                                                                                                        &                                \\
         \midrule
-        Prefix                        & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                              & \multirow{7}{*}{Right to left} \\
-        Unary                         & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                &                                \\
-        Logical NOT and bitwise NOT   & \mintinline{c}{!}, \mintinline{c}{~}                                                                                                                                                &                                \\
-        Type cast                     & \mintinline{c}{(type)}                                                                                                                                                              &                                \\
-        Dereference                   & \mintinline{c}{*}                                                                                                                                                                   &                                \\
-        Address-of                    & \mintinline{c}{\&}                                                                                                                                                                  &                                \\
-        Size-of                       & \mintinline{c}{sizeof}                                                                                                                                                              &                                \\
+        Prefix                        & \mintinline{c}{++}, \mintinline{c}{--}                                                                                                                                                                                    & \multirow{7}{*}{Right to left} \\
+        Unary                         & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                                                      &                                \\
+        Logical NOT and bitwise NOT   & \mintinline{c}{!}, \mintinline{c}{~}                                                                                                                                                                                      &                                \\
+        Type cast                     & \mintinline{c}{(type)}                                                                                                                                                                                                    &                                \\
+        Dereference                   & \mintinline{c}{*}                                                                                                                                                                                                         &                                \\
+        Address-of                    & \mintinline[escapeinside=||]{c}{|\&|}                                                                                                                                                                                     &                                \\
+        Size-of                       & \mintinline{c}{sizeof}                                                                                                                                                                                                    &                                \\
         \midrule
-        Multiplicative                & \mintinline{c}{*}, \mintinline{c}{/}, \mintinline{c}{\%}                                                                                                                            & Left to right                  \\
-        Additive                      & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                & Left to right                  \\
-        Bitwise shift                 & \mintinline{c}{<<}, \mintinline{c}{>>}                                                                                                                                              & Left to right                  \\
-        Relational                    & \mintinline{c}{<}, \mintinline{c}{>}, \mintinline{c}{<=}, \mintinline{c}{>=}                                                                                                        & Left to right                  \\
-        Equality                      & \mintinline{c}{==}, \mintinline{c}{!=}                                                                                                                                              & Left to right                  \\
-        Bitwise AND                   & \mintinline{c}{\&}                                                                                                                                                                  & Left to right                  \\
-        Bitwise XOR                   & \mintinline{c}{^}                                                                                                                                                                   & Left to right                  \\
-        Bitwise OR                    & \mintinline{c}{|}                                                                                                                                                                   & Left to right                  \\
-        Logical AND                   & \mintinline{c}{\&\&}                                                                                                                                                                & Left to right                  \\
-        Logical OR                    & \mintinline{c}{||}                                                                                                                                                                  & Left to right                  \\
-        Conditional                   & \mintinline{c}{? :}                                                                                                                                                                 & Right to left                  \\ % chktex 26
-        Assignment                    & \mintinline{c}{=}, \mintinline{c}{+=}, \mintinline{c}{-=}, \mintinline{c}{*=}, \mintinline{c}{/=}, \mintinline{c}{\%=}, \mintinline{c}{\&=}, \mintinline{c}{^=}, \mintinline{c}{|=} & Right to left                  \\
-        Sequential evaluation         & \mintinline{c}{,}                                                                                                                                                                   & Left to right                  \\
+        Multiplicative                & \mintinline{c}{*}, \mintinline{c}{/}, \mintinline[escapeinside=||]{c}{|\%|}                                                                                                                                               & Left to right                  \\
+        Additive                      & \mintinline{c}{+}, \mintinline{c}{-}                                                                                                                                                                                      & Left to right                  \\
+        Bitwise shift                 & \mintinline{c}{<<}, \mintinline{c}{>>}                                                                                                                                                                                    & Left to right                  \\
+        Relational                    & \mintinline{c}{<}, \mintinline{c}{>}, \mintinline{c}{<=}, \mintinline{c}{>=}                                                                                                                                              & Left to right                  \\
+        Equality                      & \mintinline{c}{==}, \mintinline{c}{!=}                                                                                                                                                                                    & Left to right                  \\
+        Bitwise AND                   & \mintinline[escapeinside=||]{c}{|\&|}                                                                                                                                                                                     & Left to right                  \\
+        Bitwise XOR                   & \mintinline{c}{^}                                                                                                                                                                                                         & Left to right                  \\
+        Bitwise OR                    & \mintinline{c}{|}                                                                                                                                                                                                         & Left to right                  \\
+        Logical AND                   & \mintinline[escapeinside=||]{c}{|\&\&|}                                                                                                                                                                                   & Left to right                  \\
+        Logical OR                    & \mintinline{c}{||}                                                                                                                                                                                                        & Left to right                  \\
+        Conditional                   & \mintinline{c}{? :}                                                                                                                                                                                                       & Right to left                  \\ % chktex 26
+        Assignment                    & \mintinline{c}{=}, \mintinline{c}{+=}, \mintinline{c}{-=}, \mintinline{c}{*=}, \mintinline{c}{/=}, \mintinline[escapeinside=||]{c}{|\%|=}, \mintinline[escapeinside=||]{c}{|\&|=}, \mintinline{c}{^=}, \mintinline{c}{|=} & Right to left                  \\
+        Sequential evaluation         & \mintinline{c}{,}                                                                                                                                                                                                         & Left to right                  \\
         \bottomrule
     \end{tabular}
     % \caption{} % \label{}
@@ -2227,7 +2227,7 @@ Note that the semi-colon is omitted at the end of the macro definition,
 as it would also be substituted into the program.
 
 Only a single preprocessor directives can appear on a line, and the directives
-must occupy a single line (note that a backslash (\mintinline{c}{\\}) can be used to break long lines).
+must occupy a single line (note that a backslash (\mintinline[escapeinside=||]{c}{|\backslash|}) can be used to break long lines). % chktex 9
 \chapter{Pointers}
 When a variable is declared, the compiler automatically allocates a block of memory to store that variable.
 If we want to access this block of memory indirectly, we must use a \textbf{pointer}.
@@ -3442,4 +3442,324 @@ int main(void)
     }
 }
 \end{minted}
+\section{Serial Communication}
+Serial communication is the process of transmitting data \textbf{one bit at a time}.
+On a microcontroller, this is typically done via a digital I/O pin.
+
+The form of serial communication is determined by the \textbf{protocol} used (how the data is arranged, timing etc.)
+and the \textbf{physical interface} used (i.e., voltage level used to represent bits).
+For two devices to communicate, they must both use the same protocol and physical interface.
+\subsection{Serial Communication Terminology}
+\begin{itemize}
+    \item \textbf{Transmit}: to send data. Often abbreviated to \textbf{Tx}.
+    \item \textbf{Receive}: to receive data. Often abbreviated to \textbf{Rx}.
+    \item \textbf{Full-duplex}: bidirectional communication, occurring simultaneously.
+    \item \textbf{Half-duplex}: bidirectional communication, occurring in one direction at a time.
+    \item \textbf{Simplex}: Unidirectional communication.
+    \item \textbf{Synchronous}: Communication relying on a shared clock.
+    \item \textbf{Asynchronous}: Communication that does not rely on a shared clock.
+\end{itemize}
+There are many serial interfaces used in embedded systems, including:
+\begin{itemize}
+    \item \textbf{UART}: Universal asynchronous receiver/transmitter.
+    \item \textbf{SPI}: Serial peripheral interface.
+    \item \textbf{I\({}^2\)C}: Inter-integrated circuit.
+    \item \textbf{CAN}: Controller area network.
+    \item \textbf{I\({}^2\)S}: Inter-IC sound.
+\end{itemize}
+\subsection{UART}
+UART is a simple and cost effective serial communication protocol. As it is asynchronous,
+its clock is not shared between the two communicating devices. Instead, the sender and receiver
+must agree on a \textbf{baud rate} (the number of bits transmitted per second). This is
+typically in the range of \qtyrange[range-phrase=~to~]{9600}{115200}{baud} (with a \qty{2}{Mbaud} maximum).
+
+UART is a frame based protocol, where each frame is signalled by a start bit (always LOW),
+and is fixed length and format. UART can be used in both full-duplex or half-duplex,
+depending on the hardware implementation, where the transmitter and receiver are
+fully independent. This means either a 1- or 2-wire mode is possible (plus 1 for GND).
+\subsubsection{UART Frame Format}
+The UART frame format is as follows:
+\begin{itemize}
+    \item \textbf{Start bit}: always LOW\@.
+    \item \textbf{Data bits}: 5 to 9 bits of data\@.
+    \item \textbf{Parity bit}: optional bit used to detect errors.
+    \item \textbf{Stop bit}: always HIGH\@.
+    \item \textbf{Idle}: in the idle state, the line is HIGH\@.
+\end{itemize}
+The parity bit is used to detect errors in the data bits. It allows the receiver to
+detect a single-bit error in the frame. The parity bit can be configured to either be
+odd or even parity.
+\begin{itemize}
+    \item For \textbf{even} parity, the total number of 1s in the data and parity bits must be even.
+    \item For \textbf{odd} parity, the total number of 1s in the data and parity bits must be odd.
+\end{itemize}
+If a parity error is detected in a received frame, the receiver may choose to reject the frame.
+\subsubsection{USART0 on the ATtiny1626}
+The USART (Universal Synchronous/Asynchronous Receiver/Transmitter)
+peripheral is used to implement UART on the ATtiny1626.
+
+The transmission operation is as follows:
+\begin{enumerate}
+    \item The user loads the data for transmission into the \mintinline{c}{TXDATA} register.
+    \item When the TX shift register is empty, the data will immediately be copied into the shift register.
+    \item Data is shifted out from the TX shift register, one bit at a time, according to the baud rate.
+    \item The transmitter is double-buffered so that:
+          \begin{itemize}
+              \item If a second byte is loaded into the \mintinline{c}{TXDATA} register before the first byte has finished transmitting,
+                    this byte will be transferred into the TX buffer and transmitted after the first byte.
+              \item Additionally, writing a third byte will cause it to remain in the \mintinline{c}{TXDATA} register, until the previous two bytes have been transmitted.
+          \end{itemize}
+\end{enumerate}
+The reception operation is as follows:
+\begin{enumerate}
+    \item The start of an incoming frame is detected based on a falling edge on the RX line.
+    \item Data is shifted into the RX shift register, one bit at a time, according to the baud rate.
+    \item Once the correct number of data bits have been shifted the shift register, the data will be copied into the
+          \mintinline{c}{RXDATA} register.
+    \item The receiver is double-buffered so that:
+          \begin{itemize}
+              \item If a second byte is shifted out of the shift register before the first byte is read, it will be stored in the RX buffer.
+              \item Additionally, a third byte will remain in the RX shift register until the RX buffer is empty.
+          \end{itemize}
+\end{enumerate}
+For more information about the USART0 peripheral, see the datasheet.
+\subsubsection{USART0 Example Configuration}
+\begin{minted}{c}
+void uart_init(void) {
+    PORTB.DIRSET = PIN2_bm;
+    USART0.BAUD = 1389;
+    USART0.CTRLB = USART_RXEN_bm | USART_TXEN_bm;
+}
+\end{minted}
+\subsection{Serial Peripheral Interface}
+SPI is a synchronous serial communication protocol where a clock is transmitted
+to allow for higher bit rates in the range \qtyrange{10}{20}{MHz}. SPI is typically
+used for high-speed, inter-IC communications (communication with other peripherals) over short distances.
+SPI is also \linebreak full-duplex, and can be configured to use a 2-, 3-, 4-wire modes (plus 1 for GND).
+It can be used to communicate with multiple devices simultaneously, using
+\textbf{chip select} (CS) (or slave select) lines to select the device to communicate with.
+Typically in a master slave model, the master device controls the clock.
+
+The SPI peripheral can be used to interface to devices that produce or consume a serial bit stream, clocked or otherwise.
+The clock phase and polarity can also be modified to suit the device being interfaced to. It is also possible to have multiple
+masters on the same bus, but this requires a careful mechanism to arbitrate access to the bus.
+\subsubsection{SPI0 Example Configuration}
+\begin{minted}{c}
+void spi_init(void) {
+    VPORTC.OUT = PIN0_bm | PIN2_bm;
+    VPORTC.DIR = PIN0_bm | PIN2_bm;
+
+    PORTMUX.SPIROUTEA = PORTMUX_SPI0_ALT1_gc;
+
+    SPI0.CTRLB = SPI_SSD_bm;
+    SPI0.INTCTRL = SPI_IE_bm;
+    SPI0.CTRLA = SPI_MASTER_bm | SPI_ENABLE_bm;
+}
+\end{minted}
+\subsection{Other Serial Protocols}
+\begin{itemize}
+    \item \textbf{I\({}^2\)C}: Inter-integrated circuit.
+          \begin{itemize}
+              \item Very common on microcontrollers, suitable for short distances only (typically < \qty{300}{mm}). Widely used for external peripherals.
+              \item Typically up to \qty{400}{kbaud}.
+              \item Half-duplex, synchronous, 2-wire bus, with bidirectional signalling, where devices use open-drain outputs.
+          \end{itemize}
+    \item \textbf{CAN}: Controller area network.
+          \begin{itemize}
+              \item Very prevalent automotive and industrial standard, suitable for medium distances (\qtyrange{40}{500}{m})
+              \item Robust and reliable (safety critical systems)
+              \item Built-in message priority and arbitration
+              \item Typically up to \qty{1}{Mbaud}
+              \item Half-duplex, asynchronous, 2-wire bus (one differential pair)
+              \item Very precise timing requirements compared with UART
+              \item Complex protocol and controller
+          \end{itemize}
+\end{itemize}
+\subsection{Polled vs Interrupt Driven}
+In a polled model for serial communication, the CPU is continuously checking the status of the peripheral to see if it is ready to transmit or receive data.
+This is referred to as a \textbf{blocking} read/write, as the program does not proceed until the read/write completes.
+This delay may be significant for a slow serial interface as the CPU cannot do anything else while waiting for the peripheral to complete the operation.
+
+Alternatively, we can use an interrupt-driven model, where we can use interrupts to signal when the peripheral is ready for
+new data to be read/written. In this model, no delays are incurred by the CPU, and we are guaranteed that data is already ready to be read/written.
+The read/write operations are also completed in a deterministic amount of time, and the CPU can do other tasks while waiting for the peripheral to complete the operation.
+\section{Serial Communications on the QUTy}
+\subsection{Virtual COM Port via USB-UART Bridge}
+The CP2102N is a USB-UART bridge that allows the QUTy to communicate with a PC via a USB cable. On the USB (host, e.g., computer) side, it presents itself as a virtual COM port (VCP),
+and on the microcontroller side, it presents itself as a UART interface.
+The bytes written via the UART are received by the VCP, and vice versa. Note that the TX pin (output) of the microcontroller is connected to the RX pin (input) of the VCP, and vice versa.
+
+The UPDI pin is used to program the flash memory of the QUTy with a program. It share the USB-UART bridge with the UART interface, which necessitates a switch to select between the two.
+\subsection{Controlling the 7-Segment Display}
+The 7-segment display is interfaced to the microcontroller by a 74HC595 \textbf{shift register}.
+A shift register is a device which translates \textbf{serial} input/output into \textbf{parallel} input/output.
+On the QUTy, it takes a serial, 1-bit output from the microcontroller and uses this to control, in parallel, the 7-segment display, plus a digit select signal.
+The 74HC595 takes a \textbf{clocked serial data stream} as an input, which makes interfacing via the SPI peripheral very simple.
+
+Q0-Q6 on the shift register control the 7 segments of the display, and Q7 controls the digit select.
+The first bit clocked out of the microcontroller will set the state of Q7, and the last bit clocked out will set the state of Q0.
+
+To latch the data shifted into the shift register into the output register (and consequently update the state of Q0-Q7) requires a \textbf{rising edge} on the DISP LATCH net.
+\subsection{Time Multiplexing}
+As only one side of the 7-segment display can be illuminated at a time, we need to multiplex the display to show both digits.
+This is done by using a \textbf{time multiplexing} scheme, where we illuminate each digit for a short period of time, and then switch to the other digit.
+As this is done rapidly, the human eye perceives both digits as being illuminated at the same time. If we wish to display a number, we can simply
+store the state of each digit and switch between them using an interrupt-driven timer.
+
+If we choose a refresh rate of \qty{50}{Hz}, we must choose a period of \qty{20}{ms} for both digits. This means that we must switch digits every \qty{10}{ms}
+which will ensure that each digit is displayed for an equal amount of time.
+\section{Strings}
+\subsection{Character Literals}
+The encoding of a character is platform-dependent, but typically characters 0--127 are defined through the American Standard Code for Information Interchange (ASCII),
+with slight variations depending on locale. In this character set, characters 0--31 and 127 are control characters, and characters 32--126 are printable characters.
+Characters 128--255 are typically defined by the local character set, and are not portable between platforms.
+
+A character literal is a single character enclosed in single quotes, e.g., \mintinline{c}{'a'}, and escape sequences can be used to represent control characters, e.g., \mintinline{c}{'\n'}.
+Characters are stored in memory as 8-bit values, and are typically represented as unsigned integers in C.
+\subsection{String Literals}
+As mentioned in previous sections, a string is a sequence of characters, terminated by a null character (\mintinline{c}{'\0'}).
+Strings can be defined using double quotes, e.g., \mintinline{c}{"Hello, world!"} or as an array of characters. When defined using double quotes, % chktex 18
+a null character is implicitly added to the end of the string, however this is not the case when defined as an array of characters.
+
+If the size of the character array is specified for a character array, then
+\begin{itemize}
+    \item If the size is greater than the length of the string, then the remaining elements of the array are initialised to 0.
+    \item If the size is less than the length of the string, then the string is truncated to fit the array, and no null character is added.
+\end{itemize}
+When accessing strings to perform operations on them, we can utilise the null character to determine the length of the string.
+
+To modify a string, we can utilise pointer arithmetic to modify each character in-place.
+The \mintinline{c}{<string.h>} header file contains a number of functions for manipulating strings, including
+\begin{itemize}
+    \item \mintinline{c}{strlen()} --- Get length of string
+    \item \mintinline{c}{strcpy()}, \mintinline{c}{strncpy()} --- Copy string
+    \item \mintinline{c}{memcpy()} --- Copy data
+    \item \mintinline{c}{strcmp()} --- Compare strings
+    \item \mintinline{c}{strchr()}, \mintinline{c}{strrchr()} --- Find character in string
+    \item \mintinline{c}{strchr()} --- Find string in string
+    \item \mintinline{c}{strcat()} --- Concatenate two strings
+\end{itemize}
+\subsection{Standard Input/Output}
+The C standard I/O header file \mintinline{c}{<stdio.h>} library provides a number of functions that read input
+and write output. Many of these functions work with the standard input and output devices, \mintinline{c}{stdin} and \mintinline{c}{stdout}.
+On a PC, these will normally read from or write to, a terminal by default. On the QUTy, these devices are non-functional by default, and must be
+configured to read from/write to USART0.
+
+The \mintinline{c}{putchar(0)} and \mintinline{c}{getchar()} functions are used to write a single character to the standard output device and read a single character from the standard input device, respectively.
+\subsection{Formatted Output}
+The \mintinline{c}{printf()} function (print formatted) is used to write formatted output to the standard output device. The format string is a string that contains
+text and format specifiers, which are used to specify how the arguments are to be formatted. The format specifiers are prefixed by a percent sign (\mintinline[escapeinside=||]{c}{|\%|}).
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("Hello, world!\n"); // Print a string
+printf("%d\n", 100); // Print a signed integer (or %i)
+printf("%d%%\n", 100); // Escape a percent sign
+printf("%u\n", 100); // Print an unsigned integer
+printf("%o\n", 100); // Print an unsigned octal
+printf("%x\n", 100); // Print an unsigned hexadecimal (%X uppercase)
+printf("%p\n", &var); // Print a pointer
+\end{minted}
+Preceding the format specifier with an optional \textbf{integer length modifier} will change the size of the argument that is formatted.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%d\n", 100); // Print a signed integer
+printf("%hd\n", 100); // Print a signed short integer
+printf("%ld\n", 100); // Print a signed long integer
+\end{minted}
+Additionally, a number before the specifier can be used to specify the minimum width of the output, and a number after the period can be used to specify the number of decimal places.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%d\n", 100); // Print a signed integer
+printf("%10d\n", 100); // Print a signed integer with a minimum width of 10
+printf("%-10d\n", 100); // Print a signed integer with a minimum width of 10 and
+                        // justify left
+\end{minted}
+For floating point numbers, the \mintinline[escapeinside=||]{c}{|\%|f} specifier can be used to print a fixed-point number, and the \mintinline[escapeinside=||]{c}{|\%|e} specifier can be used to print a floating-point number in scientific notation.
+\mintinline[escapeinside=||]{c}{|\%|g} prints either depending on the size.
+A decimal point can be used to specify the number of decimal places to print.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%f\n", 100.0); // Print a float
+printf("%.2f\n", 100.0); // Print a float with 2 d.p.
+printf("%e\n", 100.0); // Print a float in scientific notation
+\end{minted}
+For performance reasons, \mintinline{c}{printf()} is buffered, and will store characters in a buffer in SRAM\@. By default \mintinline{c}{stdout}
+is line-buffered, meaning that the buffer is flushed when a newline character is written to the buffer. \mintinline{c}{fflush(stdout)} can be used to flush the buffer.
+\subsection{Formatted Input}
+The \mintinline{c}{scanf()} function (scan formatted) is used to read formatted input from the standard input device. The format string is similar to that of \mintinline{c}{printf()},
+except that the format specifiers are used to specify how the input is to be read.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i;
+scanf("%d", &i); // Read a signed integer
+// A signed integer input will be stored in i
+// Otherwise, the function returns 0
+
+char str[10];
+scanf("abc%d", str); // Read a string with a prefix
+// If the string is "abc123", then str will be "123"
+// If the string is "5", then "5" will stay in the buffer and the function will return 0
+// If the string is "abcd", then scanf will stop reading and return 0
+// Otherwise, the function returns 0
+\end{minted}
+If two or more format specifiers are used, then the function will read input until it reaches a whitespace character, and then stop.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i, j;
+scanf("%d %d", &i, &j); // Read two signed integers
+// If the input is "123 456", then i will be 123 and j will be 456
+// If the input is "123", then i will be 123 and the function will return 0
+// Otherwise, the function returns 0
+\end{minted}
+Whitespace characters are ignored when reading input,
+\begin{minted}{c}
+#include <stdio.h>
+
+char c;
+scanf("%c", &c); // Read a character
+// If the input is "a", then c will be 'a'
+// If the input is " a", then c will be 'a'
+// If the input is "  a", then c will be 'a'
+\end{minted}
+A width specifier tells the function how many characters to read, this is useful to prevent buffer overflows.
+\begin{minted}{c}
+#include <stdio.h>
+
+char str[10];
+scanf("%9s", str); // Read a string with a maximum length of 9
+// If the input is "123456789", then str will be "123456789"
+// If the input is "1234567890", then str will be "123456789"
+\end{minted}
+The asterisk (\mintinline{c}{*}) can be used to ignore input.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i;
+scanf("%*d %d", &i); // Read a signed integer
+// If the input is "123 456", then i will be 456
+// If the input is "123", then the function will return 0
+// Otherwise, the function returns 0
+\end{minted}
+A scanset can be used to specify a set of characters that are allowed to be read.
+\begin{minted}{c}
+#include <stdio.h>
+
+char c;
+scanf("%[abc]", &c); // Read a character
+// If the input is "a", then c will be 'a'
+// If the input is "b", then c will be 'b'
+// If the input is "c", then c will be 'c'
+// Otherwise, the function returns 0
+\end{minted}
+This behaves similarly to a regular expression, and can be negated by using the caret (\mintinline{c}{^}),
+ranges can be specified by using a hyphen (\mintinline{c}{-}), and the backslash (\mintinline[escapeinside=||]{c}{|\\|}) can be used to escape special characters.
+
+If a width is specified for a scanset, then the function will read input until it reaches a character that is not in the scanset or until the maximum width is reached. This
+character will be left in the buffer.
 \end{document}
