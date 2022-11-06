@@ -11,7 +11,8 @@
 \setminted{
     escapeinside=||,
     linenos,
-    frame=lines
+    frame=lines,
+    breakanywhere
 }
 
 \usepackage{subcaption}
@@ -25,7 +26,7 @@
 \newcommand{\documentAuthors}{Tarang Janawalkar}
 
 \fancyhead[L]{\unitName}
-\fancyhead[R]{\leftmark}
+\fancyhead[R]{\parbox[t]{0.6\textwidth}{\raggedleft\leftmark\strut}}
 \fancyfoot[C]{\thepage}
 
 % Copyright
@@ -129,6 +130,19 @@ Some key characteristics of the AVR Core are:
     \item Stack Pointer --- temporary data that doesn't fit into the registers
     \item 8-bit core --- all data, registers, and operations, operate within 8-bits
 \end{itemize}
+\section{Status Register}
+The status register is a 8-bit register that stores the result of the last operation performed by the ALU.
+It has the following flags:
+\begin{itemize}
+    \item[\textbf{C}] Carry Flag
+    \item[\textbf{Z}] Zero Flag
+    \item[\textbf{N}] Negative Flag
+    \item[\textbf{V}] Two's Complement Overflow Flag
+    \item[\textbf{S}] Sign Flag
+    \item[\textbf{H}] Half Carry Flag
+    \item[\textbf{T}] Transfer Bit
+    \item[\textbf{I}] Global Interrupt Enable Bit
+\end{itemize}
 \section{Programme Execution}
 At the time of reset, PC = 0. The following steps are then performed:
 \begin{enumerate}
@@ -174,12 +188,6 @@ This is illustrated in the following figure:
     \item Different devices, peripherals and memory can be included in a memory map
           (and sometimes a device can be accessed at multiple different addresses)
 \end{itemize}
-\section{Memory map}
-\begin{figure}[H]
-    \centering
-    \includegraphics[height = 8cm, keepaspectratio = true]{figures/memory_map.pdf}
-    \caption{ATtiny1626 memory map.} % \label{}
-\end{figure}
 \section{Assembly code}
 \begin{itemize}
     \item The opcodes placed into programme memory are called
@@ -210,7 +218,6 @@ These states are often referred to as:
 A sequence of \textit{eight} bits is known as a \textbf{byte}, and it is the most
 common representation of data in digital systems.
 A sequence of \textit{four} bits is known as a \textbf{nibble}.
-
 A sequence of \(n\) bits can represent up to \(2^n\) states.
 \section{Representation}
 \subsection{Binary Representation}
@@ -305,8 +312,7 @@ represented by an \(n\)-bit sign-magnitude encoded bit sequence is:
     -\left( 2^{n - 1} - 1 \right) \text{ to } 2^{n - 1} - 1
 \end{equation*}
 For 8-bit sequences, this range is: \(-127\) to \(127\).
-
-However, there are some issues with this representation.
+This presents several issues:
 \begin{enumerate}
     \item There are two ways to represent zero: \mintinline{ca65}{0b10000000 |=| 0}, or \mintinline{ca65}{0b00000000 |=| -0}.
     \item Arithmetic and comparison requires inspecting the sign bit
@@ -348,21 +354,14 @@ from a two-element set, (usually \(\left\{ 0,\: 1 \right\}\) or \mintinline{text
 These functions are also referred to as \textit{logical functions} when they operate on bits.
 The most common logical functions available to microprocessors and most programming languages are:
 \begin{itemize}
-    \item Negation: \keywordinline{NOT}
-    \item Conjunction: \mintinline{ca65}{AND}
-    \item Disjunction: \keywordinline{OR}
-    \item Exclusive disjunction: \keywordinline{XOR}
+    \item Negation: \keywordinline{NOT} \(a\), \textasciitilde\(a\), \(\overline{a}\)
+    \item Conjunction: \(a\) \mintinline{ca65}{AND} \(b\), \(a\) \mintinline{ca65}{&} \(b\), \(a \cdot b\), \(a \land b\)
+    \item Disjunction: \(a\) \keywordinline{OR} \(b\), \(a\) \mintinline{ca65}{|\vert|} \(b\), \(a + b\), \(a \lor b\)
+    \item Exclusive disjunction: \(a\) \keywordinline{XOR} \(b\), \(a\) \mintinline{ca65}{^} \(b\), \(a \oplus b\)
 \end{itemize}
 By convention, we map a bit value of \mintinline{ca65}{0} to \mintinline{ca65}{false}, and a bit value of \mintinline{ca65}{1} to \mintinline{ca65}{true}.
 \subsection{Negation}
-\mintinline{ca65}{NOT} is a unary operator that is used to \textbf{invert} a bit.
-It is typically expressed as:
-\begin{itemize}
-    \item \keywordinline{NOT} \(a\)
-    \item \textasciitilde\(a\)
-    \item \(\overline{a}\)
-\end{itemize}
-Truth table:
+A unary operator used to \textbf{invert} a bit.
 \begin{table}[H]
     \centering
     \begin{tabular}{c c}
@@ -376,14 +375,6 @@ Truth table:
 \end{table}
 \subsection{Conjunction}
 \mintinline{ca65}{AND} is a binary operator whose output is true if \textbf{both} inputs are \textbf{true}.
-It is typically expressed as:
-\begin{itemize}
-    \item \(a\) \mintinline{ca65}{AND} \(b\)
-    \item \(a\) \mintinline{ca65}{&} \(b\)
-    \item \(a \cdot b\)
-    \item \(a \land b\)
-\end{itemize}
-Truth table:
 \begin{table}[H]
     \centering
     \begin{tabular}{c c c}
@@ -399,14 +390,6 @@ Truth table:
 \end{table}
 \subsection{Disjunction}
 \keywordinline{OR} is a binary operator whose output is true if \textbf{either} input is \textbf{true}.
-It is typically expressed as:
-\begin{itemize}
-    \item \(a\) \keywordinline{OR} \(b\)
-    \item \(a\) \mintinline{ca65}{|\vert|} \(b\)
-    \item \(a + b\)
-    \item \(a \lor b\)
-\end{itemize}
-Truth table:
 \begin{table}[H]
     \centering
     \begin{tabular}{c c c}
@@ -422,13 +405,6 @@ Truth table:
 \end{table}
 \subsection{Exclusive Disjunction}
 \keywordinline{XOR} (Exclusive \keywordinline{OR}) is a binary operator whose output is true if \textbf{only one} input is \textbf{true}.
-It is typically expressed as:
-\begin{itemize}
-    \item \(a\) \keywordinline{XOR} \(b\)
-    \item \(a\) \mintinline{ca65}{^} \(b\)
-    \item \(a \oplus b\)
-\end{itemize}
-Truth table:
 \begin{table}[H]
     \centering
     \begin{tabular}{c c c}
@@ -492,7 +468,6 @@ Other bitwise operations act on the entire byte.
 \subsection{One's Complement}
 The one's complement of a byte inverts every bit in the operand. This is done by
 taking the bitwise \keywordinline{NOT} of the byte.
-
 Similarly, we can subtract the byte from \mintinline{ca65}{0xFF} to get the one's complement.
 \subsection{Two's Complement}
 The two's complement of a byte is the one's complement of the byte plus one.
@@ -576,7 +551,6 @@ a 16-bit number.
 
 To avoid loss of information, a \textbf{carry bit} is used to indicate when an overflow has occurred.
 This carry bit can be added to the high byte in the event that an overflow occurs.
-This is because the carry bit is 0 when the sum is less than 256, and 1 when the sum is greater than 255.
 
 The following example shows how to use the \mintinline{ca65}{adc} instruction to carry the carry bit when an overflow occurs.
 \begin{minted}{ca65}
@@ -831,7 +805,6 @@ ICs are \textbf{packaged}, and connections to the internal circuitry are exposed
 In general, the specific implementation of the IC is not important, but
 rather the \textbf{function of the device} and how it \textbf{interfaces} with the rest of the circuit.
 Hence ICs can be treated as a functional \textbf{black box}.
-
 For digital ICs:
 \begin{itemize}
     \item \textbf{Input pins} are typically \textbf{high-impedance}, and they appear as an open circuit.
@@ -965,11 +938,10 @@ Pins can be used for:
 \end{itemize}
 Pins are typically organised into groups of related IO banks,
 referred to as \textbf{ports} on the AVR microcontroller.
-
 These ports and pins are assigned an alphanumeric identifier, (e.g., PB7 for pin 7 on port B).
 \begin{figure}[H]
     \centering
-    \includegraphics[height = 8cm, keepaspectratio = true]{figures/PORT_block_diagram.pdf}
+    \includegraphics[height = 10cm, keepaspectratio = true]{figures/PORT_block_diagram.pdf}
     \caption{ATtiny1626 PORT block diagram.} % \label{}
 \end{figure}
 To summarise this diagram:
@@ -1013,10 +985,8 @@ To summarise this diagram:
     \item Isolate the relevant pin using the AND operator.
 \end{enumerate}
 \begin{minted}{ca65}
-; Load macros for easy access to port data space addresses.
 #include <avr/io.h>
 
-; Bitmask for pin 5
 |\keyword{ldi}| r16, PIN5_bm
 
 ; Enable internal pull-up resistor if required
@@ -1070,7 +1040,6 @@ An LED can be driven in two different configurations from a microcontroller pin:
     \item \textbf{active low}; in which case the LED is \textbf{lit} when the pin is \textbf{LOW}.
 \end{itemize}
 Both of these configurations have their benefits, and the best configuration depends entirely on the context.
-\pagebreak
 \begin{multicols}{2}
     \begin{figure}[H]
         \centering
@@ -1102,6 +1071,7 @@ As the switch has two states (open or closed), these can be mapped directly to
 
 This can be done by connecting the switch between the pin and voltage source
 representing one of the logic levels (ground or a positive supply).
+\pagebreak
 \begin{multicols}{2}
     \begin{figure}[H]
         \centering
@@ -1155,31 +1125,25 @@ have a \textbf{known state} prior to the configuration of the relevant microcont
 A register refers to a memory location that is 1 byte in size (8-bit).
 The ATtiny1626 has 32 registers of which \mintinline{ca65}{r16} to \mintinline{ca65}{r31} can be loaded with an immediate value (\numrange{0}{255}) using \keywordinline{ldi}.
 \begin{minted}{ca65}
-|\keyword{ldi}| r16, 17
-|\keyword{ldi}| r19, 0b10101010
-|\keyword{ldi}| r31, 0xFF
+|\keyword{ldi}| r16, 17 ; Load the value 17 into r16
 \end{minted}
 Values are commonly loaded into registers as many other operations can be performed on them.
 \section{Flow Control}
 Instructions on the AVR Core increment the PC by 1 or 2 (depending on whether the OPCODE is 1 or 2 words) when they are executed so that any successive
 instructions are executed after the first. To divert execution to a different location, we can utilise
-\textbf{change of flow} instructions. The AVR Core has many change of flow instructions, that each have a different
-effect on the execution of the program.
+\textbf{change of flow} instructions.
 
-The \mintinline{ca65}{jmp} (jump) instruction is used the simplest to jump to a different location in the program.
+The \mintinline{ca65}{jmp} (jump) instruction is used to simply jump to a different location in the program.
 This instruction is capable of jumping to an address withtin the entire 4M (words) program memory, however,
 this is highly excessive for the ATtiny1626.
 \section{Labels}
 Most change of flow instructions take an \textbf{address} in program memory as a parameter.
 Hence to make this process easier, we can use labels to refer to locations in program memory (and also RAM).
 \begin{minted}{ca65}
-entry:
-    |\keyword{ldi}| r16, 0
-    jmp new_location ; Jump to the label |\textbf{new\_location}|.
-    |\keyword{ldi}| r16, 1 ; This instruction is skipped
+jmp new_location ; Jump to the label |\textbf{new\_location}|.
+|\keyword{ldi}| r16, 1 ; This instruction is skipped
 
-; Label
-new_location:
+new_location: ; Label
     |\keyword{push}| r16
 \end{minted}
 When a label appears in source code, the assembler replaces references to it with the address of the
@@ -1196,13 +1160,12 @@ than what the 16-bit PC can address on the ATtiny1626 (\qty{64}{KB}).
 As we will only need to jump within \qty{64}{KB} of memory, it is inefficient to use the \mintinline{ca65}{jmp} instruction as it
 requires 3 CPU cycles to execute. Therefore, many AVR change of flow instructions take a value that is
 \textbf{added} onto the current PC to calculate the destination address, allowing them to fit within 16 bits.
-
-The \keywordinline{rjmp} (relative jump) instruction works in the same manner as the absolute jump instruction. It only requires 2
-CPU cycles and because the assembler calculates the relative address locations, we do not need to determine the relative distances.
+The \keywordinline{rjmp} (relative jump) instruction is therefore more suitable as it only requires 2
+CPU cycles.
 
 Note the assembler throw an error if the address is not within the range of the PC\@.
 \section{Branching}
-A branching instruction jumps to a different location in response to something that occurs, i.e., user input, internal state, or other external factors.
+A branching instruction jumps to a different location based on a condition, i.e., user input, internal state, or other external factors.
 Many change of flow instructions are conditional, and will alter the PC differently based on register value(s) or flags.
 In AVR there are two main categories of branching instructions:
 \begin{itemize}
@@ -1232,14 +1195,11 @@ The ALU performs a subtraction operation whose result is used to update the SREG
     \item \mintinline{ca65}{|\keyword{cp}| Rd, Rr} performs \mintinline{ca65}{Rd} \(-\) \mintinline{ca65}{Rr}
     \item \mintinline{ca65}{|\keyword{cpi}| Rd, K} performs \mintinline{ca65}{Rd} \(-\) \mintinline{ca65}{K}
 \end{itemize}
-Note \keywordinline{cp} compares the values in two registers, whereas \keywordinline{cpi} compares the value in a register with an immediate value.
-The result of this operation is used to set the appropriate flags in the SREG\@.
 \begin{minted}{ca65}
-entry:
-    |\keyword{ldi}| r16, 0
-    |\keyword{ldi}| r19, 10
-    |\keyword{cp}| r16, r19 ; Compare values in registers r16 and r19
-    |\keyword{brge}| new_location ; Branch if r16 greater than or equal to r19
+|\keyword{ldi}| r16, 0
+|\keyword{ldi}| r19, 10
+|\keyword{cp}| r16, r19 ; Compare values in registers r16 and r19
+|\keyword{brge}| new_location ; Branch if r16 greater than or equal to r19
 
 new_location:
 \end{minted}
@@ -1253,42 +1213,31 @@ In this example we will skip the line which increments register 16.
 \begin{minted}{ca65}
 |\keyword{cpse}| r16, r17 ; Skips next instruction if r16 == r17
 inc r16 ; This is skipped
-
-|\keyword{push}| r16 ; PC is now here
 \end{minted}
 Same example which uses a branch instruction:
 \begin{minted}{ca65}
-entry:
-    |\keyword{cp}| r16, r17
-    |\keyword{breq}| new_location ; Skips to new_location if r16 == r17
-    inc r16 ; This is skipped
+|\keyword{cp}| r16, r17
+|\keyword{breq}| new_location ; Skips to new_location if r16 == r17
+inc r16 ; This is skipped
 
-new_location:
-    |\keyword{push}| r16 ; PC is now here
+new_location: ; PC is now here
 \end{minted}
-Note that the number of cycles for a skip instruction depend on the size of the instruction being skipped.
-
+Note that the number of cycles for a skip instruction depends on the size of the instruction being skipped.
 The \keywordinline{sbrc} and \keywordinline{sbrs} instructions are used to skip the next instruction if the specified bit a register is cleared/set.
 \begin{minted}{ca65}
 |\keyword{ldi}| r16, 0b00101110
 
 |\keyword{sbrc}| r16, 0 ; Skips next instruction if bit 0 of r16 is cleared
 inc r16 ; This is skipped
-
-|\keyword{push}| r16 ; PC is now here
 \end{minted}
 Comparing with branch instructions
 \begin{minted}{ca65}
-entry:
-    |\keyword{ldi}| r16, 0b00101110
+|\keyword{ldi}| r16, 0b00101110
+|\keyword{andi}| r16, 0b00000001 ; Isolate bit 0
+|\keyword{breq}| new_location ; Skips next instruction if r16 == 0
+inc r16 ; This is skipped
 
-    |\keyword{andi}| r16, 0b00000001 ; Isolate bit 0
-
-    |\keyword{breq}| new_location ; Skips next instruction if r16 == 0
-    inc r16 ; This is skipped
-
-new_location:
-    |\keyword{push}| r16 ; PC is now here
+new_location: ; PC is now here
 \end{minted}
 The \keywordinline{sbis} and \keywordinline{sbic} instructions are used to skip the next instruction if the specified bit an I/O register is set/cleared.
 For example, if we wish to toggle the decimal point LED (DISP DP) on the QUTy (PORT B pin 5) when the first button (BUTTON0) was pressed (PORT A pin 4),
@@ -1299,14 +1248,13 @@ For example, if we wish to toggle the decimal point LED (DISP DP) on the QUTy (P
 \end{minted}
 Using branch instructions:
 \begin{minted}{ca65}
-entry:
-    |\keyword{in}| r17, VPORTA_IN ; Read the input register of PORT A
-    |\keyword{andi}| r17, 0b00010000 ; Isolate pin 4
+|\keyword{in}| r17, VPORTA_IN ; Read the input register of PORT A
+|\keyword{andi}| r17, 0b00010000 ; Isolate pin 4
 
-    |\keyword{brne}| new_location ; Skip instructions if r17 != 0
+|\keyword{brne}| new_location ; Skip instructions if r17 != 0
 
-    |\keyword{ldi}| r16, PIN5_bm ; Bitmask of pin 5
-    |\keyword{sts}| PORTB_OUTTGL, r16 ; Toggle the output driver of pin 5 on PORT B
+|\keyword{ldi}| r16, PIN5_bm ; Bitmask of pin 5
+|\keyword{sts}| PORTB_OUTTGL, r16 ; Toggle the output driver of pin 5 on PORT B
 
 new_location:
 \end{minted}
@@ -1315,13 +1263,11 @@ By jumping to an earlier address, we can loop over a block of instructions.
 \begin{minted}{ca65}
 infinite_loop:
     ; Code to repeat
-
     |\keyword{rjmp}| infinite_loop
 \end{minted}
 Loops can also be finite, in which case the loop will terminate when a counter reaches zero.
 \begin{minted}{ca65}
 |\keyword{ldi}| r16, 10 ; Set counter to 10
-
 loop:
     dec r16 ; Decrement counter
     |\keyword{brne}| loop ; Branch if counter != 0
@@ -1333,12 +1279,10 @@ main_loop:
     |\keyword{andi}| r17, 0b00010000 ; Isolate pin 4
 
     |\keyword{brne}| main_loop ; Branch if counter != 0
-
     |\keyword{rjmp}| button_pressed
 
 button_pressed:
     ; Execute instructions
-
     |\keyword{rjmp}| main_loop ; Return to main loop
 \end{minted}
 \section{Delays}
@@ -1368,10 +1312,8 @@ Note that \(n\) represents the number of iterations.
 \begin{minted}{ca65}
 delay_1:
     |\keyword{ldi}| r16, 255 - n ; 1 CPU cycle
-
     ; Incrementor
     |\keyword{ldi}| r17, 1 ; 1 CPU cycle
-
     loop:
         add r16, r17 ; 1 CPU cycle
         |\keyword{brcc}| loop ; 2 CPU cycles (1 CPU cycle when condition is false)
@@ -1446,7 +1388,7 @@ The following instructions may be used to access memory from the data space:
     \item \keywordinline{sts} (store direct from register to data space)
     \item \keywordinline{ld} (load indirect from data space to register)
     \item \keywordinline{st} (store indirect from register to data space)
-    \item \keywordinline{push}/\keywordinline{pop} (stack operations)
+    \item \keywordinline{push}/\keywordinline{pop} (stack operations in SRAM --- starting at \mintinline{ca65}{0x3800}) % chktex 29
     \item \keywordinline{in}/\keywordinline{out} (single cycle I/O register operations)
     \item \keywordinline{sbi}/\keywordinline{cbi} (set/clear bit in I/O register)
 \end{itemize}
@@ -1455,20 +1397,14 @@ only access the low 64 bytes of the I/O register space and the \keywordinline{sb
 instructions can only access the low 32 bytes of the I/O register space.
 
 As the name suggests, these instructions only require a single CPU cycle and hence
-several \linebreak VPORT\{A, B, C\} (virtual ports) addresses are mapped to this location, so that they can be
-accessed through these single cycle instructions.
-
-VPORT addresses simply hold a copy of their corresponding PORTs.
+several addresses such as VPORT\{A, B, C\} (virtual ports) are mapped to this location,
+for fast access.
 \subsection{Load/Store Indirect}
-Although the \keywordinline{lds}/\keywordinline{sts} instructions can be used to access exact addresses
+While the \keywordinline{lds}/\keywordinline{sts} instructions can be used to access addresses
 of bytes, they are generally not suitable for accessing data structures such as arrays.
 
-Instead, the \keywordinline{ld}/\keywordinline{st} instructions allow transfers between
-registers and the data space, where addresses are stored in a pointer register.
-These pointer registers are available for use only by \keywordinline{ld}/\keywordinline{st}
-through \keywordinline{X}, \keywordinline{Y}, and \keywordinline{Z}.
-
-These 16-bit pointer registers occupy the same space as registers \mintinline{ca65}{r26} to \mintinline{ca65}{r31}.
+Instead, we can use the \keywordinline{ld}/\keywordinline{st} instructions to
+take advantage of their 16-bit pointer registers, which support some pointer arithmetic.
 \begin{itemize}
     \item \mintinline{ca65}{r26} \(\to\) \keywordinline{XL} (\keywordinline{X}-register low byte)
     \item \mintinline{ca65}{r27} \(\to\) \keywordinline{XH} (\keywordinline{X}-register high byte)
@@ -1479,8 +1415,7 @@ These 16-bit pointer registers occupy the same space as registers \mintinline{ca
 \end{itemize}
 For example, if we wanted to access a byte in RAM, we can do the following:
 \begin{minted}{ca65}
-; Store address of RAM in X
-|\keyword{ldi}| XL, lo8(RAMSTART)
+|\keyword{ldi}| XL, lo8(RAMSTART) ; Store address of RAM in X
 |\keyword{ldi}| XH, hi8(RAMSTART)
 
 |\keyword{ld}| r16, X ; Load byte from X to r16
@@ -1488,7 +1423,7 @@ For example, if we wanted to access a byte in RAM, we can do the following:
 
 |\keyword{ldi}| r17, 24
 |\keyword{st}| X, r17 ; Store byte from r16 to X
-; The byte in X is now 24
+; The byte in X (and hence at RAMSTART) is now 24
 \end{minted}
 These pointer registers also support post-increment and pre-decrement operations:
 \begin{itemize}
@@ -1545,17 +1480,12 @@ and can be modified through \keywordinline{push}/\keywordinline{pop} and other m
 If a particular register is required without modifying other code, we can temporarily
 store the value of that register on the stack, and pop it back when we are done:
 \begin{minted}{ca65}
-; Temporarily store Z on the stack
-|\keyword{push}| ZL
+|\keyword{push}| ZL ; Temporarily store Z on the stack
 |\keyword{push}| ZH
-
 ; Z may be used for another purpose
-
-; Restore Z from the stack
-|\keyword{pop}| ZH
+|\keyword{pop}| ZH ; Restore Z from the stack in reverse order
 |\keyword{pop}| ZL
 \end{minted}
-Notice that the values are popped in reverse order.
 \section{Procedures}
 Procedures allow us to write modular, reusable code which makes them powerful when working on
 complex projects. Although they are usually associated with high level languages as
@@ -1577,21 +1507,13 @@ true for the SREG\@.
 
 procedure:
     |\keyword{push}| r16 ; Save r16 on the stack
-
-    ; Procedure body
-    ; Code that modifies r16
-    |\keyword{ldi}| r16, 0x12
-    loop:
-        dec r16
-        |\keyword{brne}| loop
-
+    ; Code that possibly modifies r16
     |\keyword{pop}| r16 ; Restore r16 from the stack
     |\keyword{ret}|
 
 main_loop:
     |\keyword{ldi}| r16, 10
     |\keyword{rcall}| procedure ; Call procedure
-
     |\keyword{push}| r16 ; r16 should still be 10
 \end{minted}
 \subsection{Parameters and Return Values}
@@ -1607,33 +1529,23 @@ the inputs.
 ; Outputs:
 ;     r16: average
 average:
-    ; Save r0
-    |\keyword{push}| r0
-
-    ; Save SREG
-    |\keyword{in}| r0, CPU_SREG
+    |\keyword{push}| r0 ; Save r0
+    |\keyword{in}| r0, CPU_SREG ; Save SREG
     |\keyword{push}| r0
 
     ; Calculate average
     |\keyword{add}| r16, r17
     ror r16
 
-    ; Restore SREG
-    |\keyword{pop}| r0
+    |\keyword{pop}| r0 ; Restore SREG
     |\keyword{out}| CPU_SREG, r0
-
-    ; Restore r0
-    |\keyword{pop}| r0
-
-    ; Return
+    |\keyword{pop}| r0 ; Restore r0
     |\keyword{ret}|
 
 main_loop:
     ; Arguments
     |\keyword{ldi}| r16, 100
     |\keyword{ldi}| r17, 200
-
-    ; Call procedure
     |\keyword{rcall}| average
 \end{minted}
 Using the stack:
@@ -1646,42 +1558,27 @@ Using the stack:
 ; Outputs:
 ;     r16: average
 average:
-    ; Save Z
-    |\keyword{push}| ZL
+    |\keyword{push}| ZL ; Save Z
     |\keyword{push}| ZH
-
-    ; Save SREG
-    |\keyword{in}| ZL, CPU_SREG
+    |\keyword{in}| ZL, CPU_SREG ; Save SREG
     |\keyword{push}| ZL
-
-    ; Get SP location
-    |\keyword{in}| ZL, CPU_SPL
+    |\keyword{push}| r17 ; Save r17
+    |\keyword{in}| ZL, CPU_SPL ; Get SP location
     |\keyword{in}| ZH, CPU_SPH
 
-    ; Save r17
-    |\keyword{push}| r17
-
-    ; Get first number
+    ; Get numbers number
     |\keyword{ldd}| r16, Z+7
-    ; Get second number
     |\keyword{ldd}| r17, Z+6
 
     ; Calculate average
     |\keyword{add}| r16, r17
     ror r16
 
-    ; Restore r17
-    |\keyword{pop}| r17
-
-    ; Restore SREG
-    |\keyword{pop}| ZL
+    |\keyword{pop}| r17 ; Restore r17
+    |\keyword{pop}| ZL ; Restore SREG
     |\keyword{out}| CPU_SREG, ZL
-
-    ; Restore Z
-    |\keyword{pop}| ZH
+    |\keyword{pop}| ZH ; Restore Z
     |\keyword{pop}| ZL
-
-    ; Return
     |\keyword{ret}|
 
 main_loop:
@@ -1690,8 +1587,6 @@ main_loop:
     |\keyword{push}| r16
     |\keyword{ldi}| r16, 200
     |\keyword{push}| r16
-
-    ; Call procedure
     |\keyword{rcall}| average
 
     ; Remove arguments from the stack
@@ -1700,6 +1595,7 @@ main_loop:
 \end{minted}
 Note that it is preferrable to return values using registers.
 \part{C Programming}
+\chapter{Introduction}
 C is a programming language developed in the early 1970s by Dennis Richie.
 C is a compiled language, meaning that a separate program is used to
 efficiently translate the source code into assembly.
@@ -1707,7 +1603,6 @@ Its compilers are capable of targetting a wide variety of microprocessor archite
 and hence it is used to implement all major operating system kernels.
 Compared to many other languages, C is a very efficient programming
 language as its constructs map directly onto machine instructions.
-\chapter{Introduction}
 \section{Main Function}
 C is a procedural language and hence all code subsides in a procedure (known as a \textbf{function}).
 In C, the \mintinline{c}{main} function is the \textbf{entry point} to the program.
@@ -1784,8 +1679,6 @@ The \mintinline{c}{signed char}, \mintinline{c}{signed int}, and
 \mintinline{c}{signed short int}, \mintinline{c}{signed long int} types, together with their \mintinline{c}{unsigned} variants
 and \mintinline{c}{enum}, are all known as \textbf{integral} types.
 \mintinline{c}{float}, \mintinline{c}{double}, and \mintinline{c}{long double} are known as \textbf{floating} or \textbf{floating-point} types.
-Arithmetic between
-
 The following table summarises various numeric types in C\@:
 \begin{table}[H]
     \centering
@@ -1829,20 +1722,15 @@ the development platform. This ensures that variables can be initialised with th
 \begin{minted}{c}
 #include <stdint.h>
 
-int main()
-{
-    int8_t i8;
-    int16_t i16;
-    int32_t i32;
-    int64_t i64;
+int8_t i8;
+int16_t i16;
+int32_t i32;
+int64_t i64;
 
-    uint8_t ui8;
-    uint16_t ui16;
-    uint32_t ui32;
-    uint64_t ui64;
-
-    return 0;
-}
+uint8_t ui8;
+uint16_t ui16;
+uint32_t ui32;
+uint64_t ui64;
 \end{minted}
 \subsection{Floating-Point Types}
 The \mintinline{c}{float} and \mintinline{c}{double} types can store \textbf{floating-point} value types in C.
@@ -1892,6 +1780,160 @@ As with integer types, floating point values can also be suffixed to specify whi
     \item \textbf{Character} --- surrounded by single quotes \mintinline{c}{'A'}
     \item \textbf{String} --- surrounded by double quotes \mintinline{c}{"Hello World"} % chktex 18
 \end{itemize}
+\subsection{Character Literals}
+The encoding of a character is platform-dependent, but typically characters 0--127 are defined through the American Standard Code for Information Interchange (ASCII),
+with slight variations depending on locale. In this character set, characters 0--31 and 127 are control characters, and characters 32--126 are printable characters.
+Characters 128--255 are typically defined by the local character set, and are not portable between platforms.
+
+A character literal is a single character enclosed in single quotes, e.g., \mintinline{c}{'a'}, and escape sequences can be used to represent control characters, e.g., \mintinline{c}{'\n'}.
+Characters are stored in memory as 8-bit values, and are typically represented as unsigned integers in C.
+\subsection{String Literals}
+A string is a sequence of characters, terminated by a null character (\mintinline{c}{'\0'}).
+Strings can be defined using double quotes, e.g., \mintinline{c}{"Hello, world!"} or as an array of characters. When defined using double quotes, % chktex 18
+a null character is implicitly added to the end of the string, however this is not the case when defined as an array of characters.
+
+If the size of the character array is specified for a character array, then
+\begin{itemize}
+    \item If the size is greater than the length of the string, then the remaining elements of the array are initialised to 0.
+    \item If the size is less than the length of the string, then the string is truncated to fit the array, and no null character is added.
+\end{itemize}
+When accessing strings to perform operations on them, we can utilise the null character to determine the length of the string.
+
+To modify a string, we can utilise pointer arithmetic to modify each character in-place.
+The \mintinline{c}{<string.h>} header file contains a number of functions for manipulating strings, including
+\begin{itemize}
+    \item \mintinline{c}{strlen()} --- Get length of string
+    \item \mintinline{c}{strcpy()}, \mintinline{c}{strncpy()} --- Copy string
+    \item \mintinline{c}{memcpy()} --- Copy data
+    \item \mintinline{c}{strcmp()} --- Compare strings
+    \item \mintinline{c}{strchr()}, \mintinline{c}{strrchr()} --- Find character in string
+    \item \mintinline{c}{strstr()} --- Find string in string
+    \item \mintinline{c}{strcat()} --- Concatenate two strings
+\end{itemize}
+\subsection{Standard Input/Output}
+The C standard I/O header file \mintinline{c}{<stdio.h>} library provides a number of functions that read input
+and write output. Many of these functions work with the standard input and output devices, \mintinline{c}{stdin} and \mintinline{c}{stdout}.
+On a PC, these will normally read from or write to, a terminal by default. On the QUTy, these devices are non-functional by default, and must be
+configured to read from/write to USART0.
+
+The \mintinline{c}{putchar()} and \mintinline{c}{getchar()} functions are used to write a single character to the standard output device and read a single character from the standard input device, respectively.
+\subsection{Formatted Output}
+The \mintinline{c}{printf()} function (print formatted) is used to write formatted output to the standard output device. The format string is a string that contains
+text and format specifiers, which are used to specify how the arguments are to be formatted. The format specifiers are prefixed by a percent sign (\mintinline[escapeinside=||]{c}{|\%|}).
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("Hello, world!\n"); // Print a string
+printf("%d\n", 100); // Print a signed integer (or %i)
+printf("%d%%\n", 100); // Escape a percent sign
+printf("%u\n", 100); // Print an unsigned integer
+printf("%o\n", 100); // Print an unsigned octal
+printf("%x\n", 100); // Print an unsigned hexadecimal (%X uppercase)
+printf("%p\n", &var); // Print a pointer
+\end{minted}
+Preceding the format specifier with an optional \textbf{integer length modifier} will change the size of the argument that is formatted.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%d\n", 100); // Print a signed integer
+printf("%hd\n", 100); // Print a signed short integer
+printf("%ld\n", 100); // Print a signed long integer
+\end{minted}
+Additionally, a number before the specifier can be used to specify the minimum width of the output, and a number after the period can be used to specify the number of decimal places.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%d\n", 100); // Print a signed integer
+printf("%10d\n", 100); // Print a signed integer with a minimum width of 10
+printf("%-10d\n", 100); // Print a signed integer with a minimum width of 10 and
+                        // justify left
+\end{minted}
+For floating point numbers, the \mintinline[escapeinside=||]{c}{|\%|f} specifier can be used to print a fixed-point number, and the \mintinline[escapeinside=||]{c}{|\%|e} specifier can be used to print a floating-point number in scientific notation.
+\mintinline[escapeinside=||]{c}{|\%|g} prints either depending on the size.
+A decimal point can be used to specify the number of decimal places to print.
+\begin{minted}{c}
+#include <stdio.h>
+
+printf("%f\n", 100.0); // Print a float
+printf("%.2f\n", 100.0); // Print a float with 2 d.p.
+printf("%e\n", 100.0); // Print a float in scientific notation
+\end{minted}
+For performance reasons, \mintinline{c}{printf()} is buffered, and will store characters in a buffer in SRAM\@. By default \mintinline{c}{stdout}
+is line-buffered, meaning that the buffer is flushed when a newline character is written to the buffer. \mintinline{c}{fflush(stdout)} can be used to flush the buffer.
+\subsection{Formatted Input}
+The \mintinline{c}{scanf()} function (scan formatted) is used to read formatted input from the standard input device. The format string is similar to that of \mintinline{c}{printf()},
+except that the format specifiers are used to specify how the input is to be read.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i;
+scanf("%d", &i); // Read a signed integer
+// A signed integer input will be stored in i
+// Otherwise, the function returns 0
+
+char str[10];
+scanf("abc%d", str); // Read a string with a prefix
+// If the string is "abc123", then str will be "123"
+// If the string is "5", then "5" will stay in the buffer and the function
+// returns 0
+// If the string is "abcd", then scanf will stop reading and return 0
+// Otherwise, the function returns 0
+\end{minted}
+If two or more format specifiers are used, then the function will read input until it reaches a whitespace character, and then stop.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i, j;
+scanf("%d %d", &i, &j); // Read two signed integers
+// If the input is "123 456", then i will be 123 and j will be 456
+// If the input is "123", then i will be 123 and the function returns 0
+// Otherwise, the function returns 0
+\end{minted}
+Whitespace characters are ignored when reading input,
+\begin{minted}{c}
+#include <stdio.h>
+
+char c;
+scanf("%c", &c); // Read a character
+// If the input is "a", then c will be 'a'
+// If the input is " a", then c will be 'a'
+// If the input is "  a", then c will be 'a'
+\end{minted}
+A width specifier tells the function how many characters to read, this is useful to prevent buffer overflows.
+\begin{minted}{c}
+#include <stdio.h>
+
+char str[10];
+scanf("%9s", str); // Read a string with a maximum length of 9
+// If the input is "123456789", then str will be "123456789"
+// If the input is "1234567890", then str will be "123456789"
+\end{minted}
+The asterisk (\mintinline{c}{*}) can be used to ignore input.
+\begin{minted}{c}
+#include <stdio.h>
+
+int i;
+scanf("%*d %d", &i); // Read a signed integer
+// If the input is "123 456", then i will be 456
+// If the input is "123", then the function will return 0
+// Otherwise, the function returns 0
+\end{minted}
+A scanset can be used to specify a set of characters that are allowed to be read.
+\begin{minted}{c}
+#include <stdio.h>
+
+char c;
+scanf("%[abc]", &c); // Read a character
+// If the input is "a", then c will be 'a'
+// If the input is "b", then c will be 'b'
+// If the input is "c", then c will be 'c'
+// Otherwise, the function returns 0
+\end{minted}
+This behaves similarly to a regular expression, and can be negated by using the caret (\mintinline{c}{^}),
+ranges can be specified by using a hyphen (\mintinline{c}{-}), and the backslash (\mintinline[escapeinside=||]{c}{|\backslash|}) can be used to escape special characters.
+
+If a width is specified for a scanset, then the function will read input until it reaches a character that is not in the scanset or until the maximum width is reached. This
+character will be left in the buffer.
 \chapter{Flow Control}
 \section{If Statements}
 C provides a standard branching control structure known as an \mintinline{c}{if} statement.
@@ -2103,7 +2145,8 @@ int x = 5;
 int y = 10;
 int z = 15;
 
-if (x < y) {
+if (x < y)
+{
     printf("x is less than y\n");
 }
 
@@ -2119,7 +2162,8 @@ int x = 5;
 int y = 10;
 int z = 15;
 
-if (x < y && x != 15) {
+if (x < y && x != 15)
+{
     printf("x is less than y and x is not equal to 15\n");
 }
 \end{minted}
@@ -2136,7 +2180,7 @@ int y = x++; // y = 5, x = 6
 int z = ++x; // z = 7, x = 7
 \end{minted}
 Prefix operators are evaluated before the statement is executed, while postfix operators are evaluated after the statement is executed.
-\chapter{Preprocessor}
+\chapter{The Preprocessor}
 The preprocessor processes C code before it is passed onto the compiler.
 The preprocessor strips out comments, handles \textbf{preprocessor directives}, and replaces macros.
 Preprocessors begin with the \mintinline{c}{#} character and no non-whitespace characters can
@@ -2172,12 +2216,12 @@ This file is compiled to \mintinline{text}{add.o}. To allow the \mintinline{c}{a
 we need to create a header file containing the function prototype of \mintinline{c}{add}.
 \begin{minted}{c}
 // add.h
-int add(int x, int y);
+int add(int x, int y); // The variable names are not required in the prototype
 \end{minted}
 We can then include this header file into the main program.
 \begin{minted}{c}
 // main.c
-#include <stdio.h> // Include printf definition
+#include <stdio.h> // Include printf definition (and other definitions)
 #include "add.h" // Include add function definition
 
 int main()
@@ -2225,8 +2269,7 @@ int main()
 \end{minted}
 Note that the semi-colon is omitted at the end of the macro definition,
 as it would also be substituted into the program.
-
-Only a single preprocessor directives can appear on a line, and the directives
+Only a single preprocessor directive can appear on a line, and the directives
 must occupy a single line (note that a backslash (\mintinline[escapeinside=||]{c}{|\backslash|}) can be used to break long lines). % chktex 9
 \chapter{Pointers}
 When a variable is declared, the compiler automatically allocates a block of memory to store that variable.
@@ -2236,17 +2279,13 @@ In C, pointers are declared as ``pointing to'' an object of another type.
 uint8_t *ptr; // Pointer to a uint8_t variable
 \end{minted}
 This code declares a variable \mintinline{c}{ptr} that points to a \mintinline{c}{uint8_t}.
-Note this is not the same as declaring a \mintinline{c}{uint8_t} variable.
-
-Internally, a pointer contains a \textbf{memory address}, which on the ATtiny1626 is 16-bit wide.
+Internally, a pointer contains a \textbf{memory address}, which on the ATtiny1626 is 16-bit.
 \section{Addressing}
 When the location we want to access is known in advance, pointers can be declared with a
 specific address:
 \begin{minted}{c}
 volatile uint8_t *ptr = (volatile uint8_t *)0x0421; // The address of PORTB DIRSET
 \end{minted}
-Note the type-cast will be discussed in the next sections.
-
 A more common usage of pointers is to \textit{reference} \textbf{other variables}.
 \begin{minted}{c}
 uint8_t x = 5;
@@ -2294,7 +2333,6 @@ We will see how to index into strings in the section on arrays.
 \section{Qualifiers}
 Various \textbf{qualifiers} can be used to modify the type of a pointer.
 Typically these qualifiers apply to the memory pointed to by the pointer.
-
 If the variable which the pointer points to is \textbf{constant}, the dereference operator
 cannot be used to reassign the value of the variable.
 \begin{minted}{c}
@@ -2339,7 +2377,6 @@ const uint8_t *const ptr = &a; // Points to `a` but cannot be reassigned nor mod
 ptr = &b; // Error: Cannot reassign `ptr`
 *ptr = 200; // Error: Cannot modify `a` because `ptr` is constant
 \end{minted}
-All of the above also applies to the \mintinline{c}{volatile} qualifier.
 \subsection{Pointers to Pointers}
 Pointers can also point to other pointers.
 \begin{minted}{c}
@@ -2359,30 +2396,22 @@ uint8_t **ptr2 = &ptr; // Points to `ptr`
 *ptr2 = &b; // `ptr` now points to `b`
 \end{minted}
 For high levels of indirection, we can use more asterisks, although this is uncommon.
-
-Qualifiers can also be applied to pointers to pointers.
+Qualifiers can also be applied to pointers to pointers:
 \begin{minted}{c}
-uint8_t a = 100; // Variable
-
-uint8_t *ptr = &a; // Points to `a`
-
-const uint8_t **ptr1 = &ptr; // Pointer to pointer to constant uint8_t
-
+uint8_t a = 100;              // Variable
+uint8_t *ptr = &a;            // Points to `a`
+const uint8_t **ptr1 = &ptr;  // Pointer to pointer to constant uint8_t
 uint8_t * const *ptr2 = &ptr; // Pointer to constant pointer to uint8_t
-
 uint8_t ** const ptr3 = &ptr; // Constant pointer to pointer to uint8_t
 \end{minted}
 \subsection{Pointer Arithmetic}
 Pointers can be changed with arithmetic operators such as \mintinline{c}{+} and \mintinline{c}{-}.
 Arithmetic on pointers affects the address of the pointer, so that the pointer points to another location.
-
 When performing arithmetic on pointers, the size of an increment is determined by the type of the variable
 that the pointer is pointing to.
 \begin{minted}{c}
 uint8_t a = 100; // Variable
-
 uint8_t *ptr = &a; // Points to `a`
-
 ptr++; // Increment by 1 byte (size of uint8_t)
 // ptr now points to the next byte after `a`
 \end{minted}
@@ -2396,7 +2425,6 @@ Void pointers have no type, so they cannot be dereferenced.
 Pointers of other types can be assigned to void pointers, but not vice versa.
 \begin{minted}{c}
 uint8_t a = 100;
-
 void *ptr = &a; // Pointer to uint8_t
 uint8_t *ptr2 = ptr; // Error: Cannot assign void pointer to uint8_t pointer
 \end{minted}
@@ -2405,7 +2433,6 @@ The \mintinline{c}{sizeof} function can be used to determine the size of a varia
 \begin{minted}{c}
 uint8_t a = 100;
 uint16_t b = 200;
-
 sizeof(a); // Returns 1
 sizeof(b); // Returns 2
 \end{minted}
@@ -2426,7 +2453,6 @@ A character array is a special type of array which is used to store strings.
 Character arrays can be declared using the \mintinline{c}{char} keyword.
 \begin{minted}{c}
 char a[] = "Hello World";
-
 // Equivalent to:
 char b[12] = {'H', 'e', 'l', 'l', 'o', ' ',
               'W', 'o', 'r', 'l', 'd', '\0'};
@@ -2443,7 +2469,6 @@ Array elements can be accessed with the array index operator (\mintinline{MATLAB
 In C, array indices start at 0.
 \begin{minted}{c}
 uint8_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
 a[0]; // Returns 0
 a[1] = 10; // a is now {0, 10, 2, 3, 4, 5, 6, 7, 8, 9}
 \end{minted}
@@ -2451,14 +2476,12 @@ It is undefined behaviour to access an array element which is out of bounds.
 However it is possible to have a pointer to an element one past the end of an array
 as long as the pointer is not dereferenced.
 \begin{minted}{c}
-uint8_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
+uint8_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 uint8_t *ptr = &a[10];
 \end{minted}
 To loop through an array, we can use a \mintinline{c}{for} loop.
 \begin{minted}{c}
 uint8_t a[10];
-
 for (uint8_t i = 0; i < 10; i++) {
     a[i] = i;
 }
@@ -2467,7 +2490,6 @@ for (uint8_t i = 0; i < 10; i++) {
 Arrays are implicitly converted to pointers to the first element of the array.
 \begin{minted}{c}
 uint8_t a[10];
-
 uint8_t *ptr = a; // Equivalent to `uint8_t *ptr = &a[0]`
 *ptr = 100; // `a` is now {100, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 \end{minted}
@@ -2482,16 +2504,13 @@ void func(uint8_t *arr) {
 }
 
 uint8_t a[10];
-
 func(a); // `a` is now {100, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 \end{minted}
 The syntax \mintinline{MATLAB}{arr[i]} is equivalent to \mintinline{MATLAB}{*(arr + i)}.
-Note that this is possible because arrays are stored contiguously in memory.
-
-Note that it is not possible to change an array's address.
+This is possible because arrays are stored contiguously in memory.
+Note that it is not possible to change an array's address:
 \begin{minted}{c}
 uint8_t a[10];
-
 a++; // Error: Cannot change the address of an array
 \end{minted}
 \subsection{Array Length}
@@ -2499,7 +2518,6 @@ The length of an array can be determined with the \mintinline{c}{sizeof} functio
 \begin{minted}{c}
 uint8_t a[10];
 uint16_t b[5];
-
 sizeof(a) / sizeof(a[0]); // Returns 10
 sizeof(b) / sizeof(b[0]); // Returns 5
 \end{minted}
@@ -2511,7 +2529,6 @@ The first way is to use a \mintinline{c}{for} loop.
 \begin{minted}{c}
 uint8_t a[10];
 uint8_t b[10];
-
 for (uint8_t i = 0; i < sizeof(a) / sizeof(a[0]); i++) {
     b[i] = a[i];
 }
@@ -2521,8 +2538,7 @@ from the \mintinline{c}{string.h} library.
 \begin{minted}{c}
 uint8_t a[10];
 uint8_t b[10];
-
-memcpy(b, a, sizeof(a));
+memcpy(b, a, sizeof(a) / sizeof(a[0]));
 \end{minted}
 \subsection{Multidimensional Arrays}
 Multi-dimensional arrays (or multiple subscript arrays)
@@ -2537,7 +2553,6 @@ uint8_t a[][3] = {
 To declare a multi-dimensional array, all dimensions but the first
 need to be specified. The rows of the array
 must be specified within additional braces (\mintinline{c}{{ }}).
-
 Elements can be accessed by specifying the index of each dimension.
 \begin{minted}{c}
 a[0][0]; // Returns 1
@@ -2599,7 +2614,6 @@ int main(void) {
     uint8_t b = 20;
 
     uint8_t c = add(a, b); // `a` and `b` are arguments to `add`
-    return 0;
 }
 \end{minted}
 To pass an array to a function, we can pass a pointer to that array.
@@ -2619,13 +2633,11 @@ int main(void) {
     }
 
     print_array(a, sizeof(a) / sizeof(a[0]));
-    return 0;
 }
 \end{minted}
 When a function does not take any arguments, we can specify \mintinline{c}{void} as the parameter list.
 \begin{minted}{c}
 void func(void) {
-    // Function body
 }
 \end{minted}
 \subsection{Return Values}
@@ -2645,7 +2657,6 @@ int main(void) {
     uint8_t b = 20;
 
     uint8_t c = add(a, b);
-    return 0;
 }
 
 uint8_t add(uint8_t a, uint8_t b) {
@@ -2675,10 +2686,9 @@ int main(void) {
     uint8_t b = 20;
 
     swap(&a, &b);
-    return 0;
 }
 \end{minted}
-\subsection{Stack}
+\subsection{Call Stack}
 As functions can call other functions, or even call themselves,
 local variables inside functions are stored on the \textbf{stack}.
 The return address of where a function is called from is also stored
@@ -2695,7 +2705,6 @@ Variables and other identifiers in C have scope.
 Scope affects the \textbf{visibility} and \textbf{lifecycle} of variables.
 Scope is \textbf{hierarchical}, meaning that variables declared in a parent scope
 are visible to all child scopes.
-
 Variables declared in a child scope can also hide variables
 declared in a parent scope declared with the same name.
 \subsection{Global Scope}
@@ -2728,7 +2737,6 @@ changes the lifetime of a variable to the lifetime of the program.
 This means that the variable will not be destroyed when the function
 returns, and will retain its value between function calls.
 Static variables are allocated in SRAM and not on the stack.
-
 When applied to a \textbf{global variable}, the \mintinline{c}{static} keyword
 changes the visibility of the variable to the file in which it is declared.
 \chapter{Types}
@@ -2743,7 +2751,6 @@ volatile uint8_t *portb_outclr = 0x0426;
 The \mintinline{c}{volatile} keyword is important because the variable
 is outside the control of the program. The compiler will therefore not optimize
 accesses to the variable.
-
 The \mintinline{text}{avr/io.h}
 header file includes macros and type definitions for accessing various
 registers on the AVR microcontroller.
@@ -2779,7 +2786,7 @@ Conversion between pointers will change the pointer type but will not affect the
 data. Note that these conversions are not portable across platforms.
 \begin{minted}{c}
 uint16_t a = 12345;
-uint8_t *b = (uint8_t *)&a; // likely contains 57, but may vary on different platforms
+uint8_t *b = (uint8_t *)&a; // likely 57, but may vary on different platforms
 \end{minted}
 Casting an integer to a pointer will make the pointer contain the address in that integer.
 \begin{minted}{c}
@@ -2792,9 +2799,8 @@ uint16_t addr = (uint16_t)ptr; // addr = 0x1234
 \end{minted}
 These conversions are not portable, but can be necessary when accessing memory mapped IO\@.
 \subsubsection{Modfying Qualifiers}
-Casting can also be used to add/remove qualifiers such as \mintinline{c}{const} and \mintinline{c}{volatile}.
-
-Note that the following will not work on the ATtiny1626 because the \mintinline{c}{const} qualifier
+Casting can also be used to add/remove qualifiers such as \mintinline{c}{const} and \mintinline{c}{volatile},
+however the following will not work on the ATtiny1626 because the \mintinline{c}{const} qualifier
 usually results in that variable being stored in SRAM or read-only memory locations.
 \begin{minted}{c}
 const uint8_t a = 10;
@@ -2808,7 +2814,7 @@ Casting can also be used to avoid truncation errors when performing arithmetic.
 uint16_t a = 25000;
 uint16_t b = 10000;
 
-uint32_t c = a * b; // c = 45696
+uint32_t c = a * b;           // c = 45696 (incorrect)
 uint32_t d = (uint32_t)a * b; // d = 250000000
 \end{minted}
 \section{Floating Point Types}
@@ -2826,12 +2832,12 @@ where \(s\) is the sign bit, \(m\) is the mantissa, and \(e\) is the exponent.
 Note that values are not equally spaced. There are several special values that
 can be represented by floating point numbers.
 \begin{itemize}
-    \item \(e = 2^{128}\) (all 1s):
+    \item \(e = 255 \implies 2^{128}\):
           \begin{itemize}
               \item \(m = 0\) (all 0s): \mintinline{c}{INFINITY} if \(s = 0\), \mintinline{c}{-INFINITY} if \(s = 1\)
               \item \(m\) is not all 0s: \mintinline{c}{NAN}
           \end{itemize}
-    \item \(e = 2^{-126}\) (all 0s):
+    \item \(e = 0 \implies 2^{-126}\) (denormalised):
           \begin{itemize}
               \item \(m = 0\) (all 0s): \mintinline{c}{0.0} if \(s = 0\), \mintinline{c}{-0.0} if \(s = 1\)
               \item \(m\) is not all 0s: Subnormal numbers
@@ -2847,7 +2853,6 @@ Fixed point math is a technique for performing arithmetic operations on integers
 that are scaled by a power of two. This allows for integer arithmetic to be used
 instead of floating point arithmetic, which can be significantly faster
 at the cost of precision.
-
 For common operations such as sine and cosine, consider using lookup tables.
 \chapter{Objects}
 \section{Structures}
@@ -3099,13 +3104,9 @@ The ISR is a function that is executed as a result of the interrupt.
 
 When configuring an interrupt, we must temporarily disable interrupts globally to prevent the interrupt from being triggered while we are configuring it.
 \begin{minted}{c}
-// Disable interrupts globally
-cli();
-
-// Configure interrupt
-
-// Enable interrupts globally
-sei();
+cli(); // Disable interrupts globally
+// Configure interrupts
+sei(); // Enable interrupts globally
 \end{minted}
 It is also important to restore the state of the CPU or registers before the ISR returns.
 This is because another interrupt can be triggered while the ISR is executing.
@@ -3236,10 +3237,9 @@ extern int a;
 printf("%d\n", a); // Prints 5
 
 // file1.c
-extern int a;
 int a = 5;
 \end{minted}
-Note that variable must be declared first before it can be used.
+Any non-static symbols are implicitly global, and can be accessed from any translation unit.
 \chapter{Hardware Peripherals}
 Microcontrollers typically include a variety of hardware peripherals
 that remove the burden of having to write software
@@ -3253,7 +3253,7 @@ Hardware peripherals can run independent of the CPU (in parallel)
 so that:
 \begin{itemize}
     \item peripherals can perform tasks without software intervention
-    \item peripherals are not subject to timing constrains (execution time of instructions, CPU clock speed)
+    \item peripherals are not subject to timing constraints (execution time of instructions, CPU clock speed)
     \item the CPU can be used to perform other computations while the peripheral is busy
 \end{itemize}
 All control of, and communication with peripherals is done through \textbf{peripheral registers}
@@ -3364,14 +3364,13 @@ the PWM output's duty cycle can be controlled, via the following equation:
 
 void tca_init() {
     // DISP EN
-    PORTB.OUT = PIN1_bm;
     PORTB.DIR = PIN1_bm;
 
     // Set waveform generation mode to single slope
     // Waveform output controls PA1 PWM (display brightness)
     TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_SINGLESLOPE_gc | TCA_SINGLE_CMP1EN_bm;
-    TCA0.SINGLE.PER = 0xFFFF;                 // Set period to maximum value
-    TCA0.SINGLE.CMP1 = 0xFFFE;                // 100% duty cycle
+    TCA0.SINGLE.PER = 0xFF;                   // Set period to some value
+    TCA0.SINGLE.CMP1 = 0xFF;                  // 100% duty cycle
     TCA0.SINGLE.CTRLA = TCA_SINGLE_ENABLE_bm; // Enable TCA0
 }
 
@@ -3385,7 +3384,8 @@ int main(void)
 }
 \end{minted}
 To dynamically change the brightness of the display, the compare value can be changed
-using the buffered register \mintinline{c}{TCA0.SINGLE.CMP1BUF}.
+using the buffered register \mintinline{c}{TCA0.SINGLE.CMP1BUF}. The same applies to the
+period.
 \section{Analog to Digital Conversion}
 Analog to digital conversion (ADC) is a technique used to convert an analogue signal
 to a digital signal. The analogue signal is sampled at a regular interval and the
@@ -3402,7 +3402,7 @@ When we \textbf{discretise in time}, this is referred to as \textbf{sampling}.
 The \textbf{sampling rate} determines the \textbf{time resolution} and introduces \textbf{aliasing error}.
 This rate is typically the period of the CPU clock.
 \subsection{ADC Implementation}
-Analogue to digitalconversion is the process of discretising a continuous signal (typically a voltage)
+Analogue to digital conversion is the process of discretising a continuous signal (typically a voltage)
 into a digital code. Specialised hardware called an \textbf{analogue to digital converter} (ADC)
 performs this function. The ADC samples the analogue signal at a regular interval at an instant in time, and
 converts the sampled value to a digital value.
@@ -3608,158 +3608,252 @@ store the state of each digit and switch between them using an interrupt-driven 
 
 If we choose a refresh rate of \qty{50}{Hz}, we must choose a period of \qty{20}{ms} for both digits. This means that we must switch digits every \qty{10}{ms}
 which will ensure that each digit is displayed for an equal amount of time.
-\section{Strings}
-\subsection{Character Literals}
-The encoding of a character is platform-dependent, but typically characters 0--127 are defined through the American Standard Code for Information Interchange (ASCII),
-with slight variations depending on locale. In this character set, characters 0--31 and 127 are control characters, and characters 32--126 are printable characters.
-Characters 128--255 are typically defined by the local character set, and are not portable between platforms.
-
-A character literal is a single character enclosed in single quotes, e.g., \mintinline{c}{'a'}, and escape sequences can be used to represent control characters, e.g., \mintinline{c}{'\n'}.
-Characters are stored in memory as 8-bit values, and are typically represented as unsigned integers in C.
-\subsection{String Literals}
-As mentioned in previous sections, a string is a sequence of characters, terminated by a null character (\mintinline{c}{'\0'}).
-Strings can be defined using double quotes, e.g., \mintinline{c}{"Hello, world!"} or as an array of characters. When defined using double quotes, % chktex 18
-a null character is implicitly added to the end of the string, however this is not the case when defined as an array of characters.
-
-If the size of the character array is specified for a character array, then
+\section{Pushbutton Handling}
+Pushbuttons have two possible states, \textbf{pressed} and \textbf{released}. Given an active-low pushbutton,
 \begin{itemize}
-    \item If the size is greater than the length of the string, then the remaining elements of the array are initialised to 0.
-    \item If the size is less than the length of the string, then the string is truncated to fit the array, and no null character is added.
+    \item When the pushbutton is pressed, the pin is pulled low, corresponding to a \mintinline{c}{0} value.
+    \item When the pushbutton is released, the pin is pulled high, corresponding to a \mintinline{c}{1} value.
 \end{itemize}
-When accessing strings to perform operations on them, we can utilise the null character to determine the length of the string.
+The state of pushbuttons can be read through a bitwise AND operation with the \mintinline{c}{PORTA.IN} register.
+\begin{minted}{c}
+#include <avr/io.h>
 
-To modify a string, we can utilise pointer arithmetic to modify each character in-place.
-The \mintinline{c}{<string.h>} header file contains a number of functions for manipulating strings, including
+PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
+
+while (1) {
+    if (PORTA.IN & PIN4_bm) {
+        // Pushbutton is released
+    } else {
+        // Pushbutton is pressed
+    }
+}
+\end{minted}
+In this loop structure, the state of the pushbutton will be in the pressed state until the pushbutton is released.
+This may not be desirable if we want to perform a single action when the pushbutton is pressed.
+To solve this, we must respond to a \textit{change in state}.
 \begin{itemize}
-    \item \mintinline{c}{strlen()} --- Get length of string
-    \item \mintinline{c}{strcpy()}, \mintinline{c}{strncpy()} --- Copy string
-    \item \mintinline{c}{memcpy()} --- Copy data
-    \item \mintinline{c}{strcmp()} --- Compare strings
-    \item \mintinline{c}{strchr()}, \mintinline{c}{strrchr()} --- Find character in string
-    \item \mintinline{c}{strchr()} --- Find string in string
-    \item \mintinline{c}{strcat()} --- Concatenate two strings
+    \item A \textbf{falling edge} is created when the pushbutton is pressed (transition from \mintinline{c}{1} to \mintinline{c}{0}).
+    \item A \textbf{rising edge} is created when the pushbutton is released (transition from \mintinline{c}{0} to \mintinline{c}{1}).
 \end{itemize}
-\subsection{Standard Input/Output}
-The C standard I/O header file \mintinline{c}{<stdio.h>} library provides a number of functions that read input
-and write output. Many of these functions work with the standard input and output devices, \mintinline{c}{stdin} and \mintinline{c}{stdout}.
-On a PC, these will normally read from or write to, a terminal by default. On the QUTy, these devices are non-functional by default, and must be
-configured to read from/write to USART0.
+This is known as \textbf{edge detection}.
 
-The \mintinline{c}{putchar(0)} and \mintinline{c}{getchar()} functions are used to write a single character to the standard output device and read a single character from the standard input device, respectively.
-\subsection{Formatted Output}
-The \mintinline{c}{printf()} function (print formatted) is used to write formatted output to the standard output device. The format string is a string that contains
-text and format specifiers, which are used to specify how the arguments are to be formatted. The format specifiers are prefixed by a percent sign (\mintinline[escapeinside=||]{c}{|\%|}).
+To implement this in C, we can use the XOR operator (\mintinline{c}{^}) to detect a change in the signal.
 \begin{minted}{c}
-#include <stdio.h>
+uint8_t pb_prev = 0xFF;
+uint8_t pb_state = 0xFF;
 
-printf("Hello, world!\n"); // Print a string
-printf("%d\n", 100); // Print a signed integer (or %i)
-printf("%d%%\n", 100); // Escape a percent sign
-printf("%u\n", 100); // Print an unsigned integer
-printf("%o\n", 100); // Print an unsigned octal
-printf("%x\n", 100); // Print an unsigned hexadecimal (%X uppercase)
-printf("%p\n", &var); // Print a pointer
+while (1)
+{
+    pb_prev = pb_state;
+    pb_state = PORTA.IN;
+    pb_edge = pb_state ^ pb_prev;
+
+    pb_falling_edge = pb_edge & pb_prev;
+    pb_rising_edge = pb_edge & pb_state;
+}
 \end{minted}
-Preceding the format specifier with an optional \textbf{integer length modifier} will change the size of the argument that is formatted.
+To additionally detect a falling/rising edge, we can use the AND operator (\mintinline{c}{&}) to detect a change in the signal.
+\subsection{Pushbutton Sampling}
+The actuation of mechanical pushbuttons is slow and therefore it is important to sample pushbutton states fast enough to detect changes in state.
+Latency refers to the delay between user input and the reaction of a system. For user input, latency should be acceptably small;
+what is acceptably small depends on what magnitude of latency is perceptible and is specific to the application.
+Latency as low as \qty{2}{ms} is perceptible in particular user input applications, however latency betwen \qtyrange{20}{60}{ms} is acceptable for most applications.
+\subsection{Switch Bounce}
+Switch bounce is an artefact of electromechanical switches where the switch contacts bounce back and forth when the switch is actuated.
+This results in a signal that is not stable and can cause false positives when detecting a change in state.
+
+As a digital system can sample a voltage much faster than a mechanical switch can change state, the system may detect multiple
+transitions of the switch state.
+
+To prevent this, we can \textbf{debounce} the pushbuttons and either by using a debouncing circuit, or software.
+To implement this in software, we can take multiple samples and only detect a change in state if the samples are consistent
+over multiple samples. Due to this, it is better to use an ISR to capture the state of the pushbutton at regular intervals.
 \begin{minted}{c}
-#include <stdio.h>
+volatile uint8_t pb_debounced_state = PIN4_bm;
+volatile uint8_t pb_falling_edge = 0;
+volatile uint8_t pb_rising_edge = 0;
 
-printf("%d\n", 100); // Print a signed integer
-printf("%hd\n", 100); // Print a signed short integer
-printf("%ld\n", 100); // Print a signed long integer
+// Periodic 4ms interrupt
+ISR(TCB0_INT_vect)
+{
+    static uint8_t counter = 3;
+
+    // Capture the state of the pushbutton from the port pin
+    uint8_t pb_sample = PORTA.IN & PIN4_bm;
+    // Detect a change in state
+    uint8_t pb_edge = pb_sample ^ pb_debounced_state;
+
+    if (pb_edge)
+    {
+        if (counter-- == 0)
+        {
+            // Save previous debounced state
+            uint8_t pb_previous_state = pb_debounced_state;
+
+            // Update debounced state
+            pb_debounced_state = pb_sample;
+
+            // Update falling/rising edge
+            pb_falling_edge = pb_edge & pb_previous_state;
+            pb_rising_edge = pb_edge & pb_debounced_state;
+
+            // Reset counter
+            counter = 3;
+        }
+    }
+    else
+        // Reset counter
+        counter = 3;
+
+    TCB0.INTFLAGS = TCB_CAPT_bm;
+}
 \end{minted}
-Additionally, a number before the specifier can be used to specify the minimum width of the output, and a number after the period can be used to specify the number of decimal places.
+The above implementation only debounces a single pushbutton, as the counter
+only applies to S1. To debounce multiple pushbuttons, it is possible to
+use a counter for each pushbutton, however this will lead to a large
+amount of code. Instead, we can utilise vertical counting.
+\subsection{Vertical Counters}
+Instead of using a counter variable for each pushbutton, we can use the
+bits of a single variable to represent the counters for each pushbutton.
+
+Doing so will reduce the maximum value of the counter, however this is
+not a problem as we only require the counter to reach a value of 3.
+
+The following code implements a vertical counter for 4 pushbuttons.
 \begin{minted}{c}
-#include <stdio.h>
+// We can use PIN4_bm | PIN5_bm | PIN6_bm | PIN7_bm, but we do not care about the other bits
+volatile uint8_t pb_debounced_state = 0xFF;
+volatile uint8_t pb_falling_edge = 0;
+volatile uint8_t pb_rising_edge = 0;
 
-printf("%d\n", 100); // Print a signed integer
-printf("%10d\n", 100); // Print a signed integer with a minimum width of 10
-printf("%-10d\n", 100); // Print a signed integer with a minimum width of 10 and
-                        // justify left
+// Periodic 4ms interrupt
+ISR(TCB0_INT_vect)
+{
+    // Two vertical counters for a total of 4 counter states
+    static uint8_t counter0 = 0;
+    static uint8_t counter1 = 0;
+
+    // Capture the state of the pushbuttons from the port pin
+    uint8_t pb_sample = PORTA.IN;
+    // Detect a change in state
+    uint8_t pb_edge = pb_sample ^ pb_debounced_state;
+
+    // Update counters
+    // If the state of the pushbutton has changed, increment the counter
+    counter1 = (counter1 ^ counter0) & pb_edge;
+    counter0 = ~counter0 & pb_edge;
+
+    // Save previous debounced state
+    uint8_t pb_previous_state = pb_debounced_state;
+
+    // Update debounced state if counter is 3 or immediately on falling edge
+    pb_debounced_state ^= (counter1 & counter0) | (pb_edge & pb_previous_state);
+
+    // Update falling/rising edge
+    pb_falling_edge = pb_edge & pb_previous_state;
+    pb_rising_edge = pb_edge & pb_debounced_state;
+
+    TCB0.INTFLAGS = TCB_CAPT_bm;
+}
 \end{minted}
-For floating point numbers, the \mintinline[escapeinside=||]{c}{|\%|f} specifier can be used to print a fixed-point number, and the \mintinline[escapeinside=||]{c}{|\%|e} specifier can be used to print a floating-point number in scientific notation.
-\mintinline[escapeinside=||]{c}{|\%|g} prints either depending on the size.
-A decimal point can be used to specify the number of decimal places to print.
+This code allows us to debounce up to 8 pushbuttons using a single 8-bit
+variable. The debounced state of the pushbuttons is stored in \mintinline{c}{pb_debounced_state}.
+This variable updates if the state of the pushbutton is consistent over 3 samples,
+or if a falling edge is detected.
+\chapter{State Machines}
+A state machine or finite state machine (FSM) is a mathematical model of computation in which a machine can only exist in one of a finite
+number of states. The machine transitions between states in response to inputs, and can perform actions during transitions.
+
+A state machine is fully defined by its list of states, initial state,
+and the conditions for transitioning between states.
+\section{State Machine Implementation}
+To translate a state machine into a C program, we can make use of an enumerated type.
+Enumerated types are a special type of data type that allows us to define a set of named constants.
+
+Enumerated types can be used to implement a state machine as follows:
+\begin{itemize}
+    \item Each enumerator can be used to represent a state.
+    \item A \mintinline{c}{switch} statement can be used to implement the behaviour in each state.
+    \item An \mintinline{c}{if} statement can be used to implement the conditions for transitioning between states.
+\end{itemize}
 \begin{minted}{c}
-#include <stdio.h>
+typedef enum
+{
+    START,
+    STATE1,
+    STATE2
+} state_t;
 
-printf("%f\n", 100.0); // Print a float
-printf("%.2f\n", 100.0); // Print a float with 2 d.p.
-printf("%e\n", 100.0); // Print a float in scientific notation
+// Initial state
+state_t state = START;
+
+while (1)
+{
+    // State machine
+    switch (state)
+    {
+        case START:
+            if (condition1)
+                // Transition if condition is met
+                state = STATE1;
+            break;
+        case STATE1:
+            if (condition2)
+                // Transition if condition is met
+                state = STATE2;
+            break;
+        case STATE2:
+            if (condition3)
+                // Go back to start if condition is met
+                state = START;
+            break;
+        default:
+            // Invalid state, reset to start
+            state = START;
+            break;
+    }
+}
 \end{minted}
-For performance reasons, \mintinline{c}{printf()} is buffered, and will store characters in a buffer in SRAM\@. By default \mintinline{c}{stdout}
-is line-buffered, meaning that the buffer is flushed when a newline character is written to the buffer. \mintinline{c}{fflush(stdout)} can be used to flush the buffer.
-\subsection{Formatted Input}
-The \mintinline{c}{scanf()} function (scan formatted) is used to read formatted input from the standard input device. The format string is similar to that of \mintinline{c}{printf()},
-except that the format specifiers are used to specify how the input is to be read.
+\section{Enumerated Types}
+Enumerated types are defined similarly to structures, via the \mintinline{c}{enum} keyword, and can be anonymous, or named.
+The values of an enumerated type are constants, called enumerators, that are assigned an integer value starting from 0.
 \begin{minted}{c}
-#include <stdio.h>
+typedef enum
+{
+    FALSE,
+    TRUE
+} boolean_t;
 
-int i;
-scanf("%d", &i); // Read a signed integer
-// A signed integer input will be stored in i
-// Otherwise, the function returns 0
+boolean_t b = TRUE; // b is assigned the value 1
 
-char str[10];
-scanf("abc%d", str); // Read a string with a prefix
-// If the string is "abc123", then str will be "123"
-// If the string is "5", then "5" will stay in the buffer and the function will return 0
-// If the string is "abcd", then scanf will stop reading and return 0
-// Otherwise, the function returns 0
+b == TRUE; // TRUE is assigned the value 1, so this is true
+b == 0; // FALSE is assigned the value 0, so this is false
 \end{minted}
-If two or more format specifiers are used, then the function will read input until it reaches a whitespace character, and then stop.
+While they can be compared to integers, it is recommended to use the enumerators in comparisons.
+
+Enumerated types can also be defined with explicit values, and can be used to represent bitmasks.
 \begin{minted}{c}
-#include <stdio.h>
+typedef enum
+{
+    MONDAY = 0b00000001,
+    TUESDAY = 0b00000010,
+    WEDNESDAY = 0b00000100,
+    THURSDAY = 0b00001000,
+    FRIDAY = 0b00010000,
+    SATURDAY = 0b00100000,
+    SUNDAY = 0b01000000,
+    WEEKEND = SATURDAY | SUNDAY,
+    WEEKDAY = MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY
+} DAYS;
 
-int i, j;
-scanf("%d %d", &i, &j); // Read two signed integers
-// If the input is "123 456", then i will be 123 and j will be 456
-// If the input is "123", then i will be 123 and the function will return 0
-// Otherwise, the function returns 0
+enum DAYS d = SATURDAY; // d is assigned the value 0b00100000
+
+if (d & WEEKEND) // Check if d is a weekend day
+    // Do something
 \end{minted}
-Whitespace characters are ignored when reading input,
-\begin{minted}{c}
-#include <stdio.h>
+\section{Switch Statements}
+A \mintinline{c}{switch} statement is a control structure that allows us to select a block of code to execute based on the value of an expression.
 
-char c;
-scanf("%c", &c); // Read a character
-// If the input is "a", then c will be 'a'
-// If the input is " a", then c will be 'a'
-// If the input is "  a", then c will be 'a'
-\end{minted}
-A width specifier tells the function how many characters to read, this is useful to prevent buffer overflows.
-\begin{minted}{c}
-#include <stdio.h>
-
-char str[10];
-scanf("%9s", str); // Read a string with a maximum length of 9
-// If the input is "123456789", then str will be "123456789"
-// If the input is "1234567890", then str will be "123456789"
-\end{minted}
-The asterisk (\mintinline{c}{*}) can be used to ignore input.
-\begin{minted}{c}
-#include <stdio.h>
-
-int i;
-scanf("%*d %d", &i); // Read a signed integer
-// If the input is "123 456", then i will be 456
-// If the input is "123", then the function will return 0
-// Otherwise, the function returns 0
-\end{minted}
-A scanset can be used to specify a set of characters that are allowed to be read.
-\begin{minted}{c}
-#include <stdio.h>
-
-char c;
-scanf("%[abc]", &c); // Read a character
-// If the input is "a", then c will be 'a'
-// If the input is "b", then c will be 'b'
-// If the input is "c", then c will be 'c'
-// Otherwise, the function returns 0
-\end{minted}
-This behaves similarly to a regular expression, and can be negated by using the caret (\mintinline{c}{^}),
-ranges can be specified by using a hyphen (\mintinline{c}{-}), and the backslash (\mintinline[escapeinside=||]{c}{|\\|}) can be used to escape special characters.
-
-If a width is specified for a scanset, then the function will read input until it reaches a character that is not in the scanset or until the maximum width is reached. This
-character will be left in the buffer.
+When a case is matched, a \mintinline{c}{break} statement can be used to prevent the program from falling
+through the case. The \mintinline{c}{default} case is executed if no case is matched.
 \end{document}
