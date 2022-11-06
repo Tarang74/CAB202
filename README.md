@@ -101,6 +101,9 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 79. Timers
 80. Pulse Width Modulation
 81. Analog to Digital Conversion
+82. Serial Communication
+83. Serial Communications on the QUTy
+84. Strings
 
 ---
 
