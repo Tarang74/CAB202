@@ -24,10 +24,10 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 2. Microprocessors \& Microcontrollers
 3. ATtiny1626 Microcontroller
 4. AVR Core
-5. Programme Execution
-6. Instructions
-7. Interacting with memory and peripherals
-8. Memory map
+5. Status Register
+6. Programme Execution
+7. Instructions
+8. Interacting with memory and peripherals
 9. Assembly code
 10. Digital Systems
 11. Representation
@@ -103,7 +103,10 @@ This repository provides **lecture notes** for **CAB202 - Microprocessors and Di
 81. Analog to Digital Conversion
 82. Serial Communication
 83. Serial Communications on the QUTy
-84. Strings
+84. Pushbutton Handling
+85. State Machine Implementation
+86. Enumerated Types
+87. Switch Statements
 
 ---
 
