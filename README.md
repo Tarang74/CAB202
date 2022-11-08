@@ -10,9 +10,11 @@
 
 Lecture notes download: [CAB202 Lecture Notes PDF](https://www.github.com/Tarang74/CAB202/raw/main/CAB202%20Lecture%20Notes.pdf)
 
+Exam notes download: [CAB202 Exam Notes PDF](https://www.github.com/Tarang74/CAB202/raw/main/CAB202%20Exam%20Notes.pdf)
+
 ---
 
-This repository provides **lecture notes** for **CAB202 - Microprocessors and Digital Systems**.
+This repository provides **lecture notes** and **exam notes** for **CAB202 - Microprocessors and Digital Systems**.
 
 *The contents of the lecture notes are described below.*
 
