@@ -391,7 +391,7 @@ A unary operator used to \textbf{invert} a bit.
         \textbf{\(a\)} & \textbf{\(b\)} & \(a\) \keywordinline{OR} \(b\) \\
         \midrule
         0              & 0              & 0                              \\
-        0              & 1              & 0                              \\
+        0              & 1              & 1                              \\
         1              & 0              & 1                              \\
         1              & 1              & 1                              \\
         \bottomrule
@@ -3231,10 +3231,56 @@ Any non-static symbols are implicitly global, and can be accessed from any trans
 While most microcontrollers are equipped with debugging tools, we are often presented with
 no debugging tools at all. Therefore it is important to develop strategies to be able to
 systematically debug embedded programs with access to basic I/O.
-
 Some simple methods include toggling pins on the microcontroller to indicate the state of the program
 and sending formatted strings through the serial port to a terminal.
 
+To route stdin and stdout to/from any serial communications interface that can read and write characters
+(e.g., UART, SPI, I\({}^2\)C, etc.), we can use the \mintinline{c}{stdio.h} library:
+\begin{enumerate}
+    \item Declare function prototypes for the read/write functions (names can be anything):
+    \begin{minted}{c}
+static int stdio_putchar(char c, FILE *stream);
+static int stdio_getchar(FILE *stream);
+    \end{minted}
+    \item Declare a stream to be used for stdin/stdout, using the \mintinline{c}{FDEV_SETUP_STREAM} macro:
+    \begin{minted}{c}
+static FILE stdio = FDEV_SETUP_STREAM(stdio_putchar, stdio_getchar, _FDEV_SETUP_RW);
+    \end{minted}
+    \item Implement the prototyped functions that read from the serial interface (i.e., via UART):
+    \begin{minted}{c}
+static int stdio_putchar(char c, FILE *stream)
+{
+    uart_putc(c);
+    return c;
+}
+
+static int stdio_getchar(FILE *stream)
+{
+    return uart_getc();
+}
+
+void stdio_init(void)
+{
+    // Assumes serial interface is initialised elsewhere
+    stdout = &stdio;
+    stdin = &stdio;
+}
+    \end{minted}
+\end{enumerate}
+Here we use the following blocking functions to read and write characters:
+\begin{minted}{c}
+uint8_t uart_getc(void) {
+    while (!(USART0.STATUS & USART_RXCIF_bm)); // Wait for data
+
+    return USART0.RXDATAL;
+}
+
+void uart_putc(uint8_t c) {
+    while (!(USART0.STATUS & USART_DREIF_bm)); // Wait for TX.DATA empty
+
+    USART0.TXDATAL = c;
+}
+\end{minted}
 Assembly listings are also useful for debugging in extreme cases, as they
 allow us to see exactly what instructions are being executed. This can be achieved via the
 \mintinline{text}{avr-objdump} tool.
