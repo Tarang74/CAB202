@@ -1273,14 +1273,18 @@ The following examples utilise counters of various sizes to create delays.
 Note that \(n\) represents the number of iterations.
 \begin{minted}{ca65}
 delay_1:
-    |\keyword{ldi}| r16, 255 - n ; 1 CPU cycle
-    ; Incrementor
-    |\keyword{ldi}| r17, 1 ; 1 CPU cycle
+    |\keyword{ldi}| r16, x ; 1 CPU cycle
+    |\keyword{ldi}| r17, 1 ; 1 CPU cycle ; Incrementor
+    
     loop:
         add r16, r17 ; 1 CPU cycle
         |\keyword{brcc}| loop ; 2 CPU cycles (1 CPU cycle when condition is false)
 \end{minted}
-The total number of CPU cycles is:
+The register \mintinline{ca65}{r16} has the following relationship:
+\begin{equation*}
+    x = \left( 2^8 - 1 \right) - n \iff n = \left( 2^8 - 1 \right) - x
+\end{equation*}
+with
 \begin{align*}
     \text{total cycles} & = 1 + 1 + \left( n + 1 \right) + 2 n + 1 \\
                         & = 3 n + 4
@@ -1298,7 +1302,7 @@ delay_2:
 \end{minted}
 The register pair \(\left( y:x \right)\) has the following relationship:
 \begin{align*}
-    \left( y:x \right) = \left( 2^{17} - 1 \right) - n \iff n = \left( 2^{17} - 1 \right) - \left( y:x \right)
+    \left( y:x \right) = \left( 2^{16} - 1 \right) - n \iff n = \left( 2^{16} - 1 \right) - \left( y:x \right)
 \end{align*}
 with
 \begin{align*}
@@ -1320,7 +1324,7 @@ delay_3:
 \end{minted}
 The register triplet \(\left( z:y:x \right)\) is determined through:
 \begin{align*}
-    \left( z:y:x \right) = \left( 2^{25} - 1 \right) - n \iff n = \left( 2^{25} - 1 \right) - \left( z:y:x \right)
+    \left( z:y:x \right) = \left( 2^{24} - 1 \right) - n \iff n = \left( 2^{24} - 1 \right) - \left( z:y:x \right)
 \end{align*}
 with
 \begin{align*}
