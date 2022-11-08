@@ -3651,6 +3651,39 @@ store the state of each digit and switch between them using an interrupt-driven 
 
 If we choose a refresh rate of \qty{50}{Hz}, we must choose a period of \qty{20}{ms} for both digits. This means that we must switch digits every \qty{10}{ms}
 which will ensure that each digit is displayed for an equal amount of time.
+\begin{minted}{c}
+// Bytes latched onto 7-segment display
+volatile int8_t left_byte = DISP_0 | DISP_LHS;
+volatile int8_t right_byte = DISP_0;
+
+// Current display side (alternates between left and right)
+volatile uint8_t current_display_side = 0;
+
+// 10ms interrupt
+ISR(TCB0_INT_vect)
+{
+    if (current_display_side == 1)
+        SPI0.DATA = left_byte;
+    else
+        SPI0.DATA = right_byte;
+
+    // Toggle display side (flip lsb)
+    current_display_side ^= 1;
+
+    TCB0.INTFLAGS = TCB_CAPT_bm;
+}
+
+ISR(SPI0_INT_vect)
+{
+    // Latch the digit
+    PORTA.OUTCLR = PIN1_bm; // Drive HIGH
+    PORTA.OUTSET = PIN1_bm; // Drive back to LOW
+
+    // Clear the interrupt flag (undocumented behaviour)
+    SPI0.INTFLAGS = SPI_IF_bm;
+}
+\end{minted}
+The display is updated by writing to the variables \mintinline{c}{left_byte} and \mintinline{c}{right_byte}.
 \section{Pushbutton Handling}
 Pushbuttons have two possible states, \textbf{pressed} and \textbf{released}. Given an active-low pushbutton,
 \begin{itemize}
