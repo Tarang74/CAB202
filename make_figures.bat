@@ -74,7 +74,7 @@ SET /A numP=0
 
     @REM If current option is not valid
     IF !numP!==0 GOTO :invalidOption
-    
+
     @REM Shift variables and loop if another option exists
     SHIFT
     IF NOT "%1"=="" GOTO :loop
@@ -103,7 +103,7 @@ SET /A numP=0
     ) ELSE (
         CALL :buildPDFv
     )
-    
+
     @REM Open options
     IF %open%==1 (
         CALL :openPDF
