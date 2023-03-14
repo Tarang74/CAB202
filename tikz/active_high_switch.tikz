@@ -1,0 +1,21 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\usetikzlibrary{shapes.geometric}
+
+\begin{document}
+\begin{circuitikz}[american,square/.style={regular polygon,regular polygon sides=4}]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    \draw (0, 0) node[square, draw, label={[label distance=0.5]180:pin}] (pin) {};
+    \draw (pin.east) to[short, -*] ++ (1, 0) node (connection) {};
+    \draw (connection.center) to[R] ++ (0, -2) node[rground] (gnd) {};
+    \draw (connection.center) to[cute closing switch] ++ (0, 2) node[vcc] {\(+\unit{V}\)};
+    \draw[draw=none] (gnd.south) -- ++ (0, -0.4) node {GND};
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,15 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    \draw (0, 0) to[D, name = component, i^=\(i\), v^=\(v_{KA}\), invert] (0, -3);
+\end{circuitikz}
+\end{document}

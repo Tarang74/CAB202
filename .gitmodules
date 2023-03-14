@@ -1,0 +1,6 @@
+[submodule "LaTeX-Submodule"]
+	path = LaTeX-Submodule
+	url = https://github.com/Tarang74/LaTeX-Submodule
+[submodule "CAB202-Tutorials"]
+	path = Assessment
+	url = https://github.com/Tarang74/CAB202-Tutorials

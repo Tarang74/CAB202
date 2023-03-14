@@ -1,0 +1,18 @@
+\documentclass{standalone}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{TeX Gyre Pagella Math}[range={bb,bbit}, Scale=MatchUppercase]
+
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[american]
+    \ctikzset{voltage=raised}
+    \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
+    % SPST
+    \draw (0, 0.5) node[cuteclosingswitchshape] (spst) {}
+    (spst.in) to[short] ++ (-0.5, 0)
+    (spst.out) to[short] ++ (0.5, 0);
+\end{circuitikz}
+\end{document}
