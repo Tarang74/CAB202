@@ -2864,8 +2864,7 @@ Struct members can also be initialized using braces as with arrays.
 \begin{minted}{c}
 struct Point p = { 30, 40 };
 \end{minted}
-Unlike arrays, structures are not passed can be passed between functions
-and copied normally.
+Unlike arrays, structures need not be accessed via pointers and can be passed between functions, and copied normally.
 \begin{minted}{c}
 void func(struct Point p) {
     p.x = 50;
