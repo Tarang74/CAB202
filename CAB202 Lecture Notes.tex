@@ -3376,9 +3376,9 @@ void tcb_init() {
 
 int main(void)
 {
-    sei();
-    tcb_init();
     cli();
+    tcb_init();
+    sei();
 
     while (1);
 }
@@ -3422,9 +3422,9 @@ void tca_init() {
 
 int main(void)
 {
-    sei();
-    tca_init();
     cli();
+    tca_init();
+    sei();
 
     while (1);
 }
@@ -3477,9 +3477,9 @@ void adc_init() {
 
 int main(void)
 {
-    sei();
-    adc_init();
     cli();
+    adc_init();
+    sei();
 
     while (1)
     {
