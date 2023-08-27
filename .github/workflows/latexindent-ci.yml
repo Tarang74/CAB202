@@ -36,21 +36,18 @@ jobs:
             https://api.github.com/repos/Tarang74/LaTeX-Submodule/contents/latexindent.yaml |
             jq -r '.content' | base64 -d > latexindent.yaml
 
-      - name: List files
-        run: ls
-        
       - name: Format tex files
         run: |
           for file in *.tex **/*.tex; do
             [ -f "$file" ] || continue
-            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$file"
+            ./latexindent -c Debug/ -w -m -l ./latexindent.yaml "$file"
           done
 
       - name: Format tikz files
         run: |
           for file in *.tikz **/*.tikz; do
             [ -f "$file" ] || continue
-            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$file"
+            ./latexindent -c Debug/ -w -m -l ./latexindent.yaml "$file"
           done
 
       - name: Delete latexindent
