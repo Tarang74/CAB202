@@ -82,6 +82,7 @@ jobs:
           if [[ -z "$(git status --porcelain $STATUS_ARGS $PATHSPEC)" ]]; then
             echo "No changes to commit"
           else
+            git pull
             git add .
             git commit -m "latexindent CI"
             git push
