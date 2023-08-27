@@ -1,11 +1,26 @@
-name: latexindent Continuous Integration Workflow
+name: Continuous Integration Workflow
 
 on:
   push:
     branches: [main]
 
 jobs:
-  LaTeX-Indent-CI:
+  README:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@main
+
+      - name: Tarang74/README-CI
+        uses: Tarang74/README-CI@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  LaTeX-Indent:
+    needs: README
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -35,6 +50,9 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/Tarang74/LaTeX-Submodule/contents/latexindent.yaml |
             jq -r '.content' | base64 -d > latexindent.yaml
+
+      - name: List files
+        run: ls
 
       - name: Format tex files
         run: |
