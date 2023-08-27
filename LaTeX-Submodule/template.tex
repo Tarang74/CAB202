@@ -81,11 +81,11 @@
 
 %%% Contradiction
 \newcommand{\contradiction}{
-    \hspace{-1em}
-	{\hbox{
-	\setbox0=\hbox{\(\mkern-3mu{\times}\mkern-3mu\)}
-	\setbox1=\hbox to0pt{\hss\copy0\hss}
-	\copy0\raisebox{0.5\wd0}{\copy1}\raisebox{-0.5\wd0}{\box1}\box0}}
+\hspace{-1em}
+{\hbox{
+\setbox0=\hbox{\(\mkern-3mu{\times}\mkern-3mu\)}
+\setbox1=\hbox to0pt{\hss\copy0\hss}
+\copy0\raisebox{0.5\wd0}{\copy1}\raisebox{-0.5\wd0}{\box1}\box0}}
 }
 
 %%% Lines for matrices
@@ -121,9 +121,9 @@
 %%% Augmented matrices
 \makeatletter
 \renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
-  \hskip -\arraycolsep
-  \let\@ifnextchar\new@ifnextchar
-  \array{#1}}
+    \hskip -\arraycolsep
+    \let\@ifnextchar\new@ifnextchar
+    \array{#1}}
 \makeatother
 
 %%% Operators

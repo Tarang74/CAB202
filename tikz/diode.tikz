@@ -10,8 +10,14 @@
 \begin{circuitikz}[american]
     \ctikzset{voltage=raised}
     \ctikzset{voltage/american minus=\(\vphantom{+}-\)}
-    \draw (0, 0) node[anchor=east] {\(\begin{array}{c}\text{Anode} \\ A\end{array}\)} 
+    \draw (0, 0) node[anchor=east] {\(
+        \begin{array}{c}\text{Anode} \\ A
+        \end{array}
+        \)}
     to[D, name = component, i=\(i\), v=\(v\), o-o] (3, 0) 
-    node[anchor=west] {\(\begin{array}{c}\text{Cathode} \\ K\end{array}\)};
+    node[anchor=west] {\(
+        \begin{array}{c}\text{Cathode} \\ K
+        \end{array}
+        \)};
 \end{circuitikz}
 \end{document}

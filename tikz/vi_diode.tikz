@@ -14,31 +14,24 @@
 \begin{document}
 \begin{tikzpicture}
     \begin{axis}[
-        set layers,
-        axis line style={on layer=axis foreground},
-		xmin = -10, xmax = 10,
-		ymin = -10, ymax = 10,
-		%
-		axis equal image,
-		% axis lines = middle,
-		xtick = {-10, -5, 0, 5, 10},
-		ytick = {-10, -5, 0, 5, 10},
-        xticklabels = {\( \), \( \), \(0\), \( \), \( \)},
-        yticklabels = {\( \), \( \), \(0\), \( \), \( \)},
-        extra x tick style = {xticklabel = {\(v_f\)}},
-        extra x ticks = {3},
-		%
-        xtickmin = -10,
-        xtickmax = 10,
-        grid = both,
-        grid style = {line width = .1pt, draw = gray!10},
-        major grid style = {line width = .2pt, draw = black!30},
-        minor tick num = 4,
-		%
-		xlabel = {\(v\)},
-		ylabel = {\(i\)}
-	]
-    \draw[<->, blue] (-8, 0) -- (3, 0) -- (3, 6);
+            set layers,
+            axis line style={on layer=axis foreground},
+            xmin = -10, xmax = 10,
+            ymin = -10, ymax = 10,
+            %
+            axis equal image,
+            % axis lines = middle,
+            xtick = {-10, -5, 0, 5, 10}, ytick = {-10, -5, 0, 5, 10},
+            xticklabels = {\( \), \( \), \(0\), \( \), \( \)},
+            yticklabels = {\( \), \( \), \(0\), \( \), \( \)}, extra x
+            tick style = {xticklabel = {\(v_f\)}}, extra x ticks = {3},
+            %
+            xtickmin = -10, xtickmax = 10, grid = both, grid style =
+            {line width = .1pt, draw = gray!10}, major grid style =
+            {line width = .2pt, draw = black!30}, minor tick num = 4,
+            %
+            xlabel = {\(v\)}, ylabel = {\(i\)} ] \draw[<->, blue] (-8,
+            0) -- (3, 0) -- (3, 6);
     \end{axis}
 \end{tikzpicture}
 \end{document}
