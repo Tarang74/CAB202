@@ -13,12 +13,28 @@ jobs:
 
       - name: Fetch latexindent
         run: |
-          curl https://github.com/cmhughes/latexindent.pl/releases/latest/download/latexindent-linux -o latexindent \
+          id=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/cmhughes/latexindent.pl/releases/latest |
+            jq '.assets[] | select(.name=="latexindent-linux") | .id')
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/cmhughes/latexindent.pl/releases/assets/$id \
+            -o latexindent
           chmod +x latexindent
 
       - name: Fetch latexindent config file
         run: |
-          curl https://raw.githubusercontent.com/Tarang74/LaTeX-Submodule/main/latexindent.yml -o latexindent.yaml
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Tarang74/LaTeX-Submodule/contents/latexindent.yaml |
+            jq -r '.content' | base64 -d > latexindent.yaml
 
       - name: Format tex files
         run: |
@@ -33,6 +49,10 @@ jobs:
             [ -f "$i" ] || break
             ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$i"
           done
+
+      - name: Delete latexindent
+        run: |
+          rm latexindent latexindent.yaml
 
       - name: Configure git
         run: |
