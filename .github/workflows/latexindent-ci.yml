@@ -1,0 +1,49 @@
+name: latexindent Continuous Integration Workflow
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  README-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Fetch latexindent
+        run: |
+          curl https://github.com/cmhughes/latexindent.pl/releases/latest/download/latexindent-linux -o latexindent \
+          chmod +x latexindent
+
+      - name: Fetch latexindent config file
+        run: |
+          curl https://raw.githubusercontent.com/Tarang74/LaTeX-Submodule/main/latexindent.yml -o latexindent.yaml
+
+      - name: Format tex files
+        run: |
+          for i in $(find . -type f -name "*tex"); do
+            [ -f "$i" ] || break
+            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$i"
+          done
+
+      - name: Format tikz files
+        run: |
+          for i in $(find . -type f -name "*tikz"); do
+            [ -f "$i" ] || break
+            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$i"
+          done
+
+      - name: Configure git
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+      - name: Commit and push changes
+        run: |
+          if [[ -z "$(git status --porcelain $STATUS_ARGS $PATHSPEC)" ]]; then
+            echo "No changes to commit"
+          else
+            git add .
+            git commit -m "latexindent CI"
+            git push
+          fi
