@@ -38,16 +38,16 @@ jobs:
 
       - name: Format tex files
         run: |
-          for i in $(find . -type f -name "*tex"); do
-            [ -f "$i" ] || break
-            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$i"
+          for file in *.tex **/*.tex; do
+            [ -f "$file" ] || continue
+            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$file"
           done
 
       - name: Format tikz files
         run: |
-          for i in $(find . -type f -name "*tikz"); do
-            [ -f "$i" ] || break
-            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$i"
+          for file in *.tikz **/*.tikz; do
+            [ -f "$file" ] || continue
+            ./latexindent -c Debug/ indent.log -w -m -l ./latexindent.yaml "$file"
           done
 
       - name: Delete latexindent
@@ -58,6 +58,7 @@ jobs:
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
+          
       - name: Commit and push changes
         run: |
           if [[ -z "$(git status --porcelain $STATUS_ARGS $PATHSPEC)" ]]; then
