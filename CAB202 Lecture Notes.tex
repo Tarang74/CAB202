@@ -2448,8 +2448,8 @@ chip design in their operation. Modern assemblers also provide features
 such as macros that allow us to write reusable code. While the scope of
 an assembler is limited, the programmer can be confident that the code
 produced is efficient and optimal, as instructions are directly
-translated into machine code.
-Some advantages of assemblers are described below:
+translated into machine code. Some advantages of assemblers are
+described below:
 \begin{itemize}
     \item \textbf{Efficiency} --- assemblers allow for precise control
           over the hardware, which may not be available in a high-level
@@ -2821,11 +2821,11 @@ uint8_t *ptr = a; // Pointer to first element of a
 sizeof(ptr);      // Returns 2 (size of the pointer)
 \end{minted}
 In the declaration of \mintinline{c}{ptr}, the array \textit{decays}
-into a pointer. This property is especially useful when accessing arrays
-through function parameters, as arrays themselves cannot be passed by
-value. Instead, we can pass a reference to the array by taking advantage
-of array decay, ensuring that we also pass a second parameter for the
-size of the array, as this information is lost.
+into a pointer. This property is especially useful when accessing
+arrays through function parameters, as arrays themselves cannot be
+passed by value. Instead, we can pass a reference to the array by
+taking advantage of array decay, ensuring that we also pass a second
+parameter for the size of the array, as this information is lost.
 \begin{minted}{c}
 void set_first_to_100(uint8_t *arr) {
     arr[0] = 100;
@@ -2968,8 +2968,8 @@ void func(void) {
 \subsubsection{Return Values}
 To return a value from a function, we use the \mintinline{c}{return}
 keyword. When a function does not return a value, we can also use
-\mintinline{c}{void} for the return type. Note that a void function does
-not need to use the \mintinline{c}{return} keyword.
+\mintinline{c}{void} for the return type. Note that a void function
+does not need to use the \mintinline{c}{return} keyword.
 \subsubsection{Function Prototypes}
 C uses \textbf{single-pass} compilation, meaning that functions need to
 be declared before they can be called. Function prototypes are used to
@@ -2996,8 +2996,8 @@ appropriate function definitions. Note that parameter names are not
 required in function prototypes.
 \subsubsection{Passing by Reference}
 As functions only return one value, we can use pointers to pass
-multiple values back to the caller. These output values can be passed as
-additional parameters.
+multiple values back to the caller. These output values can be passed
+as additional parameters.
 \begin{minted}{c}
 void swap(uint8_t *a, uint8_t *b) {
     uint8_t temp = *a;
@@ -3017,12 +3017,11 @@ As functions can call other functions, or even call themselves, local
 variables inside functions are stored on the \textbf{stack}. The return
 address of where a function is called from is also stored on the stack
 so that the program counter can be reverted to that address when the
-function returns.
-Local variables inside functions do not increase the explicit SRAM
-usage reported by the compiler. Rather, this memory will be allocated
-on the stack when the function is called. Therefore, it is important to
-ensure that the stack does not overflow, through recursive functions or
-large local variables.
+function returns. Local variables inside functions do not increase the
+explicit SRAM usage reported by the compiler. Rather, this memory will
+be allocated on the stack when the function is called. Therefore, it is
+important to ensure that the stack does not overflow, through recursive
+functions or large local variables.
 \subsection{Scope}
 All variables and other identifiers in C are scoped. Scope affects the
 \textbf{visibility} and \textbf{lifecycle} of variables. Scope is
@@ -3094,8 +3093,8 @@ volatile uint8_t *portb_outclr = (volatile uint8_t *)0x0426;
 \end{minted}
 Applying this type cast does not make this code more portable, but
 rather it tells the compiler that the programmer is aware of the
-conversion being made, and that it is intentional.
-Some common type casts are performed between:
+conversion being made, and that it is intentional. Some common type
+casts are performed between:
 \begin{itemize}
     \item \textbf{Integer types}: Conversions between integer types
           (signed or unsigned) will expand or narrow the type, resulting in a
@@ -3262,8 +3261,8 @@ typedef struct PointStruct Point;
 Point p = { 30, 40 };
 \end{minted}
 This can be useful when the struct is defined in a header file and the
-typedef is defined in a source file. In both cases, it is still possible
-to use the struct name to declare variables.
+typedef is defined in a source file. In both cases, it is still
+possible to use the struct name to declare variables.
 \begin{minted}{c}
 struct PointStruct p;
 \end{minted}
@@ -3399,8 +3398,8 @@ printf("\n"); // Prints "\n"
 \end{minted}
 In the example above, the compiler automatically allocates a block of
 memory to store the string, which in this case is 12 bytes long (11
-characters + null terminator). The pointer \mintinline{c}{str} points to
-the first character in the string.
+characters + null terminator). The pointer \mintinline{c}{str} points
+to the first character in the string.
 \begin{minted}{c}
 char *str = "Hello World";
 *str == 'H'; // True
@@ -3437,8 +3436,8 @@ processor jumps to when an interrupt is triggered. These addresses are
 usually stored at the beginning of program memory.
 \subsubsection{Interrupt Service Routine}
 The code that handles an interrupt is called an \textbf{interrupt
-service routine} (ISR) (or \textit{interrupt handler}). An ISR is simply
-a function that is executed as a result of an interrupt. When
+service routine} (ISR) (or \textit{interrupt handler}). An ISR is
+simply a function that is executed as a result of an interrupt. When
 configuring an interrupt, we must temporarily disable interrupts
 globally to prevent the interrupt from being triggered while we are
 configuring it.
@@ -3498,9 +3497,9 @@ sei();
 \subsubsection{Interrupts and Synchronisation}
 ISR's may interact with state used by other code running at the same
 time, which can cause problems with synchronisation, similar to those
-faced in multithreaded programs. To avoid this, we should make use
-of the \mintinline{c}{volatile} keyword so that the compiler does not
-make assumptions about variable states. The \mintinline{c}{cli} and
+faced in multithreaded programs. To avoid this, we should make use of
+the \mintinline{c}{volatile} keyword so that the compiler does not make
+assumptions about variable states. The \mintinline{c}{cli} and
 \mintinline{c}{sei} functions can also be used to disable interrupts
 and create a memory barrier which prevents instructions from being
 reordered by the compiler.
@@ -3509,8 +3508,8 @@ Microcontrollers typically include a variety of hardware peripherals
 that remove the burden of having to write software for common
 functionality such as timers, serial communication, and analogue to
 digital conversion. They can provide very precise timing and very fast
-(nanosecond) response times. Hardware peripherals can run independent of
-the CPU (in parallel) so that:
+(nanosecond) response times. Hardware peripherals can run independent
+of the CPU (in parallel) so that:
 \begin{itemize}
     \item peripherals can perform tasks without software intervention
     \item peripherals are not subject to timing constraints (execution
@@ -3528,8 +3527,8 @@ and must be \textbf{configured and enabled} by writing to the
 appropriate peripheral registers. This is often done once at the start
 of the program, but can also be reconfigured dynamically if required,
 depending on the application. Information about peripheral registers is
-found in the datasheet and often recommended steps are also provided. In
-general:
+found in the datasheet and often recommended steps are also provided.
+In general:
 \begin{enumerate}
     \item Set bits on peripheral registers to configure the peripheral
           in the correct mode
@@ -3551,9 +3550,9 @@ clock/event/etc. By comparing the value of this counter, the timer can
 perform more complex behaviours such as generating an interrupt or
 changing pin state.
 \subsubsection{Timer Counters}
-The ATtiny1626 has two 16-bit counters, Timer Counter A and B (TCA/TCB).
-As both timers are highly configurable, the datasheet should be
-consulted for more information. The counter, accessible via the
+The ATtiny1626 has two 16-bit counters, Timer Counter A and B
+(TCA/TCB). As both timers are highly configurable, the datasheet should
+be consulted for more information. The counter, accessible via the
 \mintinline{c}{CNT} register, increments by 1 each clock cycle. The
 clock cycle can be reconfigured with a prescaler to increase the
 duration of each clock cycle.
@@ -3625,8 +3624,10 @@ the signal compared to the total PWM period.
     D = \frac{T_\mathrm{HIGH}}{T_\mathrm{HIGH} + T_\mathrm{LOW}} = \frac{T_\mathrm{HIGH}}{T}
 \end{equation*}
 \begin{itemize}
-    \item A duty cycle of 0\% corresponds to a signal that is always LOW
-    \item A duty cycle of 100\% corresponds to a signal that is always HIGH
+    \item A duty cycle of 0\% corresponds to a signal that is always
+          LOW
+    \item A duty cycle of 100\% corresponds to a signal that is always
+          HIGH
 \end{itemize}
 PWM can be used as a form of digital to analogue conversion, where a
 \textbf{modulating signal} is used to set the duty cycle of a PWM
@@ -3685,7 +3686,7 @@ value. Digital quantities are both discrete in amplitude and time.
 \textbf{Discretisation in amplitude} is referred to as
 \textbf{quantisation}. Each amplitude is assigned a digital
 \textbf{code}. The \textbf{code width} determines the \textbf{amplitude
-resolution} and introduces \textbf{quantisation error}.
+    resolution} and introduces \textbf{quantisation error}.
 \subsubsection{Sampling}
 \textbf{Discretisation in time} is referred to as \textbf{sampling}. The
 \textbf{sampling rate} determines the \textbf{time resolution} and
@@ -3740,8 +3741,8 @@ Serial communication is the process of transmitting data \textbf{one
 bit at a time}. On a microcontroller, this is typically done via a
 digital I/O pin. The form of serial communication is determined by the
 \textbf{protocol} and \textbf{physical interface} used. The protocol
-specifies how the data is arranged, and the timing of bit transfers. The
-physical interface specifies the electrical characteristics of the
+specifies how the data is arranged, and the timing of bit transfers.
+The physical interface specifies the electrical characteristics of the
 communication medium (i.e., voltage level used to represent binary
 values). For two devices to communicate, they must both use the same
 protocol and physical interface.
@@ -3770,14 +3771,13 @@ it is asynchronous, its clock is not shared between the two
 communicating devices. Instead, the sender and receiver must agree on a
 \textbf{baud rate} (the number of bits transmitted per second). This is
 typically in the range of
-\qtyrange[range-phrase=~to~]{9600}{115200}{baud} (with a \qty{2}{M.baud}
-maximum).
-UART is a frame based protocol, where each frame is signalled by a
-start bit (always LOW), and is fixed in length and format. UART can be
-used in both full-duplex or half-duplex, depending on the hardware
-implementation, where the transmitter and receiver are fully
-independent. This means either a 1- or 2-wire mode is possible (plus 1
-for GND).
+\qtyrange[range-phrase=~to~]{9600}{115200}{baud} (with a
+\qty{2}{M.baud} maximum). UART is a frame based protocol, where each
+frame is signalled by a start bit (always LOW), and is fixed in length
+and format. UART can be used in both full-duplex or half-duplex,
+depending on the hardware implementation, where the transmitter and
+receiver are fully independent. This means either a 1- or 2-wire mode
+is possible (plus 1 for GND).
 \subsubsection{UART Frame Format}
 The UART frame format is as follows:
 \begin{itemize}
@@ -3957,12 +3957,11 @@ illuminate each digit for a short duration. When a sufficiently large
 refresh rate is used, the human eye perceives both digits as being
 illuminated at the same time. If we wish to display a number, we can
 simply store the state of each digit and switch between them using an
-interrupt-driven timer.
-For example, to configure a \qty{100}{\hertz} display, we must configure
-a total period of \qty{10}{ms} (across both digits). This corresponds to
-a switch period of \qty{5}{ms}, so that both digits are illuminated for
-an equal amount of time, leading to a uniform brightness across both
-digits.
+interrupt-driven timer. For example, to configure a \qty{100}{\hertz}
+display, we must configure a total period of \qty{10}{ms} (across both
+digits). This corresponds to a switch period of \qty{5}{ms}, so that
+both digits are illuminated for an equal amount of time, leading to a
+uniform brightness across both digits.
 \begin{minted}{c}
 // Bytes latched onto 7-segment display
 volatile uint8_t left_byte = DISP_0 | DISP_LHS;
@@ -4070,22 +4069,22 @@ state. \textbf{Latency} refers to the delay between user input and the
 reaction of a system. For user input, latency should be acceptably
 small\footnote{What is acceptably small depends on what magnitude of
 latency is perceptible and is specific to the application.}. Latency as
-low as \qty{2}{ms} is perceptible in particular user input applications,
-however latency between \qtyrange{20}{60}{ms} is acceptable for most
-applications.
+low as \qty{2}{ms} is perceptible in particular user input
+applications, however latency between \qtyrange{20}{60}{ms} is
+acceptable for most applications.
 \subsubsection{Switch Bounce}
 Switch bounce is an artefact of electromechanical switches where switch
-contacts bounce back and forth after a switch is actuated. This
-results in a signal that is not stable and can cause false positives
-when detecting a change in state. As a digital system can sample a
-voltage much faster than a mechanical switch can change state, the
-system may detect multiple transitions of the switch state.
+contacts bounce back and forth after a switch is actuated. This results
+in a signal that is not stable and can cause false positives when
+detecting a change in state. As a digital system can sample a voltage
+much faster than a mechanical switch can change state, the system may
+detect multiple transitions of the switch state.
 
-To prevent this, we \textbf{debounce} pushbuttons either by
-using a debouncing circuit, or through software. To implement this in
-software, we can take multiple samples of a pin and only accept a change
-in state if these samples are consistent over multiple samples. This can
-be implemented using an ISR to capture the state of the pushbutton at
+To prevent this, we \textbf{debounce} pushbuttons either by using a
+debouncing circuit, or through software. To implement this in software,
+we can take multiple samples of a pin and only accept a change in state
+if these samples are consistent over multiple samples. This can be
+implemented using an ISR to capture the state of the pushbutton at
 regular intervals.
 \begin{minted}{c}
 // this variable is used instead of PORTA.IN when detecting edges
@@ -4164,9 +4163,9 @@ ISR(TCB1_INT_vect)
 This code allows us to debounce up to 8 pushbuttons using a single
 8-bit variable. The debounced state of the pushbuttons is stored in
 \mintinline{c}{pb_debounced_state} and can be used to perform edge
-detection similar to the code in the previous section. This variable
-is updated if the state of the pushbutton is consistent over 3 samples,
-or if a falling edge is detected. Note that if both falling and rising
+detection similar to the code in the previous section. This variable is
+updated if the state of the pushbutton is consistent over 3 samples, or
+if a falling edge is detected. Note that if both falling and rising
 edges need to be detected, it is not recommended to immediately update
 the debounced state on a falling edge, as this leads to inconsistent
 latency between rising and falling edges.
@@ -4411,20 +4410,21 @@ used:
 Note that the second strategy requires the receiver to be able to buffer the entire payload before processing it.
 If the payload is too large, this may not be possible.
 \subsubsection{Escape Sequences}
-When there is potential ambiguity for whether a given symbol or sequence
-of symbols is part of a sequence, a payload, or a sentinel for a
-payload, escape sequences may be necessary to handle certain characters.
-In C, a backslash (\mintinline[escapeinside=||]{c}{|\backslash|}) is
-used to escape characters like the double quote (\mintinline{c}{"}), to
-tell the compiler that the character is not the end of the string.
+When there is potential ambiguity for whether a given symbol or
+sequence of symbols is part of a sequence, a payload, or a sentinel for
+a payload, escape sequences may be necessary to handle certain
+characters. In C, a backslash
+(\mintinline[escapeinside=||]{c}{|\backslash|}) is used to escape
+characters like the double quote (\mintinline{c}{"}), to tell the
+compiler that the character is not the end of the string.
 
 This may not be feasible in a serial protocol as the backslash may be
 missed during transmission, and the next character may be treated as a
 start sequence. To address this, the escape sequence should not contain
-the symbol it is escaping. Instead, an alternate sequence should be used
-to represent symbols when they are part of a payload or other contexts.
-Note that the escape sequence itself may be part of the payload, so it
-is important to account for this also.
+the symbol it is escaping. Instead, an alternate sequence should be
+used to represent symbols when they are part of a payload or other
+contexts. Note that the escape sequence itself may be part of the
+payload, so it is important to account for this also.
 \subsubsection{Handshakes}
 A protocol where the sender purely transmits data does not know whether
 the same information has been received and handled by the receiver. As
@@ -4438,10 +4438,11 @@ full-duplex). The most common form of handshakes are \textbf{ACK} and
           contents were understood.
     \item NACK indicates that the message was received, but that there
           was an error in the message. For example if the message was
-          malformed, failed its checksum, or was unable to be processed.
+          malformed, failed its checksum, or was unable to be
+          processed.
 
-          In these situations, the sender may retransmit the message, or
-          send a different message.
+          In these situations, the sender may retransmit the message,
+          or send a different message.
 \end{itemize}
 \subsubsection{Message Verification}
 As serial communications are prone to transmission errors, it is
@@ -4454,11 +4455,11 @@ transmitted checksum. While this simple checksum detects many
 transmission errors, it is not guaranteed to handle symbols sent out of
 order, or symbols that were corrupted without changing the checksum.
 \subsubsection{Flow Control}
-When the receiver operates on little power or low storage, it may not be
-able to process data when it is transmitted at its usual rate. Hence,
-the sender may respond with a flow control message, such as WAIT, to
-indicate that it is currently busy processing the previous message, and
-RESUME when it is ready to receive more data.
+When the receiver operates on little power or low storage, it may not
+be able to process data when it is transmitted at its usual rate.
+Hence, the sender may respond with a flow control message, such as
+WAIT, to indicate that it is currently busy processing the previous
+message, and RESUME when it is ready to receive more data.
 \subsection{Serial Protocol Parsing}
 Many serial protocols are designed to be simple to parse, due to the
 limitations of hardware used in serial communication. However, it is
