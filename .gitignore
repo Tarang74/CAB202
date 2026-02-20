@@ -7,8 +7,12 @@
 # BibTeX
 ## Data used by BibTeX
 *.bbl
+## biblatex control file
+*.bcf
 ## Log file for BibTeX
 *.blg
+## biber XML file
+*.run.xml
 
 # Font definitions
 *.fdb_latexmk
@@ -38,5 +42,16 @@
 # Miscellaneous
 *.fls
 
+# Minted
+*.minted
+*.pyg
+*.pygstyle
+*.pygtex
+
+# LaTeX indent
+*.bak*
+
 Debug
 Assessment
+QUTyTest/
+quty_sync/
